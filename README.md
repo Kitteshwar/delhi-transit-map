@@ -1,7 +1,103 @@
-# delhi-transit-map
+# Delhi Metro, scheduled, in 3D
 
-Animated Delhi Metro map fed by DMRC's own data. So far: the network model
-(`extract_dmrc_network.py`) and the track geometry from OpenStreetMap (`fetch_osm_track.py`).
+A browser map of the whole Delhi Metro with every train running to a timetable: trains in 3D on
+their viaducts and in their tunnels, at their real stations, built from DMRC's own station and
+run-time data and OpenStreetMap's track. **The timetable is an estimate, not DMRC's**: no
+published timetable exists, so train positions are modelled.
+
+**Live:** [kitteshwar.github.io/delhi-transit-map/web/](https://kitteshwar.github.io/delhi-transit-map/web/)
+
+## Features
+
+- **Every DMRC line**: all 13 passenger line codes in DMRC's API, Airport Express and Rapid
+  Metro Gurugram included. Noida's Aqua Line is run by NMRC and not included.
+- **Trains on a schedule**: each train accelerates and brakes at 1 m/s², waits 25 s at each
+  station and keeps to DMRC's station-to-station times. Pink Line trains go round the ring
+  continuously. A time slider, 1x to 300x speed, weekday, Saturday and Sunday timetables, and a
+  Now button.
+- **The line in 3D**: viaducts 12 m up with piers, tunnels 16 m down seen through the map, ramps
+  between them, broad-gauge rails on sleepers, overhead wires and masts, and a third rail for Rapid
+  Metro. Curves are rounded so wheels follow the rails.
+- **Trains like DMRC's**: stainless-steel cars with a rounded cab, the DMRC logo, a band in the
+  line's colour, pink door panels on the women's coach, pantographs, and lamps lit at the front and
+  red at the back. Each line runs its real number of coaches (see the table).
+- **Stations**: platforms with a yellow edge strip, columns under an arched roof, a concourse on
+  piers under the raised ones, and street entrances for the underground ones.
+- **Find a station**: search by name, OSM spelling or code, or click one, and the map flies there.
+- **Fast**: simple cars when zoomed out; closer in, only cars in view are drawn in full. Rails are
+  built only near the view. It renders at the screen's refresh rate, with an fps readout.
+- **Phone layout**: the panel folds away to leave the screen to the map.
+
+## Where the data comes from
+
+```mermaid
+flowchart LR
+  DMRC["DMRC API<br/>stations, line order,<br/>station-to-station times"] --> X[extract_dmrc_network.py] --> N[("data/network.json")]
+  OSM["OpenStreetMap<br/>via Overpass:<br/>track, stops, platforms,<br/>tunnel and bridge tags"] --> F[fetch_osm_track.py] --> T[("data/track/LINE.geojson")]
+  N --> F
+  H["config/headways.json<br/>estimated headways"] --> S[headways.py] --> SC[("data/schedule.json")]
+  N --> S
+  C["config/consists.json<br/>coaches, power"] --> W
+  N --> W["web/index.html<br/>motion.js, scene.js,<br/>train3d.js, search.js"]
+  T --> W
+  SC --> W
+```
+
+| Source | What it gives | Where it lands | As of |
+|---|---|---|---|
+| DMRC's website API (undocumented) | 254 stations, each line's station order, station-to-station run times | `data/network.json` | 2026-11-17 |
+| OpenStreetMap, through Overpass | Track geometry, stop positions, platform outlines, tunnel and viaduct stretches | `data/track/*.geojson` | 2026-11-24 (Blue Line 2026-11-18) |
+| DMRC press releases, Wikipedia | Coaches per train, third-rail power on Rapid Metro | `config/consists.json` (sources inside) | 2026-11 |
+| DMRC press releases, then estimates | First and last trains, the 2 min 18 s peak headway, every other headway | `config/headways.json` (sources inside) | 2026-11 |
+
+Viaduct height, tunnel depth, platform and car sizes are typical values, not surveyed.
+
+## The network in numbers
+
+| Line | Code | Stations | Length (km) | Viaduct | Tunnel | At grade | Coaches | Power | End to end (min) | Peak headway (s) | Trains at weekday peak |
+|---|---|--:|--:|--:|--:|--:|--:|---|--:|--:|--:|
+| Red Line | LN1 | 29 | 33.6 | 28.8 | 0.2 | 4.5 | 8 | 25 kV overhead | 58 | 180 | 40 |
+| Yellow Line | LN2 | 37 | 47.8 | 24.4 | 23.2 | 0.2 | 8 | 25 kV overhead | 83 | 138 | 74 |
+| Blue Line | LN3 | 50 | 55.6 | 50.4 | 3.4 | 1.9 | 8 | 25 kV overhead | 107 | 138 | 94 |
+| Blue Line | LN4 | 8 | 8.4 | 7.8 | 0.0 | 0.6 | 8 | 25 kV overhead | 17 | 276 | 8 |
+| Green Line | LN5 | 22 | 24.8 | 24.8 | 0.0 | 0.0 | 4 | 25 kV overhead | 45 | 300 | 20 |
+| Violet Line | LN6 | 34 | 44.9 | 30.8 | 14.1 | 0.0 | 6 | 25 kV overhead | 78 | 180 | 54 |
+| Pink Line | LN7 | 43 | 67.7 | 48.2 | 18.1 | 1.4 | 6 | 25 kV overhead | 117\* | 300 | 46 |
+| Pink (Ext.) | LN7EXTN | 4 | 4.2 | 4.2 | 0.0 | 0.0 | 6 | 25 kV overhead | 6 | 600 | 2 |
+| Magenta Line | LN8 | 26 | 38.2 | 13.9 | 24.0 | 0.4 | 6 | 25 kV overhead | 74\* | 300 | 34 |
+| Magenta (Ext.) | LN8EXTN | 7 | 9.4 | 9.4 | 0.0 | 0.0 | 6 | 25 kV overhead | 11\* | 600 | 2 |
+| Grey Line | LN9 | 4 | 4.9 | 2.6 | 2.1 | 0.2 | 6 | 25 kV overhead | 11 | 600 | 4 |
+| Airport Express | LN10 | 7 | 23.7 | 7.6 | 16.1 | 0.0 | 6 | 25 kV overhead | 21 | 600 | 6 |
+| Rapid Metro | LN11 | 11 | 12.1 | 12.1 | 0.0 | 0.0 | 3 | 750 V third rail | 21 | 240 | 12 |
+
+- **Stations** are counted by DMRC code. Interchanges count once per line. The map has
+  254 different stations.
+- **Length** is one direction's track as OSM maps it. It includes the run on to terminal
+  platforms, and 300 m past the end where an extension shares its parent line's route. That is
+  about 375 km in all. Green Line figures are for its main route: its Kirti Nagar branch
+  adds 2 stations and 1.4 km.
+- **End to end** adds up DMRC's station-to-station times, one dwell each. \* One hop's DMRC time
+  is implausible (2 s or 720 s), so it is replaced by its length at the line's median speed.
+- **Peak headway** and **trains at weekday peak** come from the estimated timetable, not from
+  DMRC. They add up to 396 trains, more than DMRC's fleet of about 350 trains
+  (DMRC, Nov 2024). That shows they are guesses. The Pink Line counts each lap as one trip.
+
+## Run it locally
+
+```
+python3 -m http.server 8765 --bind 127.0.0.1   # then open http://127.0.0.1:8765/web/
+```
+
+To rebuild the data: `extract_dmrc_network.py`, then
+`fetch_osm_track.py --line LN1 --line LN2 ...`, then `headways.py`. Tests:
+`python3 -m unittest discover -s tests` and `node --test tests/*.mjs`.
+
+## Credits and licence
+
+Track, stations and the map background (c) OpenStreetMap contributors, ODbL. Station order and
+run times from DMRC. [three.js](https://threejs.org) (MIT) is in `web/vendor/`;
+[MapLibre GL JS](https://maplibre.org) (BSD) loads from unpkg. This project's code is GPL-3.0
+(see `LICENSE`).
 
 ## extract_dmrc_network.py
 
@@ -147,3 +243,14 @@ from a platform end), so a train's front stops about half a train length past it
 
 Track, stops and platforms are (c) OpenStreetMap contributors under the ODbL: credit OSM wherever
 they are shown or published.
+
+## headways.py
+
+Builds `data/schedule.json`, the terminal departure times for each line, direction and day type,
+from the estimated profile in `config/headways.json`. A key like `LN5:1` is a line's second DMRC
+pattern (the Green Line's Kirti Nagar branch). It also prints how many trains the profile keeps
+running at once, to check against the real fleet.
+
+```
+python3 headways.py
+```
