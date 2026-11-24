@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delhi Metro, scheduled (estimated)</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V" crossorigin="anonymous">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj" crossorigin="anonymous"></script>
+<style>
+  html, body, #map { margin: 0; height: 100%; }
+  body { font: 13px system-ui, sans-serif; }
+  #panel { position: absolute; top: 10px; left: 10px; z-index: 1; background: #fff; padding: 10px 12px;
+           border-radius: 6px; box-shadow: 0 1px 4px #0004; width: 310px; }
+  #panel h1 { font-size: 14px; margin: 0 0 6px; }
+  #clock { font-size: 22px; font-variant-numeric: tabular-nums; }
+  #slider { width: 100%; }
+  .row { display: flex; gap: 6px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
+  .note { color: #a33; }
+  .small { color: #555; font-size: 11px; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; }
+  .search { position: relative; margin: 6px 0; }
+  #search { width: 100%; box-sizing: border-box; padding: 5px 8px; font: inherit; }
+  #results { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; margin: 2px 0 0; padding: 2px 0; list-style: none;
+             background: #fff; border-radius: 4px; box-shadow: 0 2px 6px #0004; max-height: 260px; overflow: auto; }
+  #results li { padding: 4px 8px; cursor: pointer; display: flex; gap: 4px; align-items: center; }
+  #results li[aria-selected="true"] { background: #e8eef8; }
+  #results li.none { color: #777; cursor: default; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="panel">
+  <h1>Delhi Metro, scheduled</h1>
+  <div class="search">
+    <input id="search" type="search" placeholder="Search stations" autocomplete="off" spellcheck="false" aria-label="Search stations"
+           role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="results">
+    <ul id="results" role="listbox" aria-label="Stations" hidden></ul>
+  </div>
+  <div class="note">Estimated timetable, not DMRC's. Train positions are modelled.</div>
+  <div class="row"><span id="clock">--:--</span> IST <span id="fps" class="small"></span></div>
+  <input id="slider" type="range" min="18000" max="90000" step="60" aria-label="Time of day">
+  <div class="row">
+    <button id="play">Pause</button>
+    <select id="speed" aria-label="Speed">
+      <option value="1">1&times;</option><option value="10" selected>10&times;</option>
+      <option value="60">60&times;</option><option value="300">300&times;</option>
+    </select>
+    <select id="dayType" aria-label="Day type">
+      <option value="weekday">Weekday</option><option value="saturday">Saturday</option><option value="sunday">Sunday</option>
+    </select>
+    <button id="now">Now</button>
+    <button id="whole">Whole line</button>
+  </div>
+  <div id="counts">Loading&hellip;</div>
+  <div class="small"><span class="swatch" style="background:#e75480"></span> door panels: women's coach (front car).
+    Each line's coaches per train from config/consists.json; the car model and band colour are the same design on every line.
+    Close up only the cars in view are drawn, in full detail.
+    Underground sections are drawn at their depth, seen through the map. Click a station, or search for one, to fly to it; right-drag to tilt and turn.</div>
+  <div class="small">Track and stations &copy; OpenStreetMap contributors; station order and run times from DMRC.
+    Viaduct height, tunnel depth, station buildings and cars are drawn to typical sizes; the livery is approximate.</div>
+</div>
+<script type="module">
+import { plan, trainFront, ringTurns, running, secs, DWELL } from './motion.js';
+import { heights, viaduct, stationShape, carPoses, trackSections, smooth, ringSeam } from './scene.js';
+import { findStations } from './search.js';
+import { trainLayer } from './train3d.js';
+
+const DAYS = ['weekday', 'saturday', 'sunday'];
+const DAY_OF_WEEK = ['sunday', 'weekday', 'weekday', 'weekday', 'weekday', 'weekday', 'saturday'];
+const END = 90000;  // 01:00 the next morning: the last trains have arrived
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const hhmm = t => { const m = Math.floor(t / 60) % 1440; return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`; };
+const fc = features => ({ type: 'FeatureCollection', features });
+
+// Service-day clock in IST: times after midnight belong to the day before, as the last trains do.
+function nowIst() {
+  const d = new Date(Date.now() + 5.5 * 3600 * 1000);
+  let t = d.getUTCHours() * 3600 + d.getUTCMinutes() * 60 + d.getUTCSeconds();
+  let dow = d.getUTCDay();
+  if (t < 4 * 3600) { t += 86400; dow = (dow + 6) % 7; }
+  return { t, day: DAY_OF_WEEK[dow] };
+}
+
+async function getJson(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  return r.json();
+}
+
+// One entry per line, pattern and direction (track, heights, trip plan, departures), plus the static scene.
+// Every line with a timetable is drawn; schedule key "LN5:1" is LN5's second pattern.
+async function load() {
+  const [schedule, consists, network] = await Promise.all(
+    ['../data/schedule.json', '../config/consists.json', '../data/network.json'].map(getJson));
+  const info = Object.fromEntries(network.lines.map(l => [l.code, l]));
+  const codes = [...new Set(Object.keys(schedule.lines).map(k => k.split(':')[0]))];
+  const tracks = await Promise.all(codes.map(c => getJson(`../data/track/${c}.geojson`)));
+  const dirs = [], scene = [], built = new Set(), spines = [], stations = [], index = {};
+  tracks.forEach((lineFc, i) => {
+    const code = codes[i], cars = consists.lines[code], color = info[code].color, thirdRail = consists.third_rail.includes(code);
+    if (!Number.isInteger(cars) || cars < 1) throw new Error(`config/consists.json: no coach count for ${code}`);
+    const stopsOf = (pattern, dir) => lineFc.features
+      .filter(f => f.properties.kind === 'stop' && f.properties.pattern === pattern && f.properties.direction === dir)
+      .sort((a, b) => a.properties.seq - b.properties.seq);
+    for (const t of lineFc.features.filter(f => f.properties.kind === 'track')) {
+      const { direction: dir, pattern } = t.properties;
+      const times = schedule.lines[pattern ? `${code}:${pattern}` : code];
+      if (!times) continue;
+      ({ coords: t.geometry.coordinates, s: t.properties.s } = smooth(t.geometry.coordinates, t.properties.s));
+      const coords = t.geometry.coordinates, s = t.properties.s;
+      t.properties.color = color;
+      const H = heights(t.properties.structure, t.properties.length_m);
+      const stops = stopsOf(pattern, dir).map(f => f.properties), p = plan(stops, t.properties.hops, t.properties.length_m, cars);
+      const deps = Object.fromEntries(DAYS.map(day => [day, times[day][dir].map(secs)]));
+      // A ring (first station again at the end) runs continuously: see ringTurns and carPoses.
+      const ring = stops[0].code === stops[stops.length - 1].code;
+      dirs.push({
+        code, coords, s, H, cars, color, thirdRail, p, deps,
+        turns: ring ? Object.fromEntries(DAYS.map(day => [day, ringTurns(p, deps[day])])) : null,
+        wrap: ring ? ringSeam(coords, s, stops[0].s, stops[stops.length - 1].s - stops[0].s) : null,
+      });
+      scene.push(...viaduct(coords, s, H));
+      spines.push({ sections: trackSections(coords, s, H, 10), thirdRail });
+      if (dir !== 'forward') continue;
+      const reverse = new Map(stopsOf(pattern, 'reverse').map(f => [f.properties.code, f.geometry.coordinates]));
+      for (const st of stopsOf(pattern, 'forward')) {
+        // Once per station and colour: Yamuna Bank is on LN3 and LN4, Maujpur on LN7 and its extension.
+        const key = `${color} ${st.properties.code}`;
+        if (built.has(key)) continue;
+        built.add(key);
+        const shape = stationShape(st.properties, coords, s, H, reverse.get(st.properties.code) || null);
+        stations.push(shape);
+        // One search entry per station code, with every line through it.
+        const entry = (index[st.properties.code] ||= { code: st.properties.code, name: st.properties.name, osmName: st.properties.osm_name,
+          at: st.geometry.coordinates, bearing: shape.bearing, lines: [], colors: [] });
+        if (!entry.lines.includes(info[code].color_name)) entry.lines.push(info[code].color_name);
+        if (!entry.colors.includes(color)) entry.colors.push(color);
+      }
+    }
+  });
+  return { tracks, dirs, scene, spines, stations, index: Object.values(index), lines: codes.map(c => info[c]) };
+}
+
+const state = { ...nowIst(), speed: 10, playing: true };
+const map = new maplibregl.Map({
+  container: 'map', center: [77.268, 28.6233], zoom: 15.6, pitch: 62, bearing: -35, maxPitch: 80,
+  maxZoom: 20,  // closer in, a steeply tilted camera drops below the 12-19 m viaducts and roofs and cuts through them
+  antialias: true,  // off by default; without it rails and edges seen at a slant are jagged
+  style: {
+    version: 8,
+    light: { anchor: 'viewport', color: '#ffffff', intensity: 0.35, position: [1.2, 210, 35] },
+    sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, maxzoom: 19,
+                      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' } },
+    layers: [{ id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-saturation': -0.85, 'raster-opacity': 0.75 } }],
+  },
+});
+const extrude = (color, opacity = 1) => ({
+  'fill-extrusion-color': color, 'fill-extrusion-opacity': opacity,
+  'fill-extrusion-base': ['get', 'base'], 'fill-extrusion-height': ['get', 'top'], 'fill-extrusion-vertical-gradient': true,
+});
+const part = (...names) => ['in', ['get', 'part'], ['literal', names]];
+
+Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs, scene, spines, stations, index, lines }]) => {
+  map.addSource('track', { type: 'geojson', data: fc(tracks.flatMap(t => t.features.filter(f => f.properties.kind === 'track'))) });
+  // MapLibre extrusions cannot go below the street; the three.js layer draws what is under it.
+  map.addSource('scene', { type: 'geojson', data: fc(scene.filter(f => f.properties.base >= 0)) });
+  // The route at street level: visible where the line runs in tunnel.
+  map.addLayer({ id: 'track', type: 'line', source: 'track', paint: { 'line-color': ['get', 'color'], 'line-opacity': 0.55, 'line-width': 2 } });
+  map.addLayer({ id: 'viaduct', type: 'fill-extrusion', source: 'scene', filter: part('pier'), paint: extrude('#c9c5bd') });
+  const trains = trainLayer(map, [77.19, 28.6]);
+  map.addLayer(trains);
+  trains.setTrack(spines);
+  trains.setStations(stations);
+
+  // Fly to a station and name it. Names come from DMRC's data, so they go in as text, not HTML.
+  let popup = null;
+  const byCode = Object.fromEntries(index.map(st => [st.code, st]));
+  const goTo = st => {
+    if (popup) popup.remove();
+    popup = new maplibregl.Popup().setLngLat(st.at).setText(`${st.name} (${st.code}) · ${st.lines.join(', ')}`).addTo(map);
+    map.flyTo({ center: st.at, zoom: 17.4, pitch: 65, bearing: st.bearing - 60 });
+  };
+  map.on('click', e => { const shape = trains.pick(e.point.x, e.point.y); if (shape) goTo(byCode[shape.code]); });
+  map.on('mousemove', e => { map.getCanvas().style.cursor = trains.pick(e.point.x, e.point.y) ? 'pointer' : ''; });
+
+  // Search box: matches as you type; arrows move, Enter flies to the highlighted one, Escape closes.
+  const searchBox = $('search'), list = $('results');
+  let shown = [], active = -1;
+  const close = () => { list.hidden = true; searchBox.setAttribute('aria-expanded', 'false'); searchBox.removeAttribute('aria-activedescendant'); active = -1; };
+  const highlight = i => {
+    active = i;
+    [...list.children].forEach((li, k) => li.setAttribute('aria-selected', String(k === i)));
+    if (i >= 0) { searchBox.setAttribute('aria-activedescendant', `result-${i}`); list.children[i].scrollIntoView({ block: 'nearest' }); }
+  };
+  const choose = st => { searchBox.value = st.name; close(); goTo(st); };
+  searchBox.addEventListener('input', () => {
+    shown = findStations(index, searchBox.value);
+    list.replaceChildren(...shown.map((st, i) => {
+      const li = Object.assign(document.createElement('li'), { id: `result-${i}` });
+      li.setAttribute('role', 'option');
+      for (const c of st.colors) {
+        const swatch = Object.assign(document.createElement('span'), { className: 'swatch' });
+        swatch.style.background = c;
+        li.append(swatch);
+      }
+      li.append(` ${st.name}`);
+      li.addEventListener('mousedown', ev => { ev.preventDefault(); choose(st); });  // before the box loses focus
+      return li;
+    }));
+    const typed = searchBox.value.trim() !== '';
+    if (!shown.length && typed) list.append(Object.assign(document.createElement('li'), { className: 'none', textContent: 'No station matches' }));
+    list.hidden = !typed;
+    searchBox.setAttribute('aria-expanded', String(typed));
+    highlight(shown.length ? 0 : -1);
+  });
+  searchBox.addEventListener('keydown', e => {
+    if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && shown.length) {
+      e.preventDefault();
+      highlight((active + (e.key === 'ArrowDown' ? 1 : shown.length - 1)) % shown.length);
+    } else if (e.key === 'Enter' && active >= 0) choose(shown[active]);
+    else if (e.key === 'Escape') close();
+  });
+  searchBox.addEventListener('blur', close);
+  $('whole').addEventListener('click', () => map.flyTo({ center: [77.15, 28.6], zoom: 10.2, pitch: 45, bearing: 0 }));
+
+  // One swatch and count per line, built once; network.json's names go in as text, not HTML.
+  $('counts').textContent = 'Trains running:';
+  const countText = {};
+  for (const l of lines) {
+    const swatch = Object.assign(document.createElement('span'), { className: 'swatch' });
+    swatch.style.background = l.color;
+    countText[l.code] = document.createTextNode('');
+    $('counts').append(' ', swatch, countText[l.code]);
+  }
+  // Frames the map drew in the last second: it draws once per screen refresh while trains move.
+  let drawn = 0;
+  map.on('render', () => { drawn++; });
+  setInterval(() => { $('fps').textContent = drawn ? `${drawn} fps` : 'idle'; drawn = 0; }, 1000);
+  const show = (el, text) => { if (el.textContent !== text) el.textContent = text; };  // no layout work when unchanged
+  // Runs on every screen refresh (requestAnimationFrame follows the display: 60, 120 or 144 Hz).
+  // Trains are placed again only when the clock or day changed, so a paused map stops redrawing.
+  let last = performance.now(), placedAt = null;
+  function frame(now) {
+    if (state.playing) state.t = Math.min(state.t + (now - last) / 1000 * state.speed, END);
+    last = now;
+    requestAnimationFrame(frame);
+    if (placedAt === `${state.day} ${state.t}`) return;
+    placedAt = `${state.day} ${state.t}`;
+    const cars = [], counts = Object.fromEntries(lines.map(l => [l.code, 0]));
+    for (const d of dirs) {
+      const deps = d.deps[state.day], turns = d.turns && d.turns[state.day];
+      deps.forEach((dep, k) => {
+        const front = turns ? trainFront(d.p, state.t - dep, turns.held[k] ? 0 : -DWELL, turns.stay[k]) : trainFront(d.p, state.t - dep);
+        if (front === null) return;
+        for (const c of carPoses(d.coords, d.s, front, d.H, d.cars, d.wrap)) cars.push(Object.assign(c, { color: d.color, thirdRail: d.thirdRail }));
+      });
+      counts[d.code] += running(d.p, deps, state.t);
+    }
+    trains.setCars(cars);
+    show($('clock'), hhmm(state.t));
+    if (Number($('slider').value) !== Math.round(state.t / 60) * 60) $('slider').value = state.t;
+    $('dayType').value = state.day;
+    for (const l of lines) {
+      const text = ` ${l.color_name} (${l.code}) ${counts[l.code]}  `;
+      if (countText[l.code].nodeValue !== text) countText[l.code].nodeValue = text;
+    }
+  }
+  requestAnimationFrame(frame);
+}).catch(e => { $('counts').textContent = `Could not load the data: ${e.message}`; });
+
+$('slider').addEventListener('input', e => { state.t = Number(e.target.value); });
+$('play').addEventListener('click', e => { state.playing = !state.playing; e.target.textContent = state.playing ? 'Pause' : 'Play'; });
+$('speed').addEventListener('change', e => { state.speed = Number(e.target.value); });
+$('dayType').addEventListener('change', e => { state.day = e.target.value; });
+$('now').addEventListener('click', () => Object.assign(state, nowIst()));
+</script>
+</body>
+</html>

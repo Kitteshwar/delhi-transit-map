@@ -1,0 +1,32 @@
+{
+  "note": "Coaches per train, by DMRC line code. The animation draws every train on a line with this many coaches.",
+  "lines": {
+    "LN1": 8,
+    "LN2": 8,
+    "LN3": 8,
+    "LN4": 8,
+    "LN5": 4,
+    "LN6": 6,
+    "LN7": 6,
+    "LN7EXTN": 6,
+    "LN8": 6,
+    "LN8EXTN": 6,
+    "LN9": 6,
+    "LN10": 6,
+    "LN11": 3
+  },
+  "sources": {
+    "LN3 LN4": "DMRC press release, 8 Nov 2022 ('DMRC introduces 8-coach trains on its Red Line from today'): the conversion of all 6-coach trains to 8-coach on the Blue Line (Line-3/4, Dwarka Sec-21 to Noida Electronic City/Vaishali) was completed the year before.",
+    "LN1": "Same release: Red Line 6-to-8 conversion 'likely to be completed by 2024'; DMRC release of 25 Dec 2024: TS-01 'expanded ... to 8 coaches in 2023'. Wikipedia (Red Line): all converted by April 2024.",
+    "LN2": "Same 8 Nov 2022 release: 'the conversion of all 6-coach trains into 8-coach trains on the Yellow Line' was completed the year before.",
+    "LN7 LN7EXTN": "DMRC release of 30 Oct 2026: Pink Line occupancy displays show coaches C1 to C6. Release of 15 Nov 2024: 90 coaches (15 trains) for the Pink Line extension.",
+    "LN8 LN8EXTN": "DMRC release of 15 Nov 2024: 144 coaches (24 trains) for the Magenta Line extension.",
+    "LN10": "Wikipedia (Airport Express Line): eight six-car CAF trains.",
+    "LN11": "Wikipedia (Rapid Metro Gurgaon): trains operate in three-car configurations.",
+    "LN5 LN6 LN9": "Assumed. The 8 Nov 2022 release says standard-gauge lines take up to 6 coaches and the fleet then had 22 four-coach trains, without naming their line. Wikipedia: Green and Violet stock was ordered mostly as 4-car trains (46 of 48); Grey uses the Pink/Magenta stock. Green is taken as 4, Violet and Grey as 6.",
+    "third_rail LN11": "Wikipedia (Rapid Metro Gurgaon): 'powered by a 750-volt direct current (DC) traction system supplied through a third rail'. Every other line is drawn with 25 kV overhead wires."
+  },
+  "third_rail": [
+    "LN11"
+  ]
+}

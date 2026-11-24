@@ -1,0 +1,140 @@
+{
+  "status": "estimated",
+  "note": "No published DMRC timetable exists (OTD's 2023 GTFS no longer downloads). Every train built from this file is 'scheduled (estimated)'. Replace these numbers when real data arrives (RTI reply, rider measurements). Headway bands are [start HH:MM, seconds between departures]; a band runs until the next one starts.",
+  "sources": {
+    "first_departure 06:00": "DMRC press releases: 'routine timing of 6 AM' (16 Nov 2026); on Sundays only Pink, Magenta and Grey start at 7 AM (6 Nov 2026). Terminal stations open at 05:50 in DMRC's station data.",
+    "last_departure 23:00": "DMRC press release: 'usual last train departure timing of 11:00 PM' (6 Nov 2026). Terminal stations close at 22:50 in DMRC's station data.",
+    "LN3 forward last 22:50": "delhigpt.in summary (updated 16 Nov 2026) of DMRC's revised last-train page: Dwarka Sector 21 to Noida Electronic City leaves at 10:50 PM. Not checked against DMRC directly (its page is behind Cloudflare).",
+    "peak 138 s": "DMRC press release (9 Aug 2026): headway 'just 2 minutes 18 seconds on the busiest corridors'. It does not name the corridors, so this is an upper bound for the Blue Line.",
+    "every other headway": "Guess. Off-peak roughly twice the peak headway, early morning and late evening about three times, weekends lighter. LN4 (Vaishali branch) at twice LN3's headway throughout.",
+    "other lines": "Guess. Each line's day is LN3's profile scaled by a guessed peak headway: LN1 180 s, LN2 138 s, LN5 300 s, LN5:1 600 s, LN6 180 s, LN7 300 s, LN7EXTN 600 s, LN8 300 s, LN8EXTN 600 s, LN9 600 s, LN10 600 s, LN11 240 s. A key 'LN5:1' is that line's second DMRC pattern (the Kirti Nagar branch). First and last departures are the network-wide 06:00 and 23:00."
+  },
+  "lines": {
+    "LN3": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "22:50", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 360], ["08:00", 138], ["11:00", 300], ["17:00", 138], ["21:00", 420]],
+        "saturday": [["06:00", 360], ["09:00", 240], ["21:00", 420]],
+        "sunday": [["06:00", 480], ["09:00", 300], ["21:00", 480]]
+      }
+    },
+    "LN4": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 720], ["08:00", 276], ["11:00", 600], ["17:00", 276], ["21:00", 840]],
+        "saturday": [["06:00", 720], ["09:00", 480], ["21:00", 840]],
+        "sunday": [["06:00", 960], ["09:00", 600], ["21:00", 960]]
+      }
+    },
+    "LN1": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 470], ["08:00", 180], ["11:00", 391], ["17:00", 180], ["21:00", 548]],
+        "saturday": [["06:00", 470], ["09:00", 313], ["21:00", 548]],
+        "sunday": [["06:00", 626], ["09:00", 391], ["21:00", 626]]
+      }
+    },
+    "LN2": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 360], ["08:00", 138], ["11:00", 300], ["17:00", 138], ["21:00", 420]],
+        "saturday": [["06:00", 360], ["09:00", 240], ["21:00", 420]],
+        "sunday": [["06:00", 480], ["09:00", 300], ["21:00", 480]]
+      }
+    },
+    "LN5": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 783], ["08:00", 300], ["11:00", 652], ["17:00", 300], ["21:00", 913]],
+        "saturday": [["06:00", 783], ["09:00", 522], ["21:00", 913]],
+        "sunday": [["06:00", 1043], ["09:00", 652], ["21:00", 1043]]
+      }
+    },
+    "LN5:1": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 1565], ["08:00", 600], ["11:00", 1304], ["17:00", 600], ["21:00", 1826]],
+        "saturday": [["06:00", 1565], ["09:00", 1043], ["21:00", 1826]],
+        "sunday": [["06:00", 2087], ["09:00", 1304], ["21:00", 2087]]
+      }
+    },
+    "LN6": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 470], ["08:00", 180], ["11:00", 391], ["17:00", 180], ["21:00", 548]],
+        "saturday": [["06:00", 470], ["09:00", 313], ["21:00", 548]],
+        "sunday": [["06:00", 626], ["09:00", 391], ["21:00", 626]]
+      }
+    },
+    "LN7": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 783], ["08:00", 300], ["11:00", 652], ["17:00", 300], ["21:00", 913]],
+        "saturday": [["06:00", 783], ["09:00", 522], ["21:00", 913]],
+        "sunday": [["06:00", 1043], ["09:00", 652], ["21:00", 1043]]
+      }
+    },
+    "LN7EXTN": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 1565], ["08:00", 600], ["11:00", 1304], ["17:00", 600], ["21:00", 1826]],
+        "saturday": [["06:00", 1565], ["09:00", 1043], ["21:00", 1826]],
+        "sunday": [["06:00", 2087], ["09:00", 1304], ["21:00", 2087]]
+      }
+    },
+    "LN8": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 783], ["08:00", 300], ["11:00", 652], ["17:00", 300], ["21:00", 913]],
+        "saturday": [["06:00", 783], ["09:00", 522], ["21:00", 913]],
+        "sunday": [["06:00", 1043], ["09:00", 652], ["21:00", 1043]]
+      }
+    },
+    "LN8EXTN": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 1565], ["08:00", 600], ["11:00", 1304], ["17:00", 600], ["21:00", 1826]],
+        "saturday": [["06:00", 1565], ["09:00", 1043], ["21:00", 1826]],
+        "sunday": [["06:00", 2087], ["09:00", 1304], ["21:00", 2087]]
+      }
+    },
+    "LN9": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 1565], ["08:00", 600], ["11:00", 1304], ["17:00", 600], ["21:00", 1826]],
+        "saturday": [["06:00", 1565], ["09:00", 1043], ["21:00", 1826]],
+        "sunday": [["06:00", 2087], ["09:00", 1304], ["21:00", 2087]]
+      }
+    },
+    "LN10": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 1565], ["08:00", 600], ["11:00", 1304], ["17:00", 600], ["21:00", 1826]],
+        "saturday": [["06:00", 1565], ["09:00", 1043], ["21:00", 1826]],
+        "sunday": [["06:00", 2087], ["09:00", 1304], ["21:00", 2087]]
+      }
+    },
+    "LN11": {
+      "first_departure": {"forward": "06:00", "reverse": "06:00"},
+      "last_departure": {"forward": "23:00", "reverse": "23:00"},
+      "headways": {
+        "weekday": [["06:00", 626], ["08:00", 240], ["11:00", 522], ["17:00", 240], ["21:00", 730]],
+        "saturday": [["06:00", 626], ["09:00", 417], ["21:00", 730]],
+        "sunday": [["06:00", 835], ["09:00", 522], ["21:00", 835]]
+      }
+    }
+  }
+}

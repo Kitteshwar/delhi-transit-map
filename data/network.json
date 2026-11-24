@@ -1,0 +1,5110 @@
+{
+ "generated_at": "2026-11-17T10:22:24+00:00",
+ "source": "https://backend.delhimetrorail.com/api/v2/en",
+ "route_date": "2026-11-17",
+ "hop_seconds_include_one_dwell": true,
+ "stations": {
+  "AHNR": {
+   "name": "ADARSH NAGAR",
+   "lat": 28.7144,
+   "lon": 77.1669,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:02:00",
+   "closing_time": "00:02:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "AHRM": {
+   "name": "ASHRAM",
+   "lat": 28.5727649,
+   "lon": 77.258494,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "AIIMS": {
+   "name": "AIIMS",
+   "lat": 28.5668,
+   "lon": 77.2081,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "AIT": {
+   "name": "SECTOR-54 CHOWK",
+   "lat": 28.431,
+   "lon": 77.1028,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:51:00",
+   "closing_time": "22:21:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "AJG": {
+   "name": "ARJAN GARH",
+   "lat": 28.4809,
+   "lon": 77.1259,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "APMN": {
+   "name": "ASHOK PARK MAIN",
+   "lat": 28.6715791,
+   "lon": 77.1552039,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:31:00",
+   "closing_time": "23:29:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "APOT": {
+   "name": "AIRPORT (T-3)",
+   "lat": 28.5573141,
+   "lon": 77.0869171,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:17:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN10"
+   ]
+  },
+  "ASDM": {
+   "name": "AKSHARDHAM",
+   "lat": 28.618,
+   "lon": 77.2794,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:50:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "ATHA": {
+   "name": "ARTHALA",
+   "lat": 28.6729,
+   "lon": 77.3917,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "AVIT": {
+   "name": "ANAND VIHAR ISBT",
+   "lat": 28.647,
+   "lon": 77.3159,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:53:00",
+   "closing_time": "00:10:00",
+   "lines": [
+    "LN4",
+    "LN7"
+   ]
+  },
+  "AZU": {
+   "name": "AZADPUR",
+   "lat": 28.707,
+   "lon": 77.1807,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:53:00",
+   "closing_time": "00:25:00",
+   "lines": [
+    "LN2",
+    "LN7"
+   ]
+  },
+  "BACH": {
+   "name": "BATA CHOWK",
+   "lat": 28.385109,
+   "lon": 77.3113603,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:44:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "BAPB": {
+   "name": "BADARPUR BORDER",
+   "lat": 28.49325,
+   "lon": 77.3007813,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:43:00",
+   "closing_time": "23:42:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "BCGN": {
+   "name": "BOTANICAL GARDEN",
+   "lat": 28.564,
+   "lon": 77.3343,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:39:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN3",
+    "LN8"
+   ]
+  },
+  "BEL": {
+   "name": "BELVEDERE TOWERS",
+   "lat": 28.4923,
+   "lon": 77.0884,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:03:00",
+   "closing_time": "22:04:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "BIMR": {
+   "name": "HAIDERPUR BADLI MOR",
+   "lat": 28.7299849889464,
+   "lon": 77.1491824510158,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:57:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN2",
+    "LN8EXTN"
+   ]
+  },
+  "BJPU": {
+   "name": "BHAJANPURA",
+   "lat": 28.703581,
+   "lon": 77.262331,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "00:13:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "BKCP": {
+   "name": "BHIKAJI CAMA PLACE",
+   "lat": 28.5703764,
+   "lon": 77.1843847,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "23:50:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "BKMR": {
+   "name": "BADKAL MOR",
+   "lat": 28.4228115,
+   "lon": 77.3079462,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "BLSW": {
+   "name": "BHALASWA",
+   "lat": 28.736927,
+   "lon": 77.167997,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "23:02:00",
+   "lines": [
+    "LN8EXTN"
+   ]
+  },
+  "BRKR": {
+   "name": "BARAKHAMBA ROAD",
+   "lat": 28.6299,
+   "lon": 77.2245,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:27:00",
+   "closing_time": "23:49:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "BURI": {
+   "name": "BURARI",
+   "lat": 28.72976,
+   "lon": 77.19952,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "00:24:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "BUSS": {
+   "name": "BAHADURGARH CITY",
+   "lat": 28.6906885,
+   "lon": 76.9352146,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "23:33:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "BVHM": {
+   "name": "RAJA NAHAR SINGH (BALLABHGARH)",
+   "lat": 28.3397812,
+   "lon": 77.316603,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "CDLI": {
+   "name": "CHIRAG DELHI",
+   "lat": 28.5410031,
+   "lon": 77.2304831,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:07:00",
+   "closing_time": "23:24:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "CHK": {
+   "name": "CHANDNI CHOWK",
+   "lat": 28.6588,
+   "lon": 77.2304,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:30:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "CHTP": {
+   "name": "CHHATARPUR",
+   "lat": 28.5068,
+   "lon": 77.175,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:52:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "CIPK": {
+   "name": "BRIG. HOSHIAR SINGH",
+   "lat": 28.6973662,
+   "lon": 76.9187353,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "CL": {
+   "name": "CIVIL LINES",
+   "lat": 28.6773,
+   "lon": 77.2248,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "23:50:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "CTST": {
+   "name": "CENTRAL SECRETARIAT",
+   "lat": 28.6152,
+   "lon": 77.2123,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:34:00",
+   "closing_time": "23:52:00",
+   "lines": [
+    "LN2",
+    "LN6"
+   ]
+  },
+  "CWBR": {
+   "name": "CHAWRI BAZAR",
+   "lat": 28.6488,
+   "lon": 77.2263,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "DACY": {
+   "name": "DELHI AEROCITY",
+   "lat": 28.548032,
+   "lon": 77.1182363,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:12:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN10"
+   ]
+  },
+  "DBMR": {
+   "name": "DABRI MOR - JANAKPURI SOUTH",
+   "lat": 28.6155363,
+   "lon": 77.0825158,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "23:50:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "DDSC": {
+   "name": "DURGABAI DESHMUKH SOUTH CAMPUS",
+   "lat": 28.58938,
+   "lon": 77.1673313,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:50:00",
+   "closing_time": "23:55:00",
+   "lines": [
+    "LN7",
+    "LN12"
+   ]
+  },
+  "DKV": {
+   "name": "DHAULA KUAN",
+   "lat": 28.5921119,
+   "lon": 77.1615398,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:02:00",
+   "closing_time": "23:38:00",
+   "lines": [
+    "LN10",
+    "LN12"
+   ]
+  },
+  "DL2": {
+   "name": "PHASE-2",
+   "lat": 28.4873,
+   "lon": 77.0931,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:02:00",
+   "closing_time": "22:11:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "DL3": {
+   "name": "PHASE-3",
+   "lat": 28.4925,
+   "lon": 77.0919,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:09:00",
+   "closing_time": "22:09:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "DLIC": {
+   "name": "DELHI CANTT.",
+   "lat": 28.6086915,
+   "lon": 77.1382338,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:07:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "DLIG": {
+   "name": "DELHI GATE",
+   "lat": 28.640061,
+   "lon": 77.2386843,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "DM": {
+   "name": "DWARKA MOR",
+   "lat": 28.6218,
+   "lon": 77.0411,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:18:00",
+   "closing_time": "00:14:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DNBT": {
+   "name": "DHANSA BUS STAND",
+   "lat": 28.6118577,
+   "lon": 76.9754261,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN9"
+   ]
+  },
+  "DPCK": {
+   "name": "DEEPALI CHOWK",
+   "lat": 28.698002,
+   "lon": 77.118101,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:20:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN8EXTN"
+   ]
+  },
+  "DSE": {
+   "name": "DWARKA SECTOR - 11",
+   "lat": 28.5864,
+   "lon": 77.0497,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:29:00",
+   "closing_time": "00:24:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DSET": {
+   "name": "DWARKA SECTOR - 8",
+   "lat": 28.5657,
+   "lon": 77.0671,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "00:30:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DSFN": {
+   "name": "DWARKA SECTOR - 14",
+   "lat": 28.6022,
+   "lon": 77.0259,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:23:00",
+   "closing_time": "00:18:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DSG": {
+   "name": "DILSHAD GARDEN",
+   "lat": 28.6759,
+   "lon": 77.3215,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:35:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "DSHP": {
+   "name": "DASHRATHPURI",
+   "lat": 28.6024422,
+   "lon": 77.0803213,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "DSN": {
+   "name": "DWARKA SECTOR - 9",
+   "lat": 28.5743,
+   "lon": 77.0653,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:34:00",
+   "closing_time": "00:28:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DST": {
+   "name": "DWARKA SECTOR - 10",
+   "lat": 28.5811,
+   "lon": 77.0575,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "00:26:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DSTN": {
+   "name": "DWARKA SECTOR - 13",
+   "lat": 28.5972,
+   "lon": 77.0333,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "00:20:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DSTO": {
+   "name": "DWARKA SECTOR - 21",
+   "lat": 28.5522,
+   "lon": 77.0583,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN3",
+    "LN10"
+   ]
+  },
+  "DSW": {
+   "name": "DWARKA SECTOR - 12",
+   "lat": 28.5955,
+   "lon": 77.0417,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:27:00",
+   "closing_time": "00:22:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "DW": {
+   "name": "DWARKA-KAKROLA",
+   "lat": 28.6149,
+   "lon": 77.0227,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:15:00",
+   "closing_time": "00:16:00",
+   "lines": [
+    "LN9",
+    "LN3"
+   ]
+  },
+  "EANR": {
+   "name": "EAST AZAD NAGAR",
+   "lat": 28.66479,
+   "lon": 77.2826113,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:58:00",
+   "closing_time": "23:57:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "ECMJ": {
+   "name": "ESCORTS MUJESAR",
+   "lat": 28.37016,
+   "lon": 77.31494,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:46:00",
+   "closing_time": "00:02:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "ESIH": {
+   "name": "ESI-BASAIDARAPUR",
+   "lat": 28.6582712,
+   "lon": 77.1252019,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:56:00",
+   "closing_time": "00:11:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "GAT": {
+   "name": "CYBER CITY",
+   "lat": 28.4977,
+   "lon": 77.0894,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:05:00",
+   "closing_time": "22:05:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "GDPI": {
+   "name": "GOVIND PURI",
+   "lat": 28.5446117,
+   "lon": 77.261992,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:26:00",
+   "closing_time": "23:31:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "GE": {
+   "name": "GURU DRONACHARYA",
+   "lat": 28.4819,
+   "lon": 77.1023,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "00:03:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "GEC": {
+   "name": "GOLF COURSE",
+   "lat": 28.5672,
+   "lon": 77.346,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:42:00",
+   "closing_time": "00:08:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "GHEM": {
+   "name": "GHEVRA METRO STATION",
+   "lat": 28.6853835,
+   "lon": 76.9949917,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:42:00",
+   "closing_time": "23:24:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "GKEI": {
+   "name": "GREATER KAILASH",
+   "lat": 28.5430994,
+   "lon": 77.2410711,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:05:00",
+   "closing_time": "23:25:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "GKPR": {
+   "name": "GOKULPURI",
+   "lat": 28.7025224,
+   "lon": 77.2861548,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "22:44:00",
+   "lines": [
+    "LN7EXTN"
+   ]
+  },
+  "GNPK": {
+   "name": "GREEN PARK",
+   "lat": 28.5598,
+   "lon": 77.2068,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:38:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "GTBR": {
+   "name": "GURU TEG BAHADUR NAGAR",
+   "lat": 28.6984,
+   "lon": 77.2059,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "23:56:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "GTNI": {
+   "name": "GHITORNI",
+   "lat": 28.4938,
+   "lon": 77.1492,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:47:00",
+   "closing_time": "23:56:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "HCC": {
+   "name": "MILLENNIUM CITY CENTRE GURUGRAM",
+   "lat": 28.4592,
+   "lon": 77.0725,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "HDNR": {
+   "name": "HINDON RIVER",
+   "lat": 28.6734,
+   "lon": 77.4065,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "HKS": {
+   "name": "HAUZ KHAS",
+   "lat": 28.544,
+   "lon": 77.2062,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:34:00",
+   "closing_time": "23:41:00",
+   "lines": [
+    "LN2",
+    "LN8"
+   ]
+  },
+  "HNOK": {
+   "name": "HARKESH NAGAR OKHLA",
+   "lat": 28.5429658,
+   "lon": 77.273094,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:24:00",
+   "closing_time": "23:29:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "IDPT": {
+   "name": "INDRAPRASTHA",
+   "lat": 28.6206,
+   "lon": 77.25,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:55:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "IFOC": {
+   "name": "IFFCO CHOWK",
+   "lat": 28.4722,
+   "lon": 77.0724,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "00:10:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "IGDA": {
+   "name": "TERMINAL 1-IGI AIRPORT",
+   "lat": 28.5647538,
+   "lon": 77.1221478,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:04:00",
+   "closing_time": "23:38:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "IICC": {
+   "name": "YASHOBHOOMI DWARKA SECTOR  - 25",
+   "lat": 28.550816,
+   "lon": 77.045253,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN10"
+   ]
+  },
+  "IIT": {
+   "name": "IIT",
+   "lat": 28.547199,
+   "lon": 77.1916283,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:14:00",
+   "closing_time": "23:25:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "ILOK": {
+   "name": "INDERLOK",
+   "lat": 28.6736,
+   "lon": 77.1703,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:33:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN5",
+    "LN1"
+   ]
+  },
+  "INA": {
+   "name": "DILLI HAAT - INA",
+   "lat": 28.5744,
+   "lon": 77.2096,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:24:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN2",
+    "LN7"
+   ]
+  },
+  "IPE": {
+   "name": "I.P. EXTENSION",
+   "lat": 28.6319356,
+   "lon": 77.3085679,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "ITO": {
+   "name": "ITO",
+   "lat": 28.6278305,
+   "lon": 77.240214,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "23:58:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "IWNR": {
+   "name": "SUKHDEV VIHAR",
+   "lat": 28.5596435,
+   "lon": 77.2733625,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "23:34:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "JAMD": {
+   "name": "JAMA MASJID",
+   "lat": 28.6504603,
+   "lon": 77.2362374,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "00:02:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "JANR": {
+   "name": "JAMIA MILLIA ISLAMIA",
+   "lat": 28.5627144,
+   "lon": 77.2857862,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "23:36:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "JB": {
+   "name": "JOR BAGH",
+   "lat": 28.5859,
+   "lon": 77.2125,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:27:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "JFRB": {
+   "name": "JAFRABAD",
+   "lat": 28.6827585,
+   "lon": 77.2725587,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "00:03:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "JGPA": {
+   "name": "JANGPURA",
+   "lat": 28.583698,
+   "lon": 77.2362473,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:39:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "JGPI": {
+   "name": "JAHANGIRPURI",
+   "lat": 28.7296,
+   "lon": 77.1666,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "00:04:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "JIEE": {
+   "name": "JOHRI ENCLAVE",
+   "lat": 28.714627,
+   "lon": 77.2866533,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "22:42:00",
+   "lines": [
+    "LN7EXTN"
+   ]
+  },
+  "JLA": {
+   "name": "JASOLA-APOLLO",
+   "lat": 28.5382066,
+   "lon": 77.2811108,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:31:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "JLA8": {
+   "name": "JASOLA VIHAR SHAHEEN BAGH",
+   "lat": 28.5462285,
+   "lon": 77.2943212,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:41:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "JLML": {
+   "name": "JHILMIL",
+   "lat": 28.6758,
+   "lon": 77.3124,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "23:30:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "JLNS": {
+   "name": "JLN STADIUM",
+   "lat": 28.587146,
+   "lon": 77.2310163,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:40:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "JNPH": {
+   "name": "JANPATH",
+   "lat": 28.625061,
+   "lon": 77.2169953,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:48:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "JPE": {
+   "name": "JANAKPURI EAST",
+   "lat": 28.6328,
+   "lon": 77.0862,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:31:00",
+   "closing_time": "00:04:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "JPVE": {
+   "name": "JAGATPUR-WAZIRABAD",
+   "lat": 28.721209,
+   "lon": 77.223913,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:58:00",
+   "closing_time": "00:20:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "JPW": {
+   "name": "JANAKPURI WEST",
+   "lat": 28.6295,
+   "lon": 77.0778,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:28:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN3",
+    "LN8"
+   ]
+  },
+  "JRMR": {
+   "name": "JHARODA MAJRA",
+   "lat": 28.72501,
+   "lon": 77.2159,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:56:00",
+   "closing_time": "00:22:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "JW": {
+   "name": "JHANDEWALAN",
+   "lat": 28.6443,
+   "lon": 77.1999,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:34:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "KB": {
+   "name": "KAROL BAGH",
+   "lat": 28.644,
+   "lon": 77.1885,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:42:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "KE": {
+   "name": "KOHAT ENCLAVE",
+   "lat": 28.698,
+   "lon": 77.1405,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:43:00",
+   "closing_time": "23:40:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "KG": {
+   "name": "KASHMERE GATE",
+   "lat": 28.6675,
+   "lon": 77.2282,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:20:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN2",
+    "LN1",
+    "LN6"
+   ]
+  },
+  "KHCY": {
+   "name": "KAILASH COLONY",
+   "lat": 28.55554,
+   "lon": 77.2394585,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "23:37:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "KHNA": {
+   "name": "KRISHNA NAGAR",
+   "lat": 28.6575316,
+   "lon": 77.2885172,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "23:55:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "KIKJ": {
+   "name": "KALINDI KUNJ",
+   "lat": 28.543,
+   "lon": 77.30968,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "KJKS": {
+   "name": "KHAJURI KHAS",
+   "lat": 28.70521,
+   "lon": 77.25447,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "00:11:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "KJMD": {
+   "name": "KALKAJI MANDIR",
+   "lat": 28.54945,
+   "lon": 77.2570313,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:28:00",
+   "closing_time": "23:33:00",
+   "lines": [
+    "LN6",
+    "LN8"
+   ]
+  },
+  "KKDA": {
+   "name": "KARKARDUMA",
+   "lat": 28.6485,
+   "lon": 77.3056,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:51:00",
+   "closing_time": "00:07:00",
+   "lines": [
+    "LN4",
+    "LN7"
+   ]
+  },
+  "KKDC": {
+   "name": "KARKARDUMA COURT",
+   "lat": 28.6450398,
+   "lon": 77.3042615,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:59:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "KM": {
+   "name": "KHAN MARKET",
+   "lat": 28.6009531,
+   "lon": 77.2252085,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:43:00",
+   "closing_time": "23:48:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "KN": {
+   "name": "KANHAIYA NAGAR",
+   "lat": 28.6824,
+   "lon": 77.1648,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:35:00",
+   "closing_time": "23:34:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "KNR": {
+   "name": "KIRTI NAGAR",
+   "lat": 28.6557,
+   "lon": 77.1508,
+   "type": "At Grade",
+   "interchange": true,
+   "opening_time": "05:30:00",
+   "closing_time": "23:50:00",
+   "lines": [
+    "LN3",
+    "LN5"
+   ]
+  },
+  "KP": {
+   "name": "KESHAV PURAM",
+   "lat": 28.6876,
+   "lon": 77.1625,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:35:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "KPEN": {
+   "name": "KRISHNA PARK EXTENSION",
+   "lat": 28.6295,
+   "lon": 77.0778,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:40:00",
+   "closing_time": "22:40:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "KSHI": {
+   "name": "KAUSHAMBI",
+   "lat": 28.6455,
+   "lon": 77.3244,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "00:11:00",
+   "lines": [
+    "LN4"
+   ]
+  },
+  "LJPN": {
+   "name": "LAJPAT NAGAR",
+   "lat": 28.5706249,
+   "lon": 77.2342561,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:36:00",
+   "closing_time": "23:41:00",
+   "lines": [
+    "LN6",
+    "LN7"
+   ]
+  },
+  "LKM": {
+   "name": "LOK KALYAN MARG",
+   "lat": 28.5977,
+   "lon": 77.2112,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:29:00",
+   "closing_time": "23:40:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "LLQA": {
+   "name": "LAL QUILA",
+   "lat": 28.6577564,
+   "lon": 77.2347368,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "00:04:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "LN": {
+   "name": "LAXMI NAGAR",
+   "lat": 28.6305,
+   "lon": 77.2773,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:45:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN4"
+   ]
+  },
+  "MAL": {
+   "name": "MOULSARI AVENUE",
+   "lat": 28.4997,
+   "lon": 77.0939,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:07:00",
+   "closing_time": "22:07:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "MAPR": {
+   "name": "MADIPUR",
+   "lat": 28.67634,
+   "lon": 77.1175513,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:21:00",
+   "closing_time": "23:22:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "MDHS": {
+   "name": "MANDI HOUSE",
+   "lat": 28.6259,
+   "lon": 77.2343,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:24:00",
+   "closing_time": "23:56:00",
+   "lines": [
+    "LN3",
+    "LN6"
+   ]
+  },
+  "MDTW": {
+   "name": "MODEL TOWN",
+   "lat": 28.7029,
+   "lon": 77.1937,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:02:00",
+   "closing_time": "23:58:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "METE": {
+   "name": "MOHAN ESTATE",
+   "lat": 28.514454,
+   "lon": 77.2902056,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:36:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "MGRO": {
+   "name": "M.G. ROAD",
+   "lat": 28.4796,
+   "lon": 77.0801,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "00:07:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "MIAA": {
+   "name": "MUNDKA INDUSTRIAL AREA (MIA)",
+   "lat": 28.6822749,
+   "lon": 77.0146522,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:38:00",
+   "closing_time": "23:21:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "MIEE": {
+   "name": "PANDIT SHREE RAM SHARMA",
+   "lat": 28.6892418,
+   "lon": 76.9489583,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:51:00",
+   "closing_time": "23:31:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "MIRK": {
+   "name": "MUNIRKA",
+   "lat": 28.5567549,
+   "lon": 77.1719806,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:13:00",
+   "closing_time": "23:29:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "MKPR": {
+   "name": "MAJLIS PARK",
+   "lat": 28.724167,
+   "lon": 77.1805273,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN7",
+    "LN8EXTN"
+   ]
+  },
+  "MLCD": {
+   "name": "MOOLCHAND",
+   "lat": 28.5647817,
+   "lon": 77.2309781,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:34:00",
+   "closing_time": "23:39:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "MMJR": {
+   "name": "MEWALA MAHARAJPUR",
+   "lat": 28.4484907,
+   "lon": 77.3054333,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:51:00",
+   "closing_time": "23:49:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "MN": {
+   "name": "MOTI NAGAR",
+   "lat": 28.6579,
+   "lon": 77.1427,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:46:00",
+   "closing_time": "23:52:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "MNGM": {
+   "name": "MOHAN NAGAR",
+   "lat": 28.6785,
+   "lon": 77.3839,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:48:00",
+   "closing_time": "23:42:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "MPK": {
+   "name": "MANSAROVAR PARK",
+   "lat": 28.6756,
+   "lon": 77.3001,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:30:00",
+   "closing_time": "23:27:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "MUDK": {
+   "name": "MUNDKA",
+   "lat": 28.68239,
+   "lon": 77.0281513,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:00:00",
+   "closing_time": "23:19:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "MUPR": {
+   "name": "MAUJPUR-BABARPUR",
+   "lat": 28.6921031,
+   "lon": 77.2774233,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:50:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN7",
+    "LN7EXTN"
+   ]
+  },
+  "MVE": {
+   "name": "MAYUR VIHAR EXTENSION",
+   "lat": 28.5928,
+   "lon": 77.2947,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:26:00",
+   "closing_time": "23:55:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "MVNR": {
+   "name": "MALVIYA NAGAR",
+   "lat": 28.529,
+   "lon": 77.205,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:31:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "MVP1": {
+   "name": "MAYUR VIHAR -I",
+   "lat": 28.6042,
+   "lon": 77.2896,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:23:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN3",
+    "LN7"
+   ]
+  },
+  "MVPO": {
+   "name": "SHREE RAM MAYUR VIHAR MANDIR (earlier MAYUR VIHAR POCKET-1)",
+   "lat": 28.6057944,
+   "lon": 77.2965148,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "MYPI": {
+   "name": "MAYAPURI",
+   "lat": 28.637099,
+   "lon": 77.1275523,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:01:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "NAGR": {
+   "name": "NEW ASHOK NAGAR",
+   "lat": 28.5892,
+   "lon": 77.3021,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:28:00",
+   "closing_time": "23:57:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NAVR": {
+   "name": "NARAINA VIHAR",
+   "lat": 28.624125,
+   "lon": 77.1342993,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:04:00",
+   "closing_time": "00:03:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "NBAA": {
+   "name": "SHAHEED STHAL ( NEW BUS ADDA)",
+   "lat": 28.6705,
+   "lon": 77.4158,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "NCAJ": {
+   "name": "NEELAM CHOWK AJRONDA",
+   "lat": 28.3976537,
+   "lon": 77.3101607,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:42:00",
+   "closing_time": "23:58:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "NCBC": {
+   "name": "SANT SURDAS (SIHI)",
+   "lat": 28.354673,
+   "lon": 77.3140293,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "00:06:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "NCC": {
+   "name": "NOIDA CITY CENTRE",
+   "lat": 28.5747,
+   "lon": 77.356,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:02:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NDI": {
+   "name": "NEW DELHI (Yellow & Airport Line)",
+   "lat": 28.6427,
+   "lon": 77.2199,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:35:00",
+   "closing_time": "23:41:00",
+   "lines": [
+    "LN2",
+    "LN10"
+   ]
+  },
+  "NECC": {
+   "name": "NOIDA ELECTRONIC CITY",
+   "lat": 28.6279,
+   "lon": 77.3749,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NFGH": {
+   "name": "NAJAFGARH",
+   "lat": 28.6126772,
+   "lon": 76.984354,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "22:55:00",
+   "lines": [
+    "LN9"
+   ]
+  },
+  "NHPC": {
+   "name": "NHPC CHOWK",
+   "lat": 28.4576694,
+   "lon": 77.3047513,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "NIZM": {
+   "name": "SARAI KALE KHAN - NIZAMUDDIN",
+   "lat": 28.58936,
+   "lon": 77.2549413,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "NNGI": {
+   "name": "NANGLI",
+   "lat": 28.6174019,
+   "lon": 77.0083739,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "22:55:00",
+   "lines": [
+    "LN9"
+   ]
+  },
+  "NNOI": {
+   "name": "NANGLOI",
+   "lat": 28.681984,
+   "lon": 77.0616903,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:07:00",
+   "closing_time": "23:13:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "NP": {
+   "name": "NEHRU PLACE",
+   "lat": 28.5514171,
+   "lon": 77.2506607,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:30:00",
+   "closing_time": "23:35:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "NPPR": {
+   "name": "NORTH PITAMPURA",
+   "lat": 28.723761,
+   "lon": 77.143663,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "22:59:00",
+   "lines": [
+    "LN8EXTN"
+   ]
+  },
+  "NRSN": {
+   "name": "NANGLOI RAILWAY STATION",
+   "lat": 28.682133,
+   "lon": 77.0540313,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:05:00",
+   "closing_time": "23:15:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "NSET": {
+   "name": "NOIDA SECTOR-18",
+   "lat": 28.5708,
+   "lon": 77.3262,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:36:00",
+   "closing_time": "00:04:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NSFT": {
+   "name": "NOIDA SECTOR-15",
+   "lat": 28.5851,
+   "lon": 77.3116,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:31:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NSHP": {
+   "name": "NETAJI SUBHASH PLACE",
+   "lat": 28.696,
+   "lon": 77.1526,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:40:00",
+   "closing_time": "00:20:00",
+   "lines": [
+    "LN1",
+    "LN7"
+   ]
+  },
+  "NSST": {
+   "name": "NOIDA SECTOR-16",
+   "lat": 28.5787,
+   "lon": 77.3174,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:33:00",
+   "closing_time": "00:02:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "NUEE": {
+   "name": "NEHRU ENCLAVE",
+   "lat": 28.5458514,
+   "lon": 77.251167,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:03:00",
+   "closing_time": "23:28:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "NV": {
+   "name": "NIRMAN VIHAR",
+   "lat": 28.6366,
+   "lon": 77.2868,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:47:00",
+   "closing_time": "00:03:00",
+   "lines": [
+    "LN4"
+   ]
+  },
+  "NWD": {
+   "name": "NAWADA",
+   "lat": 28.6202,
+   "lon": 77.045,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "00:12:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "OFDB": {
+   "name": "OLD FARIDABAD",
+   "lat": 28.4102041,
+   "lon": 77.3086392,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:40:00",
+   "closing_time": "23:56:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "OKBS": {
+   "name": "OKHLA BIRD SANCTUARY",
+   "lat": 28.5530441,
+   "lon": 77.3201621,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "OKNS": {
+   "name": "OKHLA NSIC",
+   "lat": 28.5544365,
+   "lon": 77.2648578,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:59:00",
+   "closing_time": "23:31:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "OVA": {
+   "name": "OKHLA VIHAR",
+   "lat": 28.5614626,
+   "lon": 77.2919823,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "23:38:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "PAGI": {
+   "name": "PEERAGARHI",
+   "lat": 28.6798828,
+   "lon": 77.0910404,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:14:00",
+   "closing_time": "23:16:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "PALM": {
+   "name": "PALAM",
+   "lat": 28.5889555,
+   "lon": 77.0806434,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "PBGA": {
+   "name": "PUNJABI BAGH",
+   "lat": 28.6729291,
+   "lon": 77.1438705,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:29:00",
+   "closing_time": "23:27:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "PBGH": {
+   "name": "PULBANGASH",
+   "lat": 28.6664,
+   "lon": 77.2074,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "23:25:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "PBGW": {
+   "name": "PUNJABI BAGH WEST",
+   "lat": 28.6727751,
+   "lon": 77.136418,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:26:00",
+   "closing_time": "00:14:00",
+   "lines": [
+    "LN7",
+    "LN5"
+   ]
+  },
+  "PH1": {
+   "name": "PHASE-1",
+   "lat": 28.4706,
+   "lon": 77.0932,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "22:15:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "PHVR": {
+   "name": "PRASHANT VIHAR",
+   "lat": 28.713198,
+   "lon": 77.138755,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:03:00",
+   "closing_time": "23:01:00",
+   "lines": [
+    "LN8EXTN"
+   ]
+  },
+  "PN": {
+   "name": "PATEL NAGAR",
+   "lat": 28.645,
+   "lon": 77.1693,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:35:00",
+   "closing_time": "23:46:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "PRA": {
+   "name": "PRATAP NAGAR",
+   "lat": 28.6666,
+   "lon": 77.1989,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:27:00",
+   "closing_time": "23:27:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "PSPK": {
+   "name": "PANCHSHEEL PARK",
+   "lat": 28.5422964,
+   "lon": 77.2185052,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:09:00",
+   "closing_time": "23:22:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "PTCK": {
+   "name": "PATEL CHOWK",
+   "lat": 28.6233,
+   "lon": 77.2145,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:36:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "PTMD": {
+   "name": "SUPREME COURT",
+   "lat": 28.6233,
+   "lon": 77.2427,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "PTP": {
+   "name": "MADHUBAN CHOWK (earlier PITAMPURA)",
+   "lat": 28.7031,
+   "lon": 77.1325,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:45:00",
+   "closing_time": "23:42:00",
+   "lines": [
+    "LN1",
+    "LN8EXTN"
+   ]
+  },
+  "PTVR": {
+   "name": "PREET VIHAR",
+   "lat": 28.6419,
+   "lon": 77.2956,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:48:00",
+   "closing_time": "00:05:00",
+   "lines": [
+    "LN4"
+   ]
+  },
+  "PVE": {
+   "name": "PASCHIM VIHAR EAST",
+   "lat": 28.6773312,
+   "lon": 77.1101289,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:19:00",
+   "closing_time": "23:20:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "PVW": {
+   "name": "PASCHIM VIHAR WEST",
+   "lat": 28.678829,
+   "lon": 77.0994732,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:17:00",
+   "closing_time": "23:18:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "QM": {
+   "name": "QUTAB MINAR",
+   "lat": 28.5129,
+   "lon": 77.1863,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "23:49:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "RCK": {
+   "name": "RAJIV CHOWK",
+   "lat": 28.633,
+   "lon": 77.2194,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:29:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN2",
+    "LN3"
+   ]
+  },
+  "RDPK": {
+   "name": "RAJDHANI PARK",
+   "lat": 28.6822794,
+   "lon": 77.0418183,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:02:00",
+   "closing_time": "23:17:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "RG": {
+   "name": "RAJOURI GARDEN",
+   "lat": 28.649,
+   "lon": 77.1227,
+   "type": "Underground",
+   "interchange": true,
+   "opening_time": "05:41:00",
+   "closing_time": "00:09:00",
+   "lines": [
+    "LN3",
+    "LN7"
+   ]
+  },
+  "RHE": {
+   "name": "ROHINI",
+   "lat": 28.7077,
+   "lon": 77.1259,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:48:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "RHW": {
+   "name": "DR. BABA SAHEB AMBEDKAR HOSPITAL",
+   "lat": 28.7149,
+   "lon": 77.1155,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "RI": {
+   "name": "RITHALA",
+   "lat": 28.7208,
+   "lon": 77.1072,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "RISE": {
+   "name": "ROHINI SECTOR - 18, 19",
+   "lat": 28.7327,
+   "lon": 77.1341,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "00:09:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "RJBH": {
+   "name": "RAJ BAGH",
+   "lat": 28.6808,
+   "lon": 77.3439,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:40:00",
+   "closing_time": "23:36:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "RJNM": {
+   "name": "MAJOR MOHIT SHARMA RAJENDRA NAGAR",
+   "lat": 28.6776,
+   "lon": 77.3581,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:42:00",
+   "closing_time": "23:38:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "RKAM": {
+   "name": "RAMAKRISHNA ASHRAM MARG",
+   "lat": 28.6392,
+   "lon": 77.2086,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:31:00",
+   "closing_time": "23:45:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "RKPM": {
+   "name": "R.K.PURAM",
+   "lat": 28.5503497,
+   "lon": 77.1851486,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:15:00",
+   "closing_time": "23:27:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "RN": {
+   "name": "RAMESH NAGAR",
+   "lat": 28.6527,
+   "lon": 77.1315,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:43:00",
+   "closing_time": "23:54:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "RP": {
+   "name": "RAJENDRA PLACE",
+   "lat": 28.6425,
+   "lon": 77.1782,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "S53": {
+   "name": "SECTOR-53-54",
+   "lat": 28.4464,
+   "lon": 77.0982,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "22:19:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "S55": {
+   "name": "SECTOR 55-56",
+   "lat": 28.4234,
+   "lon": 77.1052,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "21:50:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "SABR": {
+   "name": "SADAR BAZAR CANTONMENT",
+   "lat": 28.5764632,
+   "lon": 77.1114814,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:01:00",
+   "closing_time": "23:41:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "SAKP": {
+   "name": "SHAKURPUR",
+   "lat": 28.6857703,
+   "lon": 77.1474327,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "00:17:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SAKT": {
+   "name": "SAKET",
+   "lat": 28.5211,
+   "lon": 77.2022,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:28:00",
+   "closing_time": "23:47:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "SFNN": {
+   "name": "SECTOR - 59 NOIDA",
+   "lat": 28.6064,
+   "lon": 77.3731,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "22:54:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "SFTN": {
+   "name": "SECTOR - 52 NOIDA",
+   "lat": 28.5867,
+   "lon": 77.3728,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:55:00",
+   "closing_time": "22:58:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "SHD": {
+   "name": "SHAHDARA",
+   "lat": 28.6735,
+   "lon": 77.2899,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:28:00",
+   "closing_time": "23:25:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SHDN": {
+   "name": "SHAHEED NAGAR",
+   "lat": 28.6766,
+   "lon": 77.3338,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:37:00",
+   "closing_time": "23:34:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SHPK": {
+   "name": "SHASTRI PARK",
+   "lat": 28.6683,
+   "lon": 77.2503,
+   "type": "At Grade",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "23:18:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SHT": {
+   "name": "SHASTRI NAGAR",
+   "lat": 28.6701,
+   "lon": 77.1813,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:30:00",
+   "closing_time": "23:29:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SHVP": {
+   "name": "SHIVAJI PARK",
+   "lat": 28.674939,
+   "lon": 77.1283933,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:24:00",
+   "closing_time": "23:23:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "SJSU": {
+   "name": "SHIVAJI STADIUM",
+   "lat": 28.6287699,
+   "lon": 77.2114121,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "04:53:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN10"
+   ]
+  },
+  "SKRP": {
+   "name": "SIKANDERPUR",
+   "lat": 28.4813,
+   "lon": 77.0931,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:50:00",
+   "closing_time": "00:05:00",
+   "lines": [
+    "LN2",
+    "LN11"
+   ]
+  },
+  "SKVR": {
+   "name": "SHANKAR VIHAR",
+   "lat": 28.5608173,
+   "lon": 77.1381563,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "06:08:00",
+   "closing_time": "23:35:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "SLAP": {
+   "name": "SEELAMPUR",
+   "lat": 28.6699,
+   "lon": 77.2666,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:47:00",
+   "closing_time": "23:21:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SLTP": {
+   "name": "SULTANPUR",
+   "lat": 28.4991,
+   "lon": 77.1612,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:54:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "SMBG": {
+   "name": "SHALIMAR BAGH",
+   "lat": 28.702018,
+   "lon": 77.1625815,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:56:00",
+   "closing_time": "00:22:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SMPK": {
+   "name": "SHYAM PARK",
+   "lat": 28.6782,
+   "lon": 77.3702,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:45:00",
+   "closing_time": "23:40:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "SMSM": {
+   "name": "MAHARAJA SURAJMAL STADIUM",
+   "lat": 28.68182,
+   "lon": 77.0717713,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:09:00",
+   "closing_time": "23:13:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "SN": {
+   "name": "SUBHASH NAGAR",
+   "lat": 28.6404,
+   "lon": 77.1049,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:36:00",
+   "closing_time": "00:00:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "SNVH": {
+   "name": "SONIA VIHAR",
+   "lat": 28.708431,
+   "lon": 77.242124,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:59:00",
+   "closing_time": "00:15:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SOEN": {
+   "name": "SOUTH EXTENSION",
+   "lat": 28.5686386,
+   "lon": 77.2180074,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:02:00",
+   "closing_time": "23:43:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SOJI": {
+   "name": "SAROJINI NAGAR",
+   "lat": 28.5757221,
+   "lon": 77.1955806,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "23:48:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SOOG": {
+   "name": "SOORGHAT",
+   "lat": 28.710449573671905,
+   "lon": 77.23041226878645,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:00:00",
+   "closing_time": "00:17:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SP": {
+   "name": "SHADIPUR",
+   "lat": 28.6516,
+   "lon": 77.1582,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "23:48:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "SPBI": {
+   "name": "SAMAYPUR BADLI",
+   "lat": 28.7446,
+   "lon": 77.1383,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "SRAI": {
+   "name": "SARAI",
+   "lat": 28.4780481,
+   "lon": 77.3028175,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:46:00",
+   "closing_time": "23:44:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "SRSM": {
+   "name": "SATGURU RAM SINGH MARG",
+   "lat": 28.66213,
+   "lon": 77.1554713,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:33:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "SSON": {
+   "name": "SECTOR - 61 NOIDA",
+   "lat": 28.5976,
+   "lon": 77.3701,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:57:00",
+   "closing_time": "22:56:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "SSTN": {
+   "name": "SECTOR - 62 NOIDA",
+   "lat": 28.617,
+   "lon": 77.3736,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "22:52:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "STFN": {
+   "name": "SECTOR - 34 NOIDA",
+   "lat": 28.5801,
+   "lon": 77.3635,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "23:00:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "STTA": {
+   "name": "SECTOR-28",
+   "lat": 28.43838,
+   "lon": 77.3067493,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "23:51:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "STVR": {
+   "name": "SARITA VIHAR",
+   "lat": 28.5294337,
+   "lon": 77.2861724,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:34:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "SUL": {
+   "name": "SECTOR-42-43",
+   "lat": 28.4574,
+   "lon": 77.0947,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "22:17:00",
+   "lines": [
+    "LN11"
+   ]
+  },
+  "SVMB": {
+   "name": "SIR M. VISHWESHWARAIAH MOTI BAGH",
+   "lat": 28.578504,
+   "lon": 77.1735373,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "23:53:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "SVVR": {
+   "name": "SHIV VIHAR",
+   "lat": 28.7215468,
+   "lon": 77.2883255,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:40:00",
+   "lines": [
+    "LN7EXTN"
+   ]
+  },
+  "TG": {
+   "name": "TAGORE GARDEN",
+   "lat": 28.6438,
+   "lon": 77.1129,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:38:00",
+   "closing_time": "23:58:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "TKBR": {
+   "name": "TIKRI BORDER",
+   "lat": 28.688233,
+   "lon": 76.9620993,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:48:00",
+   "closing_time": "23:29:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "TKDS": {
+   "name": "TUGHLAKABAD STATION",
+   "lat": 28.5031672,
+   "lon": 77.2963205,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:40:00",
+   "closing_time": "23:39:00",
+   "lines": [
+    "LN6"
+   ]
+  },
+  "TKLM": {
+   "name": "TIKRI KALAN",
+   "lat": 28.68688,
+   "lon": 76.9750813,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:45:00",
+   "closing_time": "23:27:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "TKPR": {
+   "name": "TRILOKPURI-SANJAY LAKE",
+   "lat": 28.6134317,
+   "lon": 77.3077957,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:56:00",
+   "closing_time": "23:42:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "TN": {
+   "name": "TILAK NAGAR",
+   "lat": 28.6366,
+   "lon": 77.0965,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:33:00",
+   "closing_time": "00:02:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "TZI": {
+   "name": "TIS HAZARI",
+   "lat": 28.6671,
+   "lon": 77.2165,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:23:00",
+   "lines": [
+    "LN1"
+   ]
+  },
+  "UDB": {
+   "name": "SEVA TEERTH (earlier UDYOG BHAWAN))",
+   "lat": 28.611,
+   "lon": 77.2122,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:32:00",
+   "closing_time": "23:52:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "UNE": {
+   "name": "UTTAM NAGAR EAST",
+   "lat": 28.6248,
+   "lon": 77.0653,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:25:00",
+   "closing_time": "00:08:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "UNRG": {
+   "name": "UDYOG NAGAR",
+   "lat": 28.6810606,
+   "lon": 77.0787957,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:12:00",
+   "closing_time": "23:14:00",
+   "lines": [
+    "LN5"
+   ]
+  },
+  "UNW": {
+   "name": "UTTAM NAGAR WEST",
+   "lat": 28.6218,
+   "lon": 77.0558,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:23:00",
+   "closing_time": "00:10:00",
+   "lines": [
+    "LN3"
+   ]
+  },
+  "VASI": {
+   "name": "VAISHALI",
+   "lat": 28.6498,
+   "lon": 77.3397,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:50:00",
+   "closing_time": "22:50:00",
+   "lines": [
+    "LN4"
+   ]
+  },
+  "VENT": {
+   "name": "EAST VINOD NAGAR-MAYUR VIHAR -II",
+   "lat": 28.620363,
+   "lon": 77.3023292,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:54:00",
+   "closing_time": "23:39:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "VNNR": {
+   "name": "MANDAWALI - WEST VINOD NAGAR",
+   "lat": 28.624877,
+   "lon": 77.3021833,
+   "type": "Elevated",
+   "interchange": false,
+   "opening_time": "05:52:00",
+   "closing_time": "23:40:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "VNPR": {
+   "name": "VINOBAPURI",
+   "lat": 28.5655297,
+   "lon": 77.2485991,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:03:00",
+   "closing_time": "23:40:00",
+   "lines": [
+    "LN7"
+   ]
+  },
+  "VS": {
+   "name": "VIDHAN SABHA",
+   "lat": 28.6878,
+   "lon": 77.2216,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:22:00",
+   "closing_time": "23:52:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "VTVR": {
+   "name": "VASANT VIHAR",
+   "lat": 28.5581039,
+   "lon": 77.1603043,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "06:10:00",
+   "closing_time": "23:32:00",
+   "lines": [
+    "LN8"
+   ]
+  },
+  "VW": {
+   "name": "VISHWAVIDYALAYA",
+   "lat": 28.6952,
+   "lon": 77.2145,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:20:00",
+   "closing_time": "23:54:00",
+   "lines": [
+    "LN2"
+   ]
+  },
+  "WC": {
+   "name": "WELCOME",
+   "lat": 28.6718,
+   "lon": 77.2777,
+   "type": "Elevated",
+   "interchange": true,
+   "opening_time": "05:45:00",
+   "closing_time": "23:59:00",
+   "lines": [
+    "LN1",
+    "LN7"
+   ]
+  },
+  "YB": {
+   "name": "YAMUNA BANK",
+   "lat": 28.6233,
+   "lon": 77.2679,
+   "type": "At Grade",
+   "interchange": true,
+   "opening_time": "05:43:00",
+   "closing_time": "23:58:00",
+   "lines": [
+    "LN3",
+    "LN4"
+   ]
+  },
+  "YMVR": {
+   "name": "YAMUNA VIHAR",
+   "lat": 28.702367,
+   "lon": 77.277337,
+   "type": "Underground",
+   "interchange": false,
+   "opening_time": "05:53:00",
+   "closing_time": "00:19:00",
+   "lines": [
+    "LN7"
+   ]
+  }
+ },
+ "lines": [
+  {
+   "code": "LN1",
+   "name": "Line 1",
+   "color_name": "Red Line",
+   "color": "#c0282c",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "RITHALA",
+    "SHAHEED STHAL ( NEW BUS ADDA)"
+   ],
+   "patterns": [
+    [
+     "NBAA",
+     "HDNR",
+     "ATHA",
+     "MNGM",
+     "SMPK",
+     "RJNM",
+     "RJBH",
+     "SHDN",
+     "DSG",
+     "JLML",
+     "MPK",
+     "SHD",
+     "WC",
+     "SLAP",
+     "SHPK",
+     "KG",
+     "TZI",
+     "PBGH",
+     "PRA",
+     "SHT",
+     "ILOK",
+     "KN",
+     "KP",
+     "NSHP",
+     "KE",
+     "PTP",
+     "RHE",
+     "RHW",
+     "RI"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "NBAA",
+     "to": "HDNR",
+     "seconds": 104
+    },
+    {
+     "from": "HDNR",
+     "to": "ATHA",
+     "seconds": 139
+    },
+    {
+     "from": "ATHA",
+     "to": "MNGM",
+     "seconds": 91
+    },
+    {
+     "from": "MNGM",
+     "to": "SMPK",
+     "seconds": 134
+    },
+    {
+     "from": "SMPK",
+     "to": "RJNM",
+     "seconds": 117
+    },
+    {
+     "from": "RJNM",
+     "to": "RJBH",
+     "seconds": 120
+    },
+    {
+     "from": "RJBH",
+     "to": "SHDN",
+     "seconds": 130
+    },
+    {
+     "from": "SHDN",
+     "to": "DSG",
+     "seconds": 136
+    },
+    {
+     "from": "DSG",
+     "to": "JLML",
+     "seconds": 113
+    },
+    {
+     "from": "JLML",
+     "to": "MPK",
+     "seconds": 121
+    },
+    {
+     "from": "MPK",
+     "to": "SHD",
+     "seconds": 125
+    },
+    {
+     "from": "SHD",
+     "to": "WC",
+     "seconds": 132
+    },
+    {
+     "from": "WC",
+     "to": "SLAP",
+     "seconds": 119
+    },
+    {
+     "from": "SLAP",
+     "to": "SHPK",
+     "seconds": 147
+    },
+    {
+     "from": "SHPK",
+     "to": "KG",
+     "seconds": 196
+    },
+    {
+     "from": "KG",
+     "to": "TZI",
+     "seconds": 130
+    },
+    {
+     "from": "TZI",
+     "to": "PBGH",
+     "seconds": 109
+    },
+    {
+     "from": "PBGH",
+     "to": "PRA",
+     "seconds": 106
+    },
+    {
+     "from": "PRA",
+     "to": "SHT",
+     "seconds": 147
+    },
+    {
+     "from": "SHT",
+     "to": "ILOK",
+     "seconds": 127
+    },
+    {
+     "from": "ILOK",
+     "to": "KN",
+     "seconds": 123
+    },
+    {
+     "from": "KN",
+     "to": "KP",
+     "seconds": 99
+    },
+    {
+     "from": "KP",
+     "to": "NSHP",
+     "seconds": 138
+    },
+    {
+     "from": "NSHP",
+     "to": "KE",
+     "seconds": 124
+    },
+    {
+     "from": "KE",
+     "to": "PTP",
+     "seconds": 111
+    },
+    {
+     "from": "PTP",
+     "to": "RHE",
+     "seconds": 99
+    },
+    {
+     "from": "RHE",
+     "to": "RHW",
+     "seconds": 125
+    },
+    {
+     "from": "RHW",
+     "to": "RI",
+     "seconds": 119
+    }
+   ],
+   "check": [
+    {
+     "from": "NBAA",
+     "to": "RI",
+     "stops": 29,
+     "sum_of_hops": 3481,
+     "planner_direct_same_line": 3481
+    }
+   ]
+  },
+  {
+   "code": "LN2",
+   "name": "Line 2",
+   "color_name": "Yellow Line",
+   "color": "#f6d71a",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "MILLENNIUM CITY CENTRE GURUGRAM",
+    "SAMAYPUR BADLI"
+   ],
+   "patterns": [
+    [
+     "SPBI",
+     "RISE",
+     "BIMR",
+     "JGPI",
+     "AHNR",
+     "AZU",
+     "MDTW",
+     "GTBR",
+     "VW",
+     "VS",
+     "CL",
+     "KG",
+     "CHK",
+     "CWBR",
+     "NDI",
+     "RCK",
+     "PTCK",
+     "CTST",
+     "UDB",
+     "LKM",
+     "JB",
+     "INA",
+     "AIIMS",
+     "GNPK",
+     "HKS",
+     "MVNR",
+     "SAKT",
+     "QM",
+     "CHTP",
+     "SLTP",
+     "GTNI",
+     "AJG",
+     "GE",
+     "SKRP",
+     "MGRO",
+     "IFOC",
+     "HCC"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "SPBI",
+     "to": "RISE",
+     "seconds": 124
+    },
+    {
+     "from": "RISE",
+     "to": "BIMR",
+     "seconds": 175
+    },
+    {
+     "from": "BIMR",
+     "to": "JGPI",
+     "seconds": 130
+    },
+    {
+     "from": "JGPI",
+     "to": "AHNR",
+     "seconds": 122
+    },
+    {
+     "from": "AHNR",
+     "to": "AZU",
+     "seconds": 133
+    },
+    {
+     "from": "AZU",
+     "to": "MDTW",
+     "seconds": 133
+    },
+    {
+     "from": "MDTW",
+     "to": "GTBR",
+     "seconds": 136
+    },
+    {
+     "from": "GTBR",
+     "to": "VW",
+     "seconds": 121
+    },
+    {
+     "from": "VW",
+     "to": "VS",
+     "seconds": 132
+    },
+    {
+     "from": "VS",
+     "to": "CL",
+     "seconds": 134
+    },
+    {
+     "from": "CL",
+     "to": "KG",
+     "seconds": 141
+    },
+    {
+     "from": "KG",
+     "to": "CHK",
+     "seconds": 136
+    },
+    {
+     "from": "CHK",
+     "to": "CWBR",
+     "seconds": 133
+    },
+    {
+     "from": "CWBR",
+     "to": "NDI",
+     "seconds": 102
+    },
+    {
+     "from": "NDI",
+     "to": "RCK",
+     "seconds": 146
+    },
+    {
+     "from": "RCK",
+     "to": "PTCK",
+     "seconds": 136
+    },
+    {
+     "from": "PTCK",
+     "to": "CTST",
+     "seconds": 115
+    },
+    {
+     "from": "CTST",
+     "to": "UDB",
+     "seconds": 104
+    },
+    {
+     "from": "UDB",
+     "to": "LKM",
+     "seconds": 140
+    },
+    {
+     "from": "LKM",
+     "to": "JB",
+     "seconds": 137
+    },
+    {
+     "from": "JB",
+     "to": "INA",
+     "seconds": 133
+    },
+    {
+     "from": "INA",
+     "to": "AIIMS",
+     "seconds": 109
+    },
+    {
+     "from": "AIIMS",
+     "to": "GNPK",
+     "seconds": 135
+    },
+    {
+     "from": "GNPK",
+     "to": "HKS",
+     "seconds": 155
+    },
+    {
+     "from": "HKS",
+     "to": "MVNR",
+     "seconds": 160
+    },
+    {
+     "from": "MVNR",
+     "to": "SAKT",
+     "seconds": 141
+    },
+    {
+     "from": "SAKT",
+     "to": "QM",
+     "seconds": 165
+    },
+    {
+     "from": "QM",
+     "to": "CHTP",
+     "seconds": 169
+    },
+    {
+     "from": "CHTP",
+     "to": "SLTP",
+     "seconds": 156
+    },
+    {
+     "from": "SLTP",
+     "to": "GTNI",
+     "seconds": 127
+    },
+    {
+     "from": "GTNI",
+     "to": "AJG",
+     "seconds": 194
+    },
+    {
+     "from": "AJG",
+     "to": "GE",
+     "seconds": 198
+    },
+    {
+     "from": "GE",
+     "to": "SKRP",
+     "seconds": 112
+    },
+    {
+     "from": "SKRP",
+     "to": "MGRO",
+     "seconds": 133
+    },
+    {
+     "from": "MGRO",
+     "to": "IFOC",
+     "seconds": 147
+    },
+    {
+     "from": "IFOC",
+     "to": "HCC",
+     "seconds": 138
+    }
+   ],
+   "check": [
+    {
+     "from": "SPBI",
+     "to": "HCC",
+     "stops": 37,
+     "sum_of_hops": 5002,
+     "planner_direct_same_line": 5002
+    }
+   ]
+  },
+  {
+   "code": "LN3",
+   "name": "Line 3",
+   "color_name": "Blue Line",
+   "color": "#3b76c0",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "NOIDA ELECTRONIC CITY",
+    "DWARKA SECTOR - 21"
+   ],
+   "patterns": [
+    [
+     "DSTO",
+     "DSET",
+     "DSN",
+     "DST",
+     "DSE",
+     "DSW",
+     "DSTN",
+     "DSFN",
+     "DW",
+     "DM",
+     "NWD",
+     "UNW",
+     "UNE",
+     "JPW",
+     "JPE",
+     "TN",
+     "SN",
+     "TG",
+     "RG",
+     "RN",
+     "MN",
+     "KNR",
+     "SP",
+     "PN",
+     "RP",
+     "KB",
+     "JW",
+     "RKAM",
+     "RCK",
+     "BRKR",
+     "MDHS",
+     "PTMD",
+     "IDPT",
+     "YB",
+     "ASDM",
+     "MVP1",
+     "MVE",
+     "NAGR",
+     "NSFT",
+     "NSST",
+     "NSET",
+     "BCGN",
+     "GEC",
+     "NCC",
+     "STFN",
+     "SFTN",
+     "SSON",
+     "SFNN",
+     "SSTN",
+     "NECC"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "DSTO",
+     "to": "DSET",
+     "seconds": 181
+    },
+    {
+     "from": "DSET",
+     "to": "DSN",
+     "seconds": 118
+    },
+    {
+     "from": "DSN",
+     "to": "DST",
+     "seconds": 125
+    },
+    {
+     "from": "DST",
+     "to": "DSE",
+     "seconds": 120
+    },
+    {
+     "from": "DSE",
+     "to": "DSW",
+     "seconds": 123
+    },
+    {
+     "from": "DSW",
+     "to": "DSTN",
+     "seconds": 122
+    },
+    {
+     "from": "DSTN",
+     "to": "DSFN",
+     "seconds": 116
+    },
+    {
+     "from": "DSFN",
+     "to": "DW",
+     "seconds": 145
+    },
+    {
+     "from": "DW",
+     "to": "DM",
+     "seconds": 148
+    },
+    {
+     "from": "DM",
+     "to": "NWD",
+     "seconds": 130
+    },
+    {
+     "from": "NWD",
+     "to": "UNW",
+     "seconds": 122
+    },
+    {
+     "from": "UNW",
+     "to": "UNE",
+     "seconds": 118
+    },
+    {
+     "from": "UNE",
+     "to": "JPW",
+     "seconds": 145
+    },
+    {
+     "from": "JPW",
+     "to": "JPE",
+     "seconds": 117
+    },
+    {
+     "from": "JPE",
+     "to": "TN",
+     "seconds": 121
+    },
+    {
+     "from": "TN",
+     "to": "SN",
+     "seconds": 115
+    },
+    {
+     "from": "SN",
+     "to": "TG",
+     "seconds": 110
+    },
+    {
+     "from": "TG",
+     "to": "RG",
+     "seconds": 131
+    },
+    {
+     "from": "RG",
+     "to": "RN",
+     "seconds": 119
+    },
+    {
+     "from": "RN",
+     "to": "MN",
+     "seconds": 131
+    },
+    {
+     "from": "MN",
+     "to": "KNR",
+     "seconds": 123
+    },
+    {
+     "from": "KNR",
+     "to": "SP",
+     "seconds": 116
+    },
+    {
+     "from": "SP",
+     "to": "PN",
+     "seconds": 136
+    },
+    {
+     "from": "PN",
+     "to": "RP",
+     "seconds": 118
+    },
+    {
+     "from": "RP",
+     "to": "KB",
+     "seconds": 123
+    },
+    {
+     "from": "KB",
+     "to": "JW",
+     "seconds": 132
+    },
+    {
+     "from": "JW",
+     "to": "RKAM",
+     "seconds": 128
+    },
+    {
+     "from": "RKAM",
+     "to": "RCK",
+     "seconds": 147
+    },
+    {
+     "from": "RCK",
+     "to": "BRKR",
+     "seconds": 108
+    },
+    {
+     "from": "BRKR",
+     "to": "MDHS",
+     "seconds": 128
+    },
+    {
+     "from": "MDHS",
+     "to": "PTMD",
+     "seconds": 117
+    },
+    {
+     "from": "PTMD",
+     "to": "IDPT",
+     "seconds": 111
+    },
+    {
+     "from": "IDPT",
+     "to": "YB",
+     "seconds": 177
+    },
+    {
+     "from": "YB",
+     "to": "ASDM",
+     "seconds": 167
+    },
+    {
+     "from": "ASDM",
+     "to": "MVP1",
+     "seconds": 175
+    },
+    {
+     "from": "MVP1",
+     "to": "MVE",
+     "seconds": 135
+    },
+    {
+     "from": "MVE",
+     "to": "NAGR",
+     "seconds": 122
+    },
+    {
+     "from": "NAGR",
+     "to": "NSFT",
+     "seconds": 135
+    },
+    {
+     "from": "NSFT",
+     "to": "NSST",
+     "seconds": 119
+    },
+    {
+     "from": "NSST",
+     "to": "NSET",
+     "seconds": 137
+    },
+    {
+     "from": "NSET",
+     "to": "BCGN",
+     "seconds": 134
+    },
+    {
+     "from": "BCGN",
+     "to": "GEC",
+     "seconds": 156
+    },
+    {
+     "from": "GEC",
+     "to": "NCC",
+     "seconds": 128
+    },
+    {
+     "from": "NCC",
+     "to": "STFN",
+     "seconds": 121
+    },
+    {
+     "from": "STFN",
+     "to": "SFTN",
+     "seconds": 129
+    },
+    {
+     "from": "SFTN",
+     "to": "SSON",
+     "seconds": 149
+    },
+    {
+     "from": "SSON",
+     "to": "SFNN",
+     "seconds": 116
+    },
+    {
+     "from": "SFNN",
+     "to": "SSTN",
+     "seconds": 130
+    },
+    {
+     "from": "SSTN",
+     "to": "NECC",
+     "seconds": 139
+    }
+   ],
+   "check": [
+    {
+     "from": "DSTO",
+     "to": "NECC",
+     "stops": 50,
+     "sum_of_hops": 6413,
+     "planner_direct_same_line": null
+    }
+   ]
+  },
+  {
+   "code": "LN4",
+   "name": "Line 4",
+   "color_name": "Blue Line",
+   "color": "#3b76c0",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "VAISHALI",
+    "YAMUNA BANK"
+   ],
+   "patterns": [
+    [
+     "YB",
+     "LN",
+     "NV",
+     "PTVR",
+     "KKDA",
+     "AVIT",
+     "KSHI",
+     "VASI"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "YB",
+     "to": "LN",
+     "seconds": 168
+    },
+    {
+     "from": "LN",
+     "to": "NV",
+     "seconds": 176
+    },
+    {
+     "from": "NV",
+     "to": "PTVR",
+     "seconds": 135
+    },
+    {
+     "from": "PTVR",
+     "to": "KKDA",
+     "seconds": 121
+    },
+    {
+     "from": "KKDA",
+     "to": "AVIT",
+     "seconds": 135
+    },
+    {
+     "from": "AVIT",
+     "to": "KSHI",
+     "seconds": 119
+    },
+    {
+     "from": "KSHI",
+     "to": "VASI",
+     "seconds": 137
+    }
+   ],
+   "check": [
+    {
+     "from": "YB",
+     "to": "VASI",
+     "stops": 8,
+     "sum_of_hops": 991,
+     "planner_direct_same_line": 991
+    }
+   ]
+  },
+  {
+   "code": "LN5",
+   "name": "Line 5",
+   "color_name": "Green Line",
+   "color": "#54ab55",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "BRIG. HOSHIAR SINGH",
+    "KIRTI NAGAR"
+   ],
+   "patterns": [
+    [
+     "ILOK",
+     "APMN",
+     "PBGA",
+     "PBGW",
+     "SHVP",
+     "MAPR",
+     "PVE",
+     "PVW",
+     "PAGI",
+     "UNRG",
+     "SMSM",
+     "NNOI",
+     "NRSN",
+     "RDPK",
+     "MUDK",
+     "MIAA",
+     "GHEM",
+     "TKLM",
+     "TKBR",
+     "MIEE",
+     "BUSS",
+     "CIPK"
+    ],
+    [
+     "KNR",
+     "SRSM"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "ILOK",
+     "to": "APMN",
+     "seconds": 193
+    },
+    {
+     "from": "APMN",
+     "to": "PBGA",
+     "seconds": 116
+    },
+    {
+     "from": "PBGA",
+     "to": "PBGW",
+     "seconds": 140
+    },
+    {
+     "from": "PBGW",
+     "to": "SHVP",
+     "seconds": 146
+    },
+    {
+     "from": "SHVP",
+     "to": "MAPR",
+     "seconds": 112
+    },
+    {
+     "from": "MAPR",
+     "to": "PVE",
+     "seconds": 102
+    },
+    {
+     "from": "PVE",
+     "to": "PVW",
+     "seconds": 99
+    },
+    {
+     "from": "PVW",
+     "to": "PAGI",
+     "seconds": 107
+    },
+    {
+     "from": "PAGI",
+     "to": "UNRG",
+     "seconds": 114
+    },
+    {
+     "from": "UNRG",
+     "to": "SMSM",
+     "seconds": 91
+    },
+    {
+     "from": "SMSM",
+     "to": "NNOI",
+     "seconds": 107
+    },
+    {
+     "from": "NNOI",
+     "to": "NRSN",
+     "seconds": 102
+    },
+    {
+     "from": "NRSN",
+     "to": "RDPK",
+     "seconds": 121
+    },
+    {
+     "from": "RDPK",
+     "to": "MUDK",
+     "seconds": 127
+    },
+    {
+     "from": "MUDK",
+     "to": "MIAA",
+     "seconds": 142
+    },
+    {
+     "from": "MIAA",
+     "to": "GHEM",
+     "seconds": 158
+    },
+    {
+     "from": "GHEM",
+     "to": "TKLM",
+     "seconds": 155
+    },
+    {
+     "from": "TKLM",
+     "to": "TKBR",
+     "seconds": 130
+    },
+    {
+     "from": "TKBR",
+     "to": "MIEE",
+     "seconds": 126
+    },
+    {
+     "from": "MIEE",
+     "to": "BUSS",
+     "seconds": 146
+    },
+    {
+     "from": "BUSS",
+     "to": "CIPK",
+     "seconds": 168
+    },
+    {
+     "from": "KNR",
+     "to": "SRSM",
+     "seconds": 124
+    }
+   ],
+   "check": [
+    {
+     "from": "ILOK",
+     "to": "CIPK",
+     "stops": 22,
+     "sum_of_hops": 2702,
+     "planner_direct_same_line": 2702
+    },
+    {
+     "from": "KNR",
+     "to": "SRSM",
+     "stops": 2,
+     "sum_of_hops": 124,
+     "planner_direct_same_line": 124
+    }
+   ]
+  },
+  {
+   "code": "LN6",
+   "name": "Line 6",
+   "color_name": "Violet Line",
+   "color": "#8115ff",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "RAJA NAHAR SINGH (BALLABHGARH)",
+    "KASHMERE GATE"
+   ],
+   "patterns": [
+    [
+     "KG",
+     "LLQA",
+     "JAMD",
+     "DLIG",
+     "ITO",
+     "MDHS",
+     "JNPH",
+     "CTST",
+     "KM",
+     "JLNS",
+     "JGPA",
+     "LJPN",
+     "MLCD",
+     "KHCY",
+     "NP",
+     "KJMD",
+     "GDPI",
+     "HNOK",
+     "JLA",
+     "STVR",
+     "METE",
+     "TKDS",
+     "BAPB",
+     "SRAI",
+     "NHPC",
+     "MMJR",
+     "STTA",
+     "BKMR",
+     "OFDB",
+     "NCAJ",
+     "BACH",
+     "ECMJ",
+     "NCBC",
+     "BVHM"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "KG",
+     "to": "LLQA",
+     "seconds": 168
+    },
+    {
+     "from": "LLQA",
+     "to": "JAMD",
+     "seconds": 94
+    },
+    {
+     "from": "JAMD",
+     "to": "DLIG",
+     "seconds": 139
+    },
+    {
+     "from": "DLIG",
+     "to": "ITO",
+     "seconds": 118
+    },
+    {
+     "from": "ITO",
+     "to": "MDHS",
+     "seconds": 103
+    },
+    {
+     "from": "MDHS",
+     "to": "JNPH",
+     "seconds": 200
+    },
+    {
+     "from": "JNPH",
+     "to": "CTST",
+     "seconds": 82
+    },
+    {
+     "from": "CTST",
+     "to": "KM",
+     "seconds": 214
+    },
+    {
+     "from": "KM",
+     "to": "JLNS",
+     "seconds": 153
+    },
+    {
+     "from": "JLNS",
+     "to": "JGPA",
+     "seconds": 120
+    },
+    {
+     "from": "JGPA",
+     "to": "LJPN",
+     "seconds": 155
+    },
+    {
+     "from": "LJPN",
+     "to": "MLCD",
+     "seconds": 119
+    },
+    {
+     "from": "MLCD",
+     "to": "KHCY",
+     "seconds": 140
+    },
+    {
+     "from": "KHCY",
+     "to": "NP",
+     "seconds": 130
+    },
+    {
+     "from": "NP",
+     "to": "KJMD",
+     "seconds": 115
+    },
+    {
+     "from": "KJMD",
+     "to": "GDPI",
+     "seconds": 114
+    },
+    {
+     "from": "GDPI",
+     "to": "HNOK",
+     "seconds": 157
+    },
+    {
+     "from": "HNOK",
+     "to": "JLA",
+     "seconds": 133
+    },
+    {
+     "from": "JLA",
+     "to": "STVR",
+     "seconds": 132
+    },
+    {
+     "from": "STVR",
+     "to": "METE",
+     "seconds": 131
+    },
+    {
+     "from": "METE",
+     "to": "TKDS",
+     "seconds": 186
+    },
+    {
+     "from": "TKDS",
+     "to": "BAPB",
+     "seconds": 137
+    },
+    {
+     "from": "BAPB",
+     "to": "SRAI",
+     "seconds": 161
+    },
+    {
+     "from": "SRAI",
+     "to": "NHPC",
+     "seconds": 181
+    },
+    {
+     "from": "NHPC",
+     "to": "MMJR",
+     "seconds": 115
+    },
+    {
+     "from": "MMJR",
+     "to": "STTA",
+     "seconds": 122
+    },
+    {
+     "from": "STTA",
+     "to": "BKMR",
+     "seconds": 144
+    },
+    {
+     "from": "BKMR",
+     "to": "OFDB",
+     "seconds": 134
+    },
+    {
+     "from": "OFDB",
+     "to": "NCAJ",
+     "seconds": 134
+    },
+    {
+     "from": "NCAJ",
+     "to": "BACH",
+     "seconds": 130
+    },
+    {
+     "from": "BACH",
+     "to": "ECMJ",
+     "seconds": 140
+    },
+    {
+     "from": "ECMJ",
+     "to": "NCBC",
+     "seconds": 190
+    },
+    {
+     "from": "NCBC",
+     "to": "BVHM",
+     "seconds": 210
+    }
+   ],
+   "check": [
+    {
+     "from": "KG",
+     "to": "BVHM",
+     "stops": 34,
+     "sum_of_hops": 4701,
+     "planner_direct_same_line": null
+    }
+   ]
+  },
+  {
+   "code": "LN7",
+   "name": "Line 7",
+   "color_name": "Pink Line",
+   "color": "#ed91c9",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "MAUJPUR-BABARPUR",
+    "YAMUNA VIHAR"
+   ],
+   "patterns": [
+    [
+     "YMVR",
+     "BJPU",
+     "KJKS",
+     "SNVH",
+     "SOOG",
+     "JPVE",
+     "JRMR",
+     "BURI",
+     "MKPR",
+     "AZU",
+     "SMBG",
+     "NSHP",
+     "SAKP",
+     "PBGW",
+     "ESIH",
+     "RG",
+     "MYPI",
+     "NAVR",
+     "DLIC",
+     "DDSC",
+     "SVMB",
+     "BKCP",
+     "SOJI",
+     "INA",
+     "SOEN",
+     "LJPN",
+     "VNPR",
+     "AHRM",
+     "NIZM",
+     "MVP1",
+     "MVPO",
+     "TKPR",
+     "VENT",
+     "VNNR",
+     "IPE",
+     "AVIT",
+     "KKDA",
+     "KKDC",
+     "KHNA",
+     "EANR",
+     "WC",
+     "JFRB",
+     "MUPR",
+     "YMVR"
+    ]
+   ],
+   "loop": true,
+   "hops": [
+    {
+     "from": "YMVR",
+     "to": "BJPU",
+     "seconds": 126
+    },
+    {
+     "from": "BJPU",
+     "to": "KJKS",
+     "seconds": 126
+    },
+    {
+     "from": "KJKS",
+     "to": "SNVH",
+     "seconds": 126
+    },
+    {
+     "from": "SNVH",
+     "to": "SOOG",
+     "seconds": 126
+    },
+    {
+     "from": "SOOG",
+     "to": "JPVE",
+     "seconds": 126
+    },
+    {
+     "from": "JPVE",
+     "to": "JRMR",
+     "seconds": 126
+    },
+    {
+     "from": "JRMR",
+     "to": "BURI",
+     "seconds": 126
+    },
+    {
+     "from": "BURI",
+     "to": "MKPR",
+     "seconds": 2,
+     "suspect": true
+    },
+    {
+     "from": "MKPR",
+     "to": "AZU",
+     "seconds": 230
+    },
+    {
+     "from": "AZU",
+     "to": "SMBG",
+     "seconds": 161
+    },
+    {
+     "from": "SMBG",
+     "to": "NSHP",
+     "seconds": 151
+    },
+    {
+     "from": "NSHP",
+     "to": "SAKP",
+     "seconds": 158
+    },
+    {
+     "from": "SAKP",
+     "to": "PBGW",
+     "seconds": 196
+    },
+    {
+     "from": "PBGW",
+     "to": "ESIH",
+     "seconds": 175
+    },
+    {
+     "from": "ESIH",
+     "to": "RG",
+     "seconds": 116
+    },
+    {
+     "from": "RG",
+     "to": "MYPI",
+     "seconds": 173
+    },
+    {
+     "from": "MYPI",
+     "to": "NAVR",
+     "seconds": 180
+    },
+    {
+     "from": "NAVR",
+     "to": "DLIC",
+     "seconds": 182
+    },
+    {
+     "from": "DLIC",
+     "to": "DDSC",
+     "seconds": 295
+    },
+    {
+     "from": "DDSC",
+     "to": "SVMB",
+     "seconds": 153
+    },
+    {
+     "from": "SVMB",
+     "to": "BKCP",
+     "seconds": 156
+    },
+    {
+     "from": "BKCP",
+     "to": "SOJI",
+     "seconds": 133
+    },
+    {
+     "from": "SOJI",
+     "to": "INA",
+     "seconds": 120
+    },
+    {
+     "from": "INA",
+     "to": "SOEN",
+     "seconds": 138
+    },
+    {
+     "from": "SOEN",
+     "to": "LJPN",
+     "seconds": 167
+    },
+    {
+     "from": "LJPN",
+     "to": "VNPR",
+     "seconds": 174
+    },
+    {
+     "from": "VNPR",
+     "to": "AHRM",
+     "seconds": 179
+    },
+    {
+     "from": "AHRM",
+     "to": "NIZM",
+     "seconds": 171
+    },
+    {
+     "from": "NIZM",
+     "to": "MVP1",
+     "seconds": 293
+    },
+    {
+     "from": "MVP1",
+     "to": "MVPO",
+     "seconds": 98
+    },
+    {
+     "from": "MVPO",
+     "to": "TKPR",
+     "seconds": 360
+    },
+    {
+     "from": "TKPR",
+     "to": "VENT",
+     "seconds": 132
+    },
+    {
+     "from": "VENT",
+     "to": "VNNR",
+     "seconds": 140
+    },
+    {
+     "from": "VNNR",
+     "to": "IPE",
+     "seconds": 174
+    },
+    {
+     "from": "IPE",
+     "to": "AVIT",
+     "seconds": 237
+    },
+    {
+     "from": "KKDA",
+     "to": "KKDC",
+     "seconds": 138
+    },
+    {
+     "from": "KKDC",
+     "to": "KHNA",
+     "seconds": 107
+    },
+    {
+     "from": "KHNA",
+     "to": "EANR",
+     "seconds": 100
+    },
+    {
+     "from": "EANR",
+     "to": "WC",
+     "seconds": 145
+    },
+    {
+     "from": "WC",
+     "to": "JFRB",
+     "seconds": 186
+    },
+    {
+     "from": "JFRB",
+     "to": "MUPR",
+     "seconds": 137
+    },
+    {
+     "from": "MUPR",
+     "to": "YMVR",
+     "seconds": 126
+    },
+    {
+     "from": "AVIT",
+     "to": "KKDA",
+     "seconds": 135,
+     "measured_as_span": [
+      "IPE",
+      "KKDC"
+     ]
+    }
+   ],
+   "check": [
+    {
+     "from": "YMVR",
+     "to": "MUPR",
+     "stops": 43,
+     "sum_of_hops": 6674,
+     "planner_direct_same_line": null
+    }
+   ]
+  },
+  {
+   "code": "LN7EXTN",
+   "name": "Line 7 Ext.",
+   "color_name": "Pink (Ext.)",
+   "color": "#ed91c9",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "SHIV VIHAR",
+    "MAUJPUR-BABARPUR"
+   ],
+   "patterns": [
+    [
+     "MUPR",
+     "GKPR",
+     "JIEE",
+     "SVVR"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "MUPR",
+     "to": "GKPR",
+     "seconds": 136
+    },
+    {
+     "from": "GKPR",
+     "to": "JIEE",
+     "seconds": 136
+    },
+    {
+     "from": "JIEE",
+     "to": "SVVR",
+     "seconds": 109
+    }
+   ],
+   "check": [
+    {
+     "from": "MUPR",
+     "to": "SVVR",
+     "stops": 4,
+     "sum_of_hops": 381,
+     "planner_direct_same_line": 381
+    }
+   ]
+  },
+  {
+   "code": "LN8",
+   "name": "Line 8",
+   "color_name": "Magenta Line",
+   "color": "#f300f3",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "BOTANICAL GARDEN",
+    "KRISHNA PARK EXTENSION"
+   ],
+   "patterns": [
+    [
+     "KPEN",
+     "JPW",
+     "DBMR",
+     "DSHP",
+     "PALM",
+     "SABR",
+     "IGDA",
+     "SKVR",
+     "VTVR",
+     "MIRK",
+     "RKPM",
+     "IIT",
+     "HKS",
+     "PSPK",
+     "CDLI",
+     "GKEI",
+     "NUEE",
+     "KJMD",
+     "OKNS",
+     "IWNR",
+     "JANR",
+     "OVA",
+     "JLA8",
+     "KIKJ",
+     "OKBS",
+     "BCGN"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "KPEN",
+     "to": "JPW",
+     "seconds": 720,
+     "suspect": true
+    },
+    {
+     "from": "JPW",
+     "to": "DBMR",
+     "seconds": 300
+    },
+    {
+     "from": "DBMR",
+     "to": "DSHP",
+     "seconds": 300
+    },
+    {
+     "from": "DSHP",
+     "to": "PALM",
+     "seconds": 143
+    },
+    {
+     "from": "PALM",
+     "to": "SABR",
+     "seconds": 238
+    },
+    {
+     "from": "SABR",
+     "to": "IGDA",
+     "seconds": 181
+    },
+    {
+     "from": "IGDA",
+     "to": "SKVR",
+     "seconds": 194
+    },
+    {
+     "from": "SKVR",
+     "to": "VTVR",
+     "seconds": 167
+    },
+    {
+     "from": "VTVR",
+     "to": "MIRK",
+     "seconds": 163
+    },
+    {
+     "from": "MIRK",
+     "to": "RKPM",
+     "seconds": 131
+    },
+    {
+     "from": "RKPM",
+     "to": "IIT",
+     "seconds": 112
+    },
+    {
+     "from": "IIT",
+     "to": "HKS",
+     "seconds": 123
+    },
+    {
+     "from": "HKS",
+     "to": "PSPK",
+     "seconds": 163
+    },
+    {
+     "from": "PSPK",
+     "to": "CDLI",
+     "seconds": 127
+    },
+    {
+     "from": "CDLI",
+     "to": "GKEI",
+     "seconds": 108
+    },
+    {
+     "from": "GKEI",
+     "to": "NUEE",
+     "seconds": 140
+    },
+    {
+     "from": "NUEE",
+     "to": "KJMD",
+     "seconds": 99
+    },
+    {
+     "from": "KJMD",
+     "to": "OKNS",
+     "seconds": 118
+    },
+    {
+     "from": "OKNS",
+     "to": "IWNR",
+     "seconds": 128
+    },
+    {
+     "from": "IWNR",
+     "to": "JANR",
+     "seconds": 146
+    },
+    {
+     "from": "JANR",
+     "to": "OVA",
+     "seconds": 141
+    },
+    {
+     "from": "OVA",
+     "to": "JLA8",
+     "seconds": 300
+    },
+    {
+     "from": "JLA8",
+     "to": "KIKJ",
+     "seconds": 300
+    },
+    {
+     "from": "KIKJ",
+     "to": "OKBS",
+     "seconds": 144
+    },
+    {
+     "from": "OKBS",
+     "to": "BCGN",
+     "seconds": 206
+    }
+   ],
+   "check": [
+    {
+     "from": "KPEN",
+     "to": "BCGN",
+     "stops": 26,
+     "sum_of_hops": 4892,
+     "planner_direct_same_line": null
+    }
+   ]
+  },
+  {
+   "code": "LN8EXTN",
+   "name": "Line 8 Ext.",
+   "color_name": "Magenta (Ext.)",
+   "color": "#f300f3",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "DEEPALI CHOWK",
+    "MAJLIS PARK"
+   ],
+   "patterns": [
+    [
+     "MKPR",
+     "BLSW",
+     "BIMR",
+     "NPPR",
+     "PHVR",
+     "PTP",
+     "DPCK"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "MKPR",
+     "to": "BLSW",
+     "seconds": 108
+    },
+    {
+     "from": "BLSW",
+     "to": "BIMR",
+     "seconds": 108
+    },
+    {
+     "from": "BIMR",
+     "to": "NPPR",
+     "seconds": 108
+    },
+    {
+     "from": "NPPR",
+     "to": "PHVR",
+     "seconds": 108
+    },
+    {
+     "from": "PHVR",
+     "to": "PTP",
+     "seconds": 2,
+     "suspect": true
+    },
+    {
+     "from": "PTP",
+     "to": "DPCK",
+     "seconds": 108
+    }
+   ],
+   "check": [
+    {
+     "from": "MKPR",
+     "to": "DPCK",
+     "stops": 7,
+     "sum_of_hops": 542,
+     "planner_direct_same_line": 542
+    }
+   ]
+  },
+  {
+   "code": "LN9",
+   "name": "Line 9",
+   "color_name": "Grey Line",
+   "color": "#808080",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "DHANSA BUS STAND",
+    "DWARKA-KAKROLA"
+   ],
+   "patterns": [
+    [
+     "DW",
+     "NNGI",
+     "NFGH",
+     "DNBT"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "DW",
+     "to": "NNGI",
+     "seconds": 136
+    },
+    {
+     "from": "NNGI",
+     "to": "NFGH",
+     "seconds": 244
+    },
+    {
+     "from": "NFGH",
+     "to": "DNBT",
+     "seconds": 276
+    }
+   ],
+   "check": [
+    {
+     "from": "DW",
+     "to": "DNBT",
+     "stops": 4,
+     "sum_of_hops": 656,
+     "planner_direct_same_line": 656
+    }
+   ]
+  },
+  {
+   "code": "LN10",
+   "name": "Airport Express",
+   "color_name": "Orange Line",
+   "color": "#f46808",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "YASHOBHOOMI DWARKA SECTOR  - 25",
+    "NEW DELHI (Yellow & Airport Line)"
+   ],
+   "patterns": [
+    [
+     "NDI",
+     "SJSU",
+     "DKV",
+     "DACY",
+     "APOT",
+     "DSTO",
+     "IICC"
+    ]
+   ],
+   "loop": false,
+   "hops": [
+    {
+     "from": "NDI",
+     "to": "SJSU",
+     "seconds": 166
+    },
+    {
+     "from": "SJSU",
+     "to": "DKV",
+     "seconds": 299
+    },
+    {
+     "from": "DKV",
+     "to": "DACY",
+     "seconds": 301
+    },
+    {
+     "from": "DACY",
+     "to": "APOT",
+     "seconds": 212
+    },
+    {
+     "from": "APOT",
+     "to": "DSTO",
+     "seconds": 184
+    },
+    {
+     "from": "DSTO",
+     "to": "IICC",
+     "seconds": 124
+    }
+   ],
+   "check": [
+    {
+     "from": "NDI",
+     "to": "IICC",
+     "stops": 7,
+     "sum_of_hops": 1286,
+     "planner_direct_same_line": 1286
+    }
+   ]
+  },
+  {
+   "code": "LN11",
+   "name": "Rapid Metro",
+   "color_name": "RMGL",
+   "color": "#015b97",
+   "status": "Normal Service",
+   "dmrc_termini": [
+    "PHASE-3",
+    "SECTOR 55-56"
+   ],
+   "patterns": [
+    [
+     "S55",
+     "AIT",
+     "S53",
+     "SUL",
+     "PH1",
+     "SKRP",
+     "DL2",
+     "BEL",
+     "GAT",
+     "MAL",
+     "DL3",
+     "DL2"
+    ]
+   ],
+   "loop": true,
+   "hops": [
+    {
+     "from": "S55",
+     "to": "AIT",
+     "seconds": 109
+    },
+    {
+     "from": "AIT",
+     "to": "S53",
+     "seconds": 138
+    },
+    {
+     "from": "S53",
+     "to": "SUL",
+     "seconds": 122
+    },
+    {
+     "from": "SUL",
+     "to": "PH1",
+     "seconds": 140
+    },
+    {
+     "from": "PH1",
+     "to": "SKRP",
+     "seconds": 132
+    },
+    {
+     "from": "SKRP",
+     "to": "DL2",
+     "seconds": 107
+    },
+    {
+     "from": "DL2",
+     "to": "BEL",
+     "seconds": 91
+    },
+    {
+     "from": "BEL",
+     "to": "GAT",
+     "seconds": 112
+    },
+    {
+     "from": "GAT",
+     "to": "MAL",
+     "seconds": 101
+    },
+    {
+     "from": "MAL",
+     "to": "DL3",
+     "seconds": 119
+    },
+    {
+     "from": "DL3",
+     "to": "DL2",
+     "seconds": 100
+    }
+   ],
+   "check": [
+    {
+     "from": "S55",
+     "to": "DL3",
+     "stops": 11,
+     "sum_of_hops": 1171,
+     "planner_direct_same_line": 1171
+    }
+   ]
+  }
+ ],
+ "warnings": [
+  "station/SPBI-Badli Dipo (SAMAYPUR - Badli Dipo): no metro line, skipped",
+  "LN12 (FOB): hidden on DMRC site, skipped",
+  "LN7: implausible hop BURI->MKPR = 2s, estimate it from track length instead",
+  "LN8: implausible hop KPEN->JPW = 720s, estimate it from track length instead",
+  "LN8EXTN: implausible hop PHVR->PTP = 2s, estimate it from track length instead"
+ ]
+}

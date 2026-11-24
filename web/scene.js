@@ -1,0 +1,172 @@
+// 3D scene for the map: rail height along each track, and footprints of cars, viaduct and stations
+// as GeoJSON polygons carrying base and top heights, for MapLibre fill-extrusion layers. Pure functions.
+import { slice, CAR_M, GAP_M, TRAIN_M, CARS, BOGIE_M } from './motion.js';
+
+export const DECK_M = 12;   // rail height on a viaduct; DMRC viaducts carry the track roughly 10-15 m up
+export const RAMP_M = 400;  // slope length between levels: 12 m up to a viaduct is a 3% grade
+export const DEPTH_M = 16;  // rail depth in tunnel; Delhi's underground sections run about 12-20 m down
+export const CAR_W = 3.2;   // DMRC broad-gauge car width
+export const STEP = 10;     // metres between height samples, and the length of one viaduct piece
+const M_PER_DEG = 6371008.8 * Math.PI / 180;
+
+// Rail height above the street (negative in tunnel) every STEP metres along a track, from its structure runs
+// ([s_start, s_end, 'tunnel' | 'elevated' | 'at_grade']), and whether each sample is in tunnel.
+export function heights(structure, length) {
+  const n = Math.floor(length / STEP) + 1, raw = new Float64Array(n), tunnel = new Array(n);
+  let r = 0;
+  for (let i = 0; i < n; i++) {
+    while (r < structure.length - 1 && structure[r][1] < i * STEP) r++;
+    const kind = structure.length ? structure[r][2] : 'at_grade';
+    raw[i] = kind === 'elevated' ? DECK_M : kind === 'tunnel' ? -DEPTH_M : 0;
+    tunnel[i] = kind === 'tunnel';
+  }
+  // A moving average over RAMP_M turns each change of level into a straight slope.
+  const pre = new Float64Array(n + 1);
+  for (let i = 0; i < n; i++) pre[i + 1] = pre[i] + raw[i];
+  const w = Math.round(RAMP_M / STEP / 2), h = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    const lo = Math.max(0, i - w), hi = Math.min(n, i + w + 1);
+    h[i] = (pre[hi] - pre[lo]) / (hi - lo);
+  }
+  return { h, tunnel };
+}
+
+export function heightAt(H, s) {
+  const x = Math.min(Math.max(s / STEP, 0), H.h.length - 1), i = Math.floor(x), j = Math.min(i + 1, H.h.length - 1);
+  return H.h[i] + (x - i) * (H.h[j] - H.h[i]);
+}
+
+export const inTunnel = (H, s) => H.tunnel[Math.min(Math.max(Math.round(s / STEP), 0), H.tunnel.length - 1)];
+
+// The track with each corner between OSM's straight pieces rounded into a curve, so cars and rails
+// follow it instead of cutting the corner (OSM draws curves as straight pieces, median 56 m on the
+// Yellow Line, and a car across a corner put its wheels up to 2.2 m off the track). Each corner is a
+// quadratic Bezier no tighter than `radius` metres would make it and taking at most 45% of either
+// piece, sampled finely enough to stay within `tol` metres of it. Distances keep OSM's measure, so
+// stops, platforms and structure runs still line up.
+export function smooth(coords, s, radius = 600, tol = 0.02) {
+  const kx = M_PER_DEG * Math.cos(coords[0][1] * Math.PI / 180);
+  const P = coords.map(([lon, lat]) => [lon * kx, lat * M_PER_DEG]);
+  const out = [coords[0]], outS = [s[0]];
+  for (let i = 1; i + 1 < P.length; i++) {
+    const [a, v, b] = [P[i - 1], P[i], P[i + 1]];
+    const l1 = Math.hypot(v[0] - a[0], v[1] - a[1]), l2 = Math.hypot(b[0] - v[0], b[1] - v[1]);
+    const cos = l1 && l2 ? ((v[0] - a[0]) * (b[0] - v[0]) + (v[1] - a[1]) * (b[1] - v[1])) / (l1 * l2) : 1;
+    const turn = Math.acos(Math.max(-1, Math.min(1, cos)));
+    const t = Math.min(radius * Math.tan(turn / 2), 0.45 * l1, 0.45 * l2);
+    if (!(t > 0.01)) { out.push(coords[i]); outS.push(s[i]); continue; }
+    const r = t / Math.tan(turn / 2), n = Math.min(64, Math.max(2, Math.ceil(2 * t / Math.sqrt(8 * r * tol))));
+    const A = [0, 1].map(j => v[j] + (a[j] - v[j]) * t / l1), B = [0, 1].map(j => v[j] + (b[j] - v[j]) * t / l2);
+    const sa = s[i] - t * (s[i] - s[i - 1]) / l1, sb = s[i] + t * (s[i + 1] - s[i]) / l2;
+    for (let k = 0; k <= n; k++) {
+      const f = k / n, p = [0, 1].map(j => (1 - f) ** 2 * A[j] + 2 * f * (1 - f) * v[j] + f * f * B[j]);
+      out.push([p[0] / kx, p[1] / M_PER_DEG]);
+      outS.push(sa + f * (sb - sa));
+    }
+  }
+  out.push(coords[coords.length - 1]);
+  outS.push(s[s.length - 1]);
+  return { coords: out, s: outS };
+}
+
+// Polygon ring around a line ([lon, lat] pairs): the line moved `shift` metres to its left and
+// widened `half` metres each side. null for a line of one point.
+export function ribbon(line, half, shift = 0) {
+  const pts = line.filter((p, i) => i === 0 || p[0] !== line[i - 1][0] || p[1] !== line[i - 1][1]);
+  if (pts.length < 2) return null;
+  const kx = M_PER_DEG * Math.cos(pts[0][1] * Math.PI / 180);
+  const left = [], right = [];
+  pts.forEach((p, i) => {
+    const a = pts[Math.max(i - 1, 0)], b = pts[Math.min(i + 1, pts.length - 1)];
+    const dx = (b[0] - a[0]) * kx, dy = (b[1] - a[1]) * M_PER_DEG, n = Math.hypot(dx, dy);
+    const at = d => [p[0] - dy / n * d / kx, p[1] + dx / n * d / M_PER_DEG];
+    left.push(at(shift + half));
+    right.push(at(shift - half));
+  });
+  return [...left, ...right.reverse(), left[0]];
+}
+
+const box = (ring, base, top, props) =>
+  ring && { type: 'Feature', properties: { base, top, ...props }, geometry: { type: 'Polygon', coordinates: [ring] } };
+
+// Where each car of a `cars`-coach train whose front is at s=front sits: the track under its rear
+// and front bogie pivots ([lon, lat]) and the rail heights there. Hung between its bogies, a car's
+// wheels stay on the rails and its ends overhang the outside of a curve, as a real car's do. Cars
+// that would hang off the start of the track are left out, so a train cut there has no rear cab.
+// On a ring, wrap (a ringSeam) draws the track as one loop: a car before the seam is drawn a lap
+// on, and one past the seam's second pass a lap back.
+export function carPoses(coords, s, front, H, cars = CARS, wrap = null) {
+  const poses = [];
+  for (let j = 0; j < cars; j++) {
+    let mid = front - j * (CAR_M + GAP_M) - CAR_M / 2;
+    if (wrap && mid < wrap.at) mid += wrap.by;
+    else if (wrap && mid > wrap.at + wrap.by) mid -= wrap.by;
+    if (mid - CAR_M / 2 < 0) continue;
+    const a = mid - BOGIE_M, b = mid + BOGIE_M;
+    poses.push({ rear: slice(coords, s, a, a)[0], front: slice(coords, s, b, b)[0], zRear: heightAt(H, a), zFront: heightAt(H, b),
+                 car: j, cars, lead: j === 0, last: j === cars - 1 });
+  }
+  return poses;
+}
+
+// Where a ring's track meets itself. OSM draws a ring as one route from its first station round to
+// that station again, often on another platform track there (16-18 m apart at Maujpur), the two
+// tracks joining beyond it. Returns the distance `at` within 600 m of the first stop where the
+// track is closest to where it passes again `by` metres on, near `lap` (last stop minus first).
+export function ringSeam(coords, s, first, lap) {
+  const kx = M_PER_DEG * Math.cos(coords[0][1] * Math.PI / 180);
+  const xy = d => { const [lon, lat] = slice(coords, s, d, d)[0]; return [lon * kx, lat * M_PER_DEG]; };
+  let best = { gap: Infinity, at: first, by: lap };
+  for (let a = Math.max(first - 600, 0); a <= first + 600; a += 5) {
+    const p = xy(a);
+    for (let b = a + lap - 100; b <= Math.min(a + lap + 100, s[s.length - 1]); b += 1) {
+      const q = xy(b), gap = Math.hypot(p[0] - q[0], p[1] - q[1]);
+      if (gap < best.gap) best = { gap, at: a, by: b - a };
+    }
+  }
+  return best;
+}
+
+// Viaduct piers under one track wherever the rail is raised, every 30 m. The deck is drawn by the
+// three.js layer, which slopes it smoothly: extrusions are flat, so a deck built from them steps.
+export function viaduct(coords, s, H) {
+  const out = [], L = s[s.length - 1];
+  for (let a = 0; a + 1.5 <= L; a += 30) {
+    const h = heightAt(H, a + 0.75);
+    if (h - 1.2 >= 0.5) out.push(box(ribbon(slice(coords, s, a, a + 1.5), 0.9), 0, h - 1.2, { part: 'pier' }));  // deck underside clears the street
+  }
+  return out.filter(Boolean);
+}
+
+// Points every `step` metres from one end of the track to the other, with the rail height at each:
+// the spine that rails, deck, bed and tunnel are swept along.
+export function trackSections(coords, s, H, step) {
+  const L = s[s.length - 1], n = Math.ceil(L / step), out = [];
+  for (let i = 0; i <= n; i++) {
+    const d = Math.min(i * step, L);
+    out.push({ at: slice(coords, s, d, d)[0], z: heightAt(H, d) });
+  }
+  return out;
+}
+
+// The layout of a station across both tracks, built round the forward-direction stop, for the
+// three.js layer to draw: `sections`, points ([lon, lat]) every 10 m along the forward track over
+// the platform; `m`, metres left of that track to the middle between the two tracks; `g`, half
+// the distance between them (at least 2.3 m); `h`, the rail height; `under`, in tunnel. rev is the
+// other direction's stop node [lon, lat], or null. Side platforms, as at most DMRC stations.
+export function stationShape(stop, coords, s, H, rev) {
+  const L = s[s.length - 1];
+  const from = Math.max(stop.platform ? stop.platform.s_start : stop.s - TRAIN_M / 2, 0);
+  const to = Math.min(stop.platform ? stop.platform.s_end : stop.s + TRAIN_M / 2, L);
+  const around = slice(coords, s, Math.max(stop.s - 5, 0), Math.min(stop.s + 5, L));
+  const a = around[0], b = around[around.length - 1];
+  const kx = M_PER_DEG * Math.cos(a[1] * Math.PI / 180);
+  const dx = (b[0] - a[0]) * kx, dy = (b[1] - a[1]) * M_PER_DEG, n = Math.hypot(dx, dy) || 1;
+  // How far the other track is to the left of this one (negative: to the right).
+  const lat = rev ? ((rev[0] - a[0]) * kx * -dy + (rev[1] - a[1]) * M_PER_DEG * dx) / n : 0;
+  const sections = [];
+  for (let d = from; d < to; d += 10) sections.push(slice(coords, s, d, d)[0]);
+  sections.push(slice(coords, s, to, to)[0]);
+  return { code: stop.code, name: stop.name, bearing: Math.atan2(dx, dy) * 180 / Math.PI, sections,
+           m: lat / 2, g: Math.max(Math.abs(lat) / 2, 2.3), h: heightAt(H, stop.s), under: inTunnel(H, stop.s) };
+}
