@@ -10,8 +10,19 @@
   html, body, #map { margin: 0; height: 100%; }
   body { font: 13px system-ui, sans-serif; }
   #panel { position: absolute; top: 10px; left: 10px; z-index: 1; background: #fff; padding: 10px 12px;
-           border-radius: 6px; box-shadow: 0 1px 4px #0004; width: 310px; }
-  #panel h1 { font-size: 14px; margin: 0 0 6px; }
+           border-radius: 6px; box-shadow: 0 1px 4px #0004; width: 310px; box-sizing: border-box; transition: width .3s ease; }
+  #panel h1 { font-size: 14px; margin: 8px 0 6px; }
+  /* The bar stays; the rest of the panel folds up into it (and back out) when minimised. */
+  .bar { display: flex; gap: 6px; align-items: center; }
+  .icon { flex: none; width: 32px; height: 32px; padding: 0; display: grid; place-items: center; cursor: pointer;
+          border: 1px solid #bbb; border-radius: 4px; background: #f4f4f4; color: #222; }
+  .icon svg { width: 14px; height: 14px; fill: currentColor; transition: transform .3s ease; }
+  #full { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease, opacity .25s ease, transform .3s ease; }
+  #full > .inner { min-height: 0; overflow: hidden; }
+  #panel.min { width: 280px; }
+  #panel.min #full { grid-template-rows: 0fr; opacity: 0; transform: translateY(-10px); }
+  #panel.min #toggle svg { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: reduce) { #panel, #full, .icon svg { transition: none; } }
   #clock { font-size: 22px; font-variant-numeric: tabular-nums; }
   #slider { width: 100%; }
   .row { display: flex; gap: 6px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
@@ -19,7 +30,7 @@
   .small { color: #555; font-size: 11px; }
   .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; }
   #more > summary { cursor: pointer; color: #333; margin: 4px 0; }
-  .search { position: relative; margin: 6px 0; }
+  .search { position: relative; flex: 1; min-width: 0; }
   #search { width: 100%; box-sizing: border-box; padding: 5px 8px; font: inherit; }
   #results { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; margin: 2px 0 0; padding: 2px 0; list-style: none;
              background: #fff; border-radius: 4px; box-shadow: 0 2px 6px #0004; max-height: 260px; overflow: auto; }
@@ -28,9 +39,9 @@
   #results li.none { color: #777; cursor: default; }
   /* Phones: the panel spans the top of the screen, scrolls if it must, and starts with the details folded. */
   @media (max-width: 600px) {
-    #panel { top: 8px; left: 8px; right: 8px; width: auto; box-sizing: border-box; padding: 8px 10px;
-             max-height: calc(100% - 16px); overflow-y: auto; }
-    #panel h1 { font-size: 13px; margin: 0; }
+    #panel, #panel.min { top: 8px; left: 8px; right: 8px; width: auto; padding: 8px 10px; }
+    #full > .inner { max-height: calc(100vh - 80px); overflow-y: auto; }  /* the panel itself must not clip the search list */
+    #panel h1 { font-size: 13px; margin: 6px 0 0; }
     #search { font-size: 16px; }  /* under 16px, iOS zooms the page in when the box is tapped */
     #clock { font-size: 18px; }
     .note { font-size: 11px; }
@@ -41,17 +52,22 @@
 <body>
 <div id="map"></div>
 <div id="panel">
-  <h1>Delhi Metro, scheduled</h1>
+  <div class="bar">
   <div class="search">
     <input id="search" type="search" placeholder="Search stations" autocomplete="off" spellcheck="false" aria-label="Search stations"
            role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="results">
     <ul id="results" role="listbox" aria-label="Stations" hidden></ul>
   </div>
+  <button id="play" class="icon" type="button" aria-label="Pause" title="Pause"></button>
+  <button id="toggle" class="icon" type="button" aria-controls="full" aria-expanded="true" aria-label="Minimise the panel" title="Minimise">
+    <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 10 7 4l6 6-1.4 1.4L7 6.8l-4.6 4.6z"/></svg></button>
+  </div>
+  <div id="full"><div class="inner">
+  <h1>Delhi Metro, scheduled</h1>
   <div class="note">Estimated timetable, not DMRC's. Train positions are modelled.</div>
   <div class="row"><span id="clock">--:--</span> IST <span id="fps" class="small"></span></div>
   <input id="slider" type="range" min="18000" max="90000" step="60" aria-label="Time of day">
   <div class="row">
-    <button id="play">Pause</button>
     <select id="speed" aria-label="Speed">
       <option value="1">1&times;</option><option value="10" selected>10&times;</option>
       <option value="60">60&times;</option><option value="300">300&times;</option>
@@ -72,6 +88,7 @@
   <div class="small">Track and stations &copy; OpenStreetMap contributors; station order and run times from DMRC.
     Viaduct height, tunnel depth, station buildings and cars are drawn to typical sizes; the livery is approximate.</div>
   </details>
+  </div></div>
 </div>
 <script type="module">
 import { plan, trainFront, ringTurns, running, secs, DWELL } from './motion.js';
@@ -83,7 +100,26 @@ const DAYS = ['weekday', 'saturday', 'sunday'];
 const DAY_OF_WEEK = ['sunday', 'weekday', 'weekday', 'weekday', 'weekday', 'weekday', 'saturday'];
 const END = 90000;  // 01:00 the next morning: the last trains have arrived
 const $ = id => document.getElementById(id);
-if (matchMedia('(max-width: 600px)').matches) $('more').open = false;  // leave a phone's screen to the map
+// Minimised, the panel is just the search box, play/pause and the button to open it again.
+const setMinimised = min => {
+  $('panel').classList.toggle('min', min);
+  $('full').inert = min;  // folded away: out of the tab order and hidden from screen readers
+  $('toggle').setAttribute('aria-expanded', String(!min));
+  $('toggle').setAttribute('aria-label', min ? 'Show the whole panel' : 'Minimise the panel');
+  $('toggle').title = min ? 'Maximise' : 'Minimise';
+};
+$('toggle').addEventListener('click', () => setMinimised(!$('panel').classList.contains('min')));
+if (matchMedia('(max-width: 600px)').matches) { $('more').open = false; setMinimised(true); }  // leave a phone's screen to the map
+const ICONS = {  // fixed markup, no data in it
+  pause: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2h3v10H3zM8 2h3v10H8z"/></svg>',
+  play: '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z"/></svg>',
+};
+const showPlaying = () => {
+  const label = state.playing ? 'Pause' : 'Play';
+  $('play').innerHTML = ICONS[state.playing ? 'pause' : 'play'];
+  $('play').setAttribute('aria-label', label);
+  $('play').title = label;
+};
 const pad = n => String(n).padStart(2, '0');
 const hhmm = t => { const m = Math.floor(t / 60) % 1440; return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`; };
 const fc = features => ({ type: 'FeatureCollection', features });
@@ -285,7 +321,8 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
 }).catch(e => { $('counts').textContent = `Could not load the data: ${e.message}`; });
 
 $('slider').addEventListener('input', e => { state.t = Number(e.target.value); });
-$('play').addEventListener('click', e => { state.playing = !state.playing; e.target.textContent = state.playing ? 'Pause' : 'Play'; });
+$('play').addEventListener('click', () => { state.playing = !state.playing; showPlaying(); });
+showPlaying();
 $('speed').addEventListener('change', e => { state.speed = Number(e.target.value); });
 $('dayType').addEventListener('change', e => { state.day = e.target.value; });
 $('now').addEventListener('click', () => Object.assign(state, nowIst()));
