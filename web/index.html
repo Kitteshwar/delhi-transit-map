@@ -18,6 +18,7 @@
   .note { color: #a33; }
   .small { color: #555; font-size: 11px; }
   .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; }
+  #more > summary { cursor: pointer; color: #333; margin: 4px 0; }
   .search { position: relative; margin: 6px 0; }
   #search { width: 100%; box-sizing: border-box; padding: 5px 8px; font: inherit; }
   #results { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; margin: 2px 0 0; padding: 2px 0; list-style: none;
@@ -25,6 +26,16 @@
   #results li { padding: 4px 8px; cursor: pointer; display: flex; gap: 4px; align-items: center; }
   #results li[aria-selected="true"] { background: #e8eef8; }
   #results li.none { color: #777; cursor: default; }
+  /* Phones: the panel spans the top of the screen, scrolls if it must, and starts with the details folded. */
+  @media (max-width: 600px) {
+    #panel { top: 8px; left: 8px; right: 8px; width: auto; box-sizing: border-box; padding: 8px 10px;
+             max-height: calc(100% - 16px); overflow-y: auto; }
+    #panel h1 { font-size: 13px; margin: 0; }
+    #search { font-size: 16px; }  /* under 16px, iOS zooms the page in when the box is tapped */
+    #clock { font-size: 18px; }
+    .note { font-size: 11px; }
+    .row { margin: 4px 0; }
+  }
 </style>
 </head>
 <body>
@@ -51,13 +62,16 @@
     <button id="now">Now</button>
     <button id="whole">Whole line</button>
   </div>
+  <details id="more" open>
+  <summary>Trains running and notes</summary>
   <div id="counts">Loading&hellip;</div>
   <div class="small"><span class="swatch" style="background:#e75480"></span> door panels: women's coach (front car).
     Each line's coaches per train from config/consists.json; the car model and band colour are the same design on every line.
     Close up only the cars in view are drawn, in full detail.
-    Underground sections are drawn at their depth, seen through the map. Click a station, or search for one, to fly to it; right-drag to tilt and turn.</div>
+    Underground sections are drawn at their depth, seen through the map. Click a station, or search for one, to fly to it; right-drag (on a phone, two fingers) to tilt and turn.</div>
   <div class="small">Track and stations &copy; OpenStreetMap contributors; station order and run times from DMRC.
     Viaduct height, tunnel depth, station buildings and cars are drawn to typical sizes; the livery is approximate.</div>
+  </details>
 </div>
 <script type="module">
 import { plan, trainFront, ringTurns, running, secs, DWELL } from './motion.js';
@@ -69,6 +83,7 @@ const DAYS = ['weekday', 'saturday', 'sunday'];
 const DAY_OF_WEEK = ['sunday', 'weekday', 'weekday', 'weekday', 'weekday', 'weekday', 'saturday'];
 const END = 90000;  // 01:00 the next morning: the last trains have arrived
 const $ = id => document.getElementById(id);
+if (matchMedia('(max-width: 600px)').matches) $('more').open = false;  // leave a phone's screen to the map
 const pad = n => String(n).padStart(2, '0');
 const hhmm = t => { const m = Math.floor(t / 60) % 1440; return `${pad(Math.floor(m / 60))}:${pad(m % 60)}`; };
 const fc = features => ({ type: 'FeatureCollection', features });
