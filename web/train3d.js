@@ -380,7 +380,8 @@ export function carGeometries() {
   };
 }
 
-// One box per car, silver with a dark window band, and its waist band (coloured per line) apart.
+// One box per car with a dark window band. The body is white here, so the per-car colour makes
+// it the line's colour: far off, a silver car on a grey viaduct was lost in the track.
 function lowGeometry() {
   const tint = (g, hex) => {
     const c = new THREE.Color(hex), n = g.getAttribute('position').count, a = new Float32Array(3 * n);
@@ -390,10 +391,9 @@ function lowGeometry() {
   };
   return {
     low: merge([
-      tint(box(2 * BODY_HALF, 2 * W, ROOF - 0.5, 0, 0, (ROOF + 0.5) / 2), 0xd3d8de),
+      tint(box(2 * BODY_HALF, 2 * W, ROOF - 0.5, 0, 0, (ROOF + 0.5) / 2), 0xffffff),
       tint(box(2 * BODY_HALF - 0.6, 2 * W + 0.04, 0.85, 0, 0, 2.55), 0x18202b),
     ], ['position', 'normal', 'color']),
-    lowBand: merge([box(2 * BODY_HALF, 2 * W + 0.06, 0.3, 0, 0, 1.7)]),
   };
 }
 
@@ -498,10 +498,9 @@ export function trainLayer(map, origin) {
   };
   for (const kind of ['middle', 'cab']) for (const [part, geometry] of Object.entries(g[kind])) add(`${kind}.${part}`, geometry, MATERIALS[part]);
   add('low', g.low, new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.25, roughness: 0.45 }));
-  add('lowBand', g.lowBand, mat(0xffffff));
   add('pantographs', pantographGeometry(), new THREE.MeshStandardMaterial({ color: 0x2b2d30, metalness: 0.4, roughness: 0.5 }));
   // Per-car colours: lamps lit or not, and the band and stripe in the line's colour.
-  const COLOURED = ['cab.headlamp', 'cab.taillamp', 'lowBand', ...['middle', 'cab'].flatMap(k => [`${k}.band`, `${k}.pinstripe`])];
+  const COLOURED = ['cab.headlamp', 'cab.taillamp', 'low', ...['middle', 'cab'].flatMap(k => [`${k}.band`, `${k}.pinstripe`])];
   for (const name of COLOURED) meshes[name].setColorAt(0, new THREE.Color());  // creates the colour buffer
   const liveries = new Map();
   const livery = hex => liveries.get(hex) || liveries.set(hex, { band: new THREE.Color(hex), pin: new THREE.Color(hex).lerp(new THREE.Color(0xffffff), 0.45) }).get(hex);
@@ -542,7 +541,7 @@ export function trainLayer(map, origin) {
     for (c of placed) {
       const detail = vp ? carDetail(vp, frustum, c.a, c.b, width, height) : 'low';
       if (detail === 'none') continue;
-      if (detail === 'low') { put(meshes.low, c.m); tint(meshes.lowBand, c.livery.band); continue; }
+      if (detail === 'low') { tint(meshes.low, c.livery.band); continue; }
       const kind = c.lead || c.last ? 'cab' : 'middle';
       for (const name of PARTS[kind]) put(meshes[name], c.m);
       tint(meshes[`${kind}.band`], c.livery.band);
@@ -656,7 +655,7 @@ export function trainLayer(map, origin) {
         statics[name] = mesh;
         scene.add(mesh);
       };
-      addMesh('deck', parts.deck, solid(0xc9c5bd, { roughness: 0.9 }));
+      addMesh('deck', parts.deck, solid(0x9a958c, { roughness: 0.9 }));
       addMesh('bed', parts.bed, solid(0x57524b, { roughness: 1 }));
       addMesh('tube', parts.tube, Object.assign(see(0x5c7391, 0.12), { side: THREE.DoubleSide }));
       addMesh('conductor', parts.conductor, solid(0x3a3d42, { roughness: 0.6 }));
@@ -688,7 +687,7 @@ export function trainLayer(map, origin) {
         roof: new THREE.MeshStandardMaterial({ color: 0xeceff2, metalness: 0.3, roughness: 0.4 }),
         concourse: new THREE.MeshStandardMaterial({ color: 0xd9d3c7, roughness: 0.8 }),
         window: onTop(new THREE.MeshStandardMaterial({ color: 0x2c3b48, metalness: 0.3, roughness: 0.2 }), 1),
-        pier: new THREE.MeshStandardMaterial({ color: 0xc9c5bd, roughness: 0.9 }),
+        pier: new THREE.MeshStandardMaterial({ color: 0x9a958c, roughness: 0.9 }),
         hall: see(0xcfc6b8, 0.22),
         canopy: new THREE.MeshStandardMaterial({ color: 0xc0282c, roughness: 0.6 }),
       };

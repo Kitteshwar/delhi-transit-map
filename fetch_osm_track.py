@@ -31,6 +31,7 @@ DMRC_OFFSET_WARN_M = 100
 PLATFORM_RADIUS_M = 30  # stop node -> its platform outline
 PARTIAL_PLATFORM_M = 120  # Blue Line platforms are ~180 m; shorter ones are mapped in pieces
 CUT_MARGIN_M = 300  # track kept past the first and last stop when a route runs further than the line
+TRACK_HALF_M = 2.25  # half the distance between the two tracks, for a route OSM maps as one line
 HERE = Path(__file__).resolve().parent
 # OSM route (network, ref) per DMRC line: by default the line number on Delhi Metro, with an
 # extension (LN7EXTN) found on its parent line's routes.
@@ -164,21 +165,26 @@ def cut(points, s, runs, a, b):
     i = max(j for j in range(len(s)) if s[j] <= a or j == 0)
     k = min(j for j in range(len(s)) if s[j] >= b or j == len(s) - 1)
     base = s[i]
-    runs = [[round(max(x, s[i]) - base, 1), round(min(y, s[k]) - base, 1), kind] for x, y, kind in runs if y > s[i] and x < s[k]]
+    runs = [[round(max(x, s[i]) - base, 1), round(min(y, s[k]) - base, 1), *rest] for x, y, *rest in runs if y > s[i] and x < s[k]]
     return points[i:k + 1], [v - base for v in s[i:k + 1]], runs
 
 
 def structure(spans, way_tags, s):
-    """[s_start, s_end, kind] runs along the track; kind is tunnel, elevated or at_grade."""
+    """[s_start, s_end, kind, layer] runs along the track: kind is tunnel, elevated or at_grade, and
+    layer OSM's `layer` tag (0 when unset), which tells which line is above where two cross."""
     runs = []
     for (a, b), tags in zip(spans, way_tags):
         kind = ("tunnel" if tags.get("tunnel", "no") != "no" else
                 "elevated" if tags.get("bridge", "no") != "no" else "at_grade")
-        if runs and runs[-1][2] == kind:
+        try:
+            layer = int(float(tags.get("layer", 0)))
+        except ValueError:  # a malformed tag counts as unset
+            layer = 0
+        if runs and runs[-1][2:] == [kind, layer]:
             runs[-1][1] = s[b]
         else:
-            runs.append([s[a], s[b], kind])
-    return [[round(a, 1), round(b, 1), kind] for a, b, kind in runs]
+            runs.append([s[a], s[b], kind, layer])
+    return [[round(a, 1), round(b, 1), kind, layer] for a, b, kind, layer in runs]
 
 
 def pair_stops(pattern, stations, stops):
@@ -201,6 +207,42 @@ def pair_stops(pattern, stations, stops):
                 if median <= best[0]:
                     best = (median, direction, pairs if direction == "forward" else pairs[::-1])
     return best[1], best[2]
+
+
+def inner_loop(codes):
+    """(i, j) where a station comes twice inside a pattern, codes[i] == codes[j], other than a ring's
+    first and last station; else None. Such a loop is single track, run one way: Rapid Metro's from
+    DLF Phase 2."""
+    for j in range(1, len(codes)):
+        if codes[j] in codes[:j] and not (j == len(codes) - 1 and codes[0] == codes[j]):
+            return codes.index(codes[j]), j
+    return None
+
+
+def return_leg(pattern):
+    """The stations trains call at coming back: a one-way loop inside the pattern is left out."""
+    loop = inner_loop(pattern)
+    return pattern[:loop[0]] + pattern[loop[1]:] if loop else pattern
+
+
+def shift_left(points, s, d, keep=()):
+    """Each point moved d metres to the left of the direction of travel (Delhi's trains run on the
+    left), for a route OSM maps as one line used both ways. Inside the (lo, hi) ranges of s in
+    `keep`, single track, the shift tapers to nothing over 100 m."""
+    k, out = R * math.pi / 180, []
+    for i, p in enumerate(points):
+        east, north = xy(points[min(i + 1, len(points) - 1)], points[max(i - 1, 0)])
+        n = math.hypot(east, north) or 1
+        f = min([1.0] + [max(0.0, 1 - min(s[i] - lo, hi - s[i]) / 100) if lo < s[i] < hi else 1.0 for lo, hi in keep])
+        out.append((p[0] + east / n * d * f / k, p[1] - north / n * d * f / (k * math.cos(math.radians(p[0])))))
+    return out
+
+
+def point_at(points, s, v):
+    """The point at distance v along the polyline."""
+    i = max(j for j in range(len(s) - 1) if s[j] <= v or j == 0)
+    f = (v - s[i]) / (s[i + 1] - s[i]) if s[i + 1] > s[i] else 0.0
+    return tuple(points[i][c] + f * (points[i + 1][c] - points[i][c]) for c in (0, 1))
 
 
 def same_name(dmrc, osm):
@@ -299,19 +341,24 @@ def main(argv=None):
         runs = structure(spans, way_tags, full_s)
         for code in here:
             stop_counts.setdefault(code, []).append(f"{r['id']}: {len(stops)}")
-            for pi, pattern in enumerate(lines[code]["patterns"]):
-                direction, pairs = pair_stops(pattern, net["stations"], stops)
-                if not direction:
+            # Where each of the relation's stops is along it, in its order: a stop it calls at twice
+            # (Rapid Metro's DLF Phase 2, before and after the loop) gets each visit's own place.
+            along, prev = {}, -1.0
+            for n in stops:
+                prev = along[id(n)] = project(points, full_s, n["at"], prev)[0]
+            # Each pattern one way, and back with any one-way loop left out.
+            legs = [(pi, want, pat) for pi, pattern in enumerate(lines[code]["patterns"])
+                    for want, pat in (("forward", pattern), ("reverse", return_leg(pattern)))]
+            for pi, want, pat in legs:
+                direction, pairs = pair_stops(pat, net["stations"], stops)
+                if direction != want:
                     continue
                 # Keep the track from just before the first stop to just after the last.
-                first = project(points, full_s, pairs[0][1]["at"])[0]
-                last = first
-                for _, node, _ in pairs[1:]:
-                    last = project(points, full_s, node["at"], last)[0]
+                first, last = along[id(pairs[0][1])], along[id(pairs[-1][1])]
                 a, b = max(first - CUT_MARGIN_M, 0), min(last + CUT_MARGIN_M, full_s[-1])
                 kept, s, kept_runs = cut(points, full_s, runs, a, b)
                 found.setdefault((code, pi, direction), []).append({
-                    "relation": r, "points": kept, "s": s, "pairs": pairs, "structure": kept_runs,
+                    "relation": r, "points": kept, "s": s, "pairs": pairs, "structure": kept_runs, "ways": {m["ref"] for m in track},
                     "gaps": [(full_s[i] - a, metres) for i, metres in gaps if a <= full_s[i] <= b],
                     "extended": [extended[0] if a == 0 else 0.0, extended[1] if b == full_s[-1] else 0.0]})
 
@@ -377,6 +424,18 @@ def main(argv=None):
                         h.update(seconds=round(h["track_m"] / (speeds[len(speeds) // 2] / 3.6)),
                                  avg_kmh=speeds[len(speeds) // 2], estimated=True)
                         line_warnings.append(f"{label}: {h['from']}->{h['to']} time estimated as {h['seconds']} s from its {h['track_m']:.0f} m")
+                # OSM maps some routes (Rapid Metro) as one line used both ways: draw each direction on
+                # its own track, left of that line, except on a single-track one-way loop.
+                other = found.get((code, pi, "reverse" if direction == "forward" else "forward"), [])
+                if other and min(other, key=lambda o: o["s"][-1])["ways"] == c["ways"]:
+                    loop = inner_loop([p["code"] for p in placed])
+                    keep = [(placed[loop[0]]["s"] + 50, placed[loop[1]]["s"] - 50)] if loop else []
+                    if direction == "reverse" and return_leg(pattern) != pattern:  # it starts on the loop's single track
+                        keep.append((-1e9, placed[0]["s"] - 50))
+                    points = shift_left(points, s, TRACK_HALF_M, keep)
+                    for f, p in zip(features[-len(placed):], placed):  # this direction's stops, on its own track
+                        lat, lon = point_at(points, s, p["s"])
+                        f["geometry"]["coordinates"] = [round(lon, 6), round(lat, 6)]
                 features.append({"type": "Feature",
                                  "geometry": {"type": "LineString", "coordinates": [[round(lon, 6), round(lat, 6)] for lat, lon in points]},
                                  "properties": {"kind": "track", "line": code, "pattern": pi, "direction": direction,
@@ -409,7 +468,7 @@ def log_summary(log, label, rel, s, runs, stops, hops):
     plats = [p["platform"]["length_m"] for p in stops if p["platform"] and not p["platform"]["partial"]]
     kmh = sorted(h["avg_kmh"] for h in hops if h["avg_kmh"])
     km = {}
-    for a, b, kind in runs:
+    for a, b, kind, *_ in runs:
         km[kind] = km.get(kind, 0) + (b - a) / 1000
     log(f"{label}: relation {rel['id']} '{rel['tags'].get('name')}', {s[-1] / 1000:.2f} km, {len(stops)} stops; "
         + ", ".join(f"{k} {v:.1f} km" for k, v in sorted(km.items())))

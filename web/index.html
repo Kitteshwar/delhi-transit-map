@@ -7,45 +7,89 @@
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" integrity="sha384-MinO0mNliZ3vwppuPOUnGa+iq619pfMhLVUXfC4LHwSCvF9H+6P/KO4Q7qBOYV5V" crossorigin="anonymous">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js" integrity="sha384-SYKAG6cglRMN0RVvhNeBY0r3FYKNOJtznwA0v7B5Vp9tr31xAHsZC0DqkQ/pZDmj" crossorigin="anonymous"></script>
 <style>
+  /* Hind (Indian Type Foundry): Latin and Devanagari in one family, as Delhi's signs are bilingual. */
+  @font-face { font-family: Hind; font-weight: 400; font-display: swap; src: url(fonts/hind-400-latin.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+  @font-face { font-family: Hind; font-weight: 600; font-display: swap; src: url(fonts/hind-600-latin.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD; }
+  @font-face { font-family: Hind; font-weight: 400; font-display: swap; src: url(fonts/hind-400-devanagari.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF; }
+  @font-face { font-family: Hind; font-weight: 600; font-display: swap; src: url(fonts/hind-600-devanagari.woff2) format('woff2');
+    unicode-range: U+0900-097F, U+1CD0-1CF9, U+200C-200D, U+20B9, U+25CC, U+A830-A839, U+A8E0-A8FF; }
+  /* Signboard slate on white; the only colours are the lines' own. */
+  :root { --ink: #1c2b39; --soft: #5b6b7a; --paper: #fff; --rail: #e3e7ec; --fill: #f1f3f6; --red: #c0282c; }
   html, body, #map { margin: 0; height: 100%; }
-  body { font: 13px system-ui, sans-serif; }
-  #panel { position: absolute; top: 10px; left: 10px; z-index: 1; background: #fff; padding: 10px 12px;
-           border-radius: 6px; box-shadow: 0 1px 4px #0004; width: 310px; box-sizing: border-box; transition: width .3s ease; }
-  #panel h1 { font-size: 14px; margin: 8px 0 6px; }
+  body { font: 400 13px/1.4 Hind, system-ui, sans-serif; color: var(--ink); }
+  button, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  #panel { position: absolute; top: 12px; left: 12px; z-index: 1; width: 320px; box-sizing: border-box; padding: 12px;
+           background: var(--paper); border-radius: 10px; box-shadow: 0 1px 2px #1c2b391f, 0 10px 28px #1c2b3924;
+           transition: width .3s ease; }
   /* The bar stays; the rest of the panel folds up into it (and back out) when minimised. */
   .bar { display: flex; gap: 6px; align-items: center; }
-  .icon { flex: none; width: 32px; height: 32px; padding: 0; display: grid; place-items: center; cursor: pointer;
-          border: 1px solid #bbb; border-radius: 4px; background: #f4f4f4; color: #222; }
+  .search { position: relative; flex: 1; min-width: 0; }
+  #search { width: 100%; box-sizing: border-box; height: 36px; padding: 0 10px; border: 1px solid var(--rail);
+            border-radius: 6px; background: var(--fill); }
+  #search:focus { background: var(--paper); border-color: var(--soft); }
+  .icon { flex: none; width: 36px; height: 36px; padding: 0; display: grid; place-items: center; cursor: pointer;
+          border: 0; border-radius: 6px; background: var(--fill); }
+  .icon:hover { background: var(--rail); }
   .icon svg { width: 14px; height: 14px; fill: currentColor; transition: transform .3s ease; }
   #full { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .3s ease, opacity .25s ease, transform .3s ease; }
   #full > .inner { min-height: 0; overflow: hidden; }
-  #panel.min { width: 280px; }
+  #panel.min { width: 300px; }
   #panel.min #full { grid-template-rows: 0fr; opacity: 0; transform: translateY(-10px); }
   #panel.min #toggle svg { transform: rotate(180deg); }
-  @media (prefers-reduced-motion: reduce) { #panel, #full, .icon svg { transition: none; } }
-  #clock { font-size: 22px; font-variant-numeric: tabular-nums; }
-  #slider { width: 100%; }
-  .row { display: flex; gap: 6px; align-items: center; margin: 6px 0; flex-wrap: wrap; }
-  .note { color: #a33; }
-  .small { color: #555; font-size: 11px; }
-  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: middle; }
-  #more > summary { cursor: pointer; color: #333; margin: 4px 0; }
-  .search { position: relative; flex: 1; min-width: 0; }
-  #search { width: 100%; box-sizing: border-box; padding: 5px 8px; font: inherit; }
-  #results { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; margin: 2px 0 0; padding: 2px 0; list-style: none;
-             background: #fff; border-radius: 4px; box-shadow: 0 2px 6px #0004; max-height: 260px; overflow: auto; }
-  #results li { padding: 4px 8px; cursor: pointer; display: flex; gap: 4px; align-items: center; }
-  #results li[aria-selected="true"] { background: #e8eef8; }
-  #results li.none { color: #777; cursor: default; }
-  /* Phones: the panel spans the top of the screen, scrolls if it must, and starts with the details folded. */
+  #results { position: absolute; left: 0; right: 0; top: 100%; z-index: 2; margin: 4px 0 0; padding: 4px 0; list-style: none;
+             background: var(--paper); border-radius: 6px; box-shadow: 0 6px 20px #1c2b392e; max-height: 280px; overflow: auto; }
+  #results li { padding: 6px 10px; cursor: pointer; display: flex; gap: 6px; align-items: center; }
+  #results li[aria-selected="true"] { background: var(--fill); }
+  #results li.none { color: var(--soft); cursor: default; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; flex: none; }
+  h1 { margin: 14px 0 0; font-size: 17px; font-weight: 600; line-height: 1.2; }
+  h1 span { font-weight: 400; color: var(--soft); margin-left: 4px; }
+  .time { display: flex; align-items: baseline; gap: 6px; margin: 8px 0 0; }
+  #clock { font-size: 30px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .soft { color: var(--soft); }
+  .note { color: var(--red); font-size: 12px; margin: 4px 0 6px; }
+  #slider { width: 100%; margin: 4px 0; accent-color: var(--ink); }
+  .row { display: flex; gap: 6px 8px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
+  /* Speed and day: one choice each, so segmented radio groups. */
+  .seg { display: inline-flex; padding: 2px; border-radius: 6px; background: var(--fill); }
+  .seg label { position: relative; }
+  .seg input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+  .seg span { display: block; padding: 3px 8px; border-radius: 4px; }
+  .seg input:checked + span { background: var(--paper); font-weight: 600; box-shadow: 0 1px 2px #1c2b3929; }
+  .seg input:focus-visible + span { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .link { padding: 2px 0; border: 0; background: none; cursor: pointer;
+          text-decoration: underline; text-decoration-color: var(--rail); text-underline-offset: 3px; }
+  .link:hover { text-decoration-color: currentColor; }
+  h2 { margin: 12px 0 6px; font-size: 13px; font-weight: 600; }
+  /* Trains running: each line drawn as on a route map, as long as its share of the busiest line's
+     trains, on a grey track the full width. */
+  .lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .lines li { display: grid; grid-template-columns: 96px 1fr auto; gap: 10px; align-items: center; }
+  .runway { position: relative; height: 7px; background: linear-gradient(var(--rail), var(--rail)) center / 100% 1px no-repeat; }
+  .run { position: absolute; left: 0; top: 1px; height: 5px; width: var(--w, 0%); min-width: 5px; border-radius: 3px;
+         background: var(--c); transition: width .4s ease; }
+  .run::after { content: ''; position: absolute; right: -3px; top: -2px; width: 9px; height: 9px; box-sizing: border-box;
+                border-radius: 50%; border: 2px solid var(--c); background: var(--paper); }
+  .lines .n { min-width: 2ch; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .lines li.idle { color: var(--soft); }
+  .lines li.idle .run { opacity: .45; }
+  details > summary { margin: 12px 0 4px; color: var(--soft); cursor: pointer; }
+  .small { margin: 4px 0; color: var(--soft); font-size: 11.5px; line-height: 1.45; }
+  .me { width: 14px; height: 14px; border-radius: 50%; background: #1a73e8; border: 2px solid #fff; box-shadow: 0 0 0 3px #1a73e855; }
+  .maplibregl-popup-content { font: 13px/1.4 Hind, system-ui, sans-serif; color: var(--ink); border-radius: 8px; }
+  @media (prefers-reduced-motion: reduce) { #panel, #full, .icon svg, .run { transition: none; } }
+  /* Phones: the panel spans the top of the screen, starts minimised and scrolls inside when open. */
   @media (max-width: 600px) {
-    #panel, #panel.min { top: 8px; left: 8px; right: 8px; width: auto; padding: 8px 10px; }
-    #full > .inner { max-height: calc(100vh - 80px); overflow-y: auto; }  /* the panel itself must not clip the search list */
-    #panel h1 { font-size: 13px; margin: 6px 0 0; }
+    #panel, #panel.min { top: 8px; left: 8px; right: 8px; width: auto; padding: 8px; }
+    #full > .inner { max-height: calc(100dvh - 76px); overflow-y: auto; }  /* the panel itself must not clip the search list */
     #search { font-size: 16px; }  /* under 16px, iOS zooms the page in when the box is tapped */
-    #clock { font-size: 18px; }
-    .note { font-size: 11px; }
-    .row { margin: 4px 0; }
+    h1 { margin-top: 10px; }
+    #clock { font-size: 26px; }
+    .icon:hover { background: var(--fill); }
   }
 </style>
 </head>
@@ -63,37 +107,53 @@
     <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 10 7 4l6 6-1.4 1.4L7 6.8l-4.6 4.6z"/></svg></button>
   </div>
   <div id="full"><div class="inner">
-  <h1>Delhi Metro, scheduled</h1>
-  <div class="note">Estimated timetable, not DMRC's. Train positions are modelled.</div>
-  <div class="row"><span id="clock">--:--</span> IST <span id="fps" class="small"></span></div>
+  <h1>Delhi Metro<span lang="hi">दिल्ली मेट्रो</span></h1>
+  <div class="time"><span id="clock">--:--</span><span class="soft">IST</span><span id="fps" class="soft"></span></div>
+  <div class="note">Timetable estimated, not DMRC's. Train positions are modelled.</div>
   <input id="slider" type="range" min="18000" max="90000" step="60" aria-label="Time of day">
   <div class="row">
-    <select id="speed" aria-label="Speed">
-      <option value="1">1&times;</option><option value="10" selected>10&times;</option>
-      <option value="60">60&times;</option><option value="300">300&times;</option>
-    </select>
-    <select id="dayType" aria-label="Day type">
-      <option value="weekday">Weekday</option><option value="saturday">Saturday</option><option value="sunday">Sunday</option>
-    </select>
-    <button id="now">Now</button>
-    <button id="whole">Whole line</button>
+    <div id="speed" class="seg" role="radiogroup" aria-label="Speed">
+      <label><input type="radio" name="speed" value="1"><span>1&times;</span></label>
+      <label><input type="radio" name="speed" value="10" checked><span>10&times;</span></label>
+      <label><input type="radio" name="speed" value="60"><span>60&times;</span></label>
+      <label><input type="radio" name="speed" value="300"><span>300&times;</span></label>
+    </div>
+    <div id="dayType" class="seg" role="radiogroup" aria-label="Timetable">
+      <label><input type="radio" name="day" value="weekday"><span>Weekday</span></label>
+      <label><input type="radio" name="day" value="saturday"><span>Saturday</span></label>
+      <label><input type="radio" name="day" value="sunday"><span>Sunday</span></label>
+    </div>
   </div>
-  <details id="more" open>
-  <summary>Trains running and notes</summary>
-  <div id="counts">Loading&hellip;</div>
-  <div class="small"><span class="swatch" style="background:#e75480"></span> door panels: women's coach (front car).
-    Each line's coaches per train from config/consists.json; the car model and band colour are the same design on every line.
-    Close up only the cars in view are drawn, in full detail.
-    Underground sections are drawn at their depth, seen through the map. Click a station, or search for one, to fly to it; right-drag (on a phone, two fingers) to tilt and turn.</div>
+  <div class="row"><button id="now" class="link" type="button">Jump to now</button>
+    <button id="whole" class="link" type="button">Show the whole network</button></div>
+  <h2 id="lines-title">Trains running</h2>
+  <ul id="counts" class="lines" aria-labelledby="lines-title"><li>Loading the timetable&hellip;</li></ul>
+  <details id="live">
+  <summary>Live: match a train to where you are (optional)</summary>
+  <div class="row"><button id="atStation" class="link" type="button">I'm at a station</button>
+    <button id="onTrain" class="link" type="button">I'm on a train</button><button id="stopLive" class="link" type="button" hidden>Stop</button></div>
+  <div id="liveChoices" class="row"></div>
+  <div id="liveStatus" class="small" role="status" aria-live="polite"></div>
+  <div class="small">Your location is read only after you tap, and only in this browser: nothing is sent anywhere.
+    Corrections last until you reload. Underground there is usually no GPS.</div>
+  </details>
+  <details id="more">
+  <summary>About this map</summary>
+  <div class="small"><span class="swatch" style="background:#e75480"></span> Pink door panels mark the women's coach, at the front.
+    Each line runs its own number of coaches; the car design and band colour are the same on every line.
+    Close up, only the cars in view are drawn in full detail.</div>
+  <div class="small">Underground sections are drawn at their depth, seen through the map. Click a station, or search for one,
+    to fly to it. Right-drag (on a phone, two fingers) to tilt and turn.</div>
   <div class="small">Track and stations &copy; OpenStreetMap contributors; station order and run times from DMRC.
     Viaduct height, tunnel depth, station buildings and cars are drawn to typical sizes; the livery is approximate.</div>
   </details>
   </div></div>
 </div>
 <script type="module">
-import { plan, trainFront, ringTurns, running, secs, DWELL } from './motion.js';
-import { heights, viaduct, stationShape, carPoses, trackSections, smooth, ringSeam } from './scene.js';
+import { plan, trainFront, ringTurns, running, secs, trainLength, DWELL } from './motion.js';
+import { heights, crossings, viaduct, stationShape, carPoses, trackSections, smooth, ringSeam } from './scene.js';
 import { findStations } from './search.js';
+import { project, timeAt, matchTrain, onTrack, nearestStation } from './live.js';
 import { trainLayer } from './train3d.js';
 
 const DAYS = ['weekday', 'saturday', 'sunday'];
@@ -147,6 +207,10 @@ async function load() {
   const info = Object.fromEntries(network.lines.map(l => [l.code, l]));
   const codes = [...new Set(Object.keys(schedule.lines).map(k => k.split(':')[0]))];
   const tracks = await Promise.all(codes.map(c => getJson(`../data/track/${c}.geojson`)));
+  // Where two lines cross at the same level one goes over or under the other: found across all tracks at once.
+  const allTracks = tracks.flatMap(fc => fc.features.filter(f => f.properties.kind === 'track'));
+  const bumps = new Map(crossings(allTracks.map(f => ({ line: f.properties.line, coords: f.geometry.coordinates,
+    s: f.properties.s, structure: f.properties.structure }))).map((b, i) => [allTracks[i], b]));
   const dirs = [], scene = [], built = new Set(), spines = [], stations = [], index = {};
   tracks.forEach((lineFc, i) => {
     const code = codes[i], cars = consists.lines[code], color = info[code].color, thirdRail = consists.third_rail.includes(code);
@@ -161,13 +225,13 @@ async function load() {
       ({ coords: t.geometry.coordinates, s: t.properties.s } = smooth(t.geometry.coordinates, t.properties.s));
       const coords = t.geometry.coordinates, s = t.properties.s;
       t.properties.color = color;
-      const H = heights(t.properties.structure, t.properties.length_m);
+      const H = heights(t.properties.structure, t.properties.length_m, bumps.get(t));
       const stops = stopsOf(pattern, dir).map(f => f.properties), p = plan(stops, t.properties.hops, t.properties.length_m, cars);
       const deps = Object.fromEntries(DAYS.map(day => [day, times[day][dir].map(secs)]));
       // A ring (first station again at the end) runs continuously: see ringTurns and carPoses.
       const ring = stops[0].code === stops[stops.length - 1].code;
       dirs.push({
-        code, coords, s, H, cars, color, thirdRail, p, deps,
+        code, coords, s, H, cars, color, thirdRail, p, deps, stops, lineName: info[code].color_name, delays: new Map(),
         turns: ring ? Object.fromEntries(DAYS.map(day => [day, ringTurns(p, deps[day])])) : null,
         wrap: ring ? ringSeam(coords, s, stops[0].s, stops[stops.length - 1].s - stops[0].s) : null,
       });
@@ -218,7 +282,7 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
   map.addSource('scene', { type: 'geojson', data: fc(scene.filter(f => f.properties.base >= 0)) });
   // The route at street level: visible where the line runs in tunnel.
   map.addLayer({ id: 'track', type: 'line', source: 'track', paint: { 'line-color': ['get', 'color'], 'line-opacity': 0.55, 'line-width': 2 } });
-  map.addLayer({ id: 'viaduct', type: 'fill-extrusion', source: 'scene', filter: part('pier'), paint: extrude('#c9c5bd') });
+  map.addLayer({ id: 'viaduct', type: 'fill-extrusion', source: 'scene', filter: part('pier'), paint: extrude('#9a958c') });
   const trains = trainLayer(map, [77.19, 28.6]);
   map.addLayer(trains);
   trains.setTrack(spines);
@@ -229,7 +293,7 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
   const byCode = Object.fromEntries(index.map(st => [st.code, st]));
   const goTo = st => {
     if (popup) popup.remove();
-    popup = new maplibregl.Popup().setLngLat(st.at).setText(`${st.name} (${st.code}) · ${st.lines.join(', ')}`).addTo(map);
+    popup = new maplibregl.Popup().setLngLat(st.at).setText(`${st.name} (${st.code}): ${st.lines.join(', ')}`).addTo(map);
     map.flyTo({ center: st.at, zoom: 17.4, pitch: 65, bearing: st.bearing - 60 });
   };
   map.on('click', e => { const shape = trains.pick(e.point.x, e.point.y); if (shape) goTo(byCode[shape.code]); });
@@ -275,15 +339,22 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
   searchBox.addEventListener('blur', close);
   $('whole').addEventListener('click', () => map.flyTo({ center: [77.15, 28.6], zoom: 10.2, pitch: 45, bearing: 0 }));
 
-  // One swatch and count per line, built once; network.json's names go in as text, not HTML.
-  $('counts').textContent = 'Trains running:';
-  const countText = {};
-  for (const l of lines) {
-    const swatch = Object.assign(document.createElement('span'), { className: 'swatch' });
-    swatch.style.background = l.color;
-    countText[l.code] = document.createTextNode('');
-    $('counts').append(' ', swatch, countText[l.code]);
-  }
+  // One row per line colour (an extension counts with its line), built once; network.json's names go
+  // in as text, not HTML. "Line 10" and "Line 11" are better known as Airport Express and Rapid Metro.
+  const label = l => /^Line /.test(l.name) ? l.color_name : l.name;
+  const groups = [...new Map(lines.map(l => [l.color, { name: label(l), color: l.color, codes: [] }])).values()];
+  for (const l of lines) groups.find(g => g.color === l.color).codes.push(l.code);
+  const el = (tag, className, text = '') => Object.assign(document.createElement(tag), { className, textContent: text });
+  $('counts').replaceChildren(...groups.map(g => {
+    const runway = el('span', 'runway');
+    g.run = el('span', 'run');
+    g.run.style.setProperty('--c', g.color);
+    runway.append(g.run);
+    g.n = el('span', 'n');
+    g.li = el('li', '');
+    g.li.append(runway, el('span', 'name', g.name), g.n);
+    return g.li;
+  }));
   // Frames the map drew in the last second: it draws once per screen refresh while trains move.
   let drawn = 0;
   map.on('render', () => { drawn++; });
@@ -302,7 +373,8 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
     for (const d of dirs) {
       const deps = d.deps[state.day], turns = d.turns && d.turns[state.day];
       deps.forEach((dep, k) => {
-        const front = turns ? trainFront(d.p, state.t - dep, turns.held[k] ? 0 : -DWELL, turns.stay[k]) : trainFront(d.p, state.t - dep);
+        const tau = state.t - dep - (d.delays.get(`${state.day}:${k}`) || 0);  // a live correction runs it late or early
+        const front = turns ? trainFront(d.p, tau, turns.held[k] ? 0 : -DWELL, turns.stay[k]) : trainFront(d.p, tau);
         if (front === null) return;
         for (const c of carPoses(d.coords, d.s, front, d.H, d.cars, d.wrap)) cars.push(Object.assign(c, { color: d.color, thirdRail: d.thirdRail }));
       });
@@ -311,12 +383,96 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
     trains.setCars(cars);
     show($('clock'), hhmm(state.t));
     if (Number($('slider').value) !== Math.round(state.t / 60) * 60) $('slider').value = state.t;
-    $('dayType').value = state.day;
-    for (const l of lines) {
-      const text = ` ${l.color_name} (${l.code}) ${counts[l.code]}  `;
-      if (countText[l.code].nodeValue !== text) countText[l.code].nodeValue = text;
-    }
+    $('dayType').querySelector(`input[value="${state.day}"]`).checked = true;
+    const totals = groups.map(g => g.codes.reduce((n, c) => n + counts[c], 0)), most = Math.max(1, ...totals);
+    groups.forEach((g, i) => {
+      const key = `${totals[i]}/${most}`;  // a bar's length depends on the busiest line's count too
+      if (g.key === key) return;  // unchanged: no style work
+      g.key = key;
+      g.n.textContent = String(totals[i]);
+      g.run.style.setProperty('--w', `${totals[i] / most * 100}%`);
+      g.li.classList.toggle('idle', !totals[i]);
+    });
   }
+  // Optional live corrections from the user's location. It is asked for only when a button is
+  // tapped, kept in memory, and never sent anywhere: the page has no server to send it to.
+  const live = { watch: null, fixes: [], train: null, marker: null };
+  const status = text => { $('liveStatus').textContent = text; };
+  const dirName = d => `${d.lineName} ${d.wrap ? 'round the ring' : `towards ${d.stops[d.stops.length - 1].name}`}`;
+  const lateText = s => Math.abs(s) < 30 ? 'on time' : `${Math.round(Math.abs(s) / 60)} min ${s > 0 ? 'late' : 'early'}`;
+  const realTime = () => { Object.assign(state, nowIst()); state.speed = 1; $('speed').querySelector('input[value="1"]').checked = true; };
+  const correct = (d, day, k, late) => { d.delays.set(`${day}:${k}`, late); placedAt = null; };
+  const frontOf = (d, s) => Math.min(s + trainLength(d.cars) / 2, d.s[d.s.length - 1]);  // you are probably mid-train
+  const showMe = lngLat => {
+    if (live.marker) return live.marker.setLngLat(lngLat);
+    live.marker = new maplibregl.Marker({ element: Object.assign(document.createElement('div'), { className: 'me' }) }).setLngLat(lngLat).addTo(map);
+  };
+  const failed = e => status(e.code === 1 ? 'Location permission was not given.' : 'Could not get your location.');
+  const hasGps = () => { if (!navigator.geolocation) status('This browser cannot share its location.'); return !!navigator.geolocation; };
+
+  // At a station: find it, list the directions through it, and when the user's train pulls in,
+  // run the scheduled train nearest to arriving there as late or early as it really is.
+  $('atStation').addEventListener('click', () => {
+    if (!hasGps()) return;
+    status('Finding you\u2026');
+    navigator.geolocation.getCurrentPosition(pos => {
+      const here = [pos.coords.longitude, pos.coords.latitude];
+      showMe(here);
+      const st = nearestStation(index, here, 400);
+      if (!st) { $('liveChoices').replaceChildren(); return status('No station within 400 m of you.'); }
+      status(`At ${st.name}. When your train pulls in, tap its direction.`);
+      $('liveChoices').replaceChildren(...dirs.filter(d => d.stops.slice(0, -1).some(x => x.code === st.code)).map(d => {
+        const b = Object.assign(document.createElement('button'), { type: 'button', className: 'link', textContent: dirName(d) });
+        b.addEventListener('click', () => {
+          const t = nowIst(), i = d.stops.findIndex(x => x.code === st.code);
+          const m = matchTrain(d.p, d.deps[t.day], t.t, d.p.front[i]);
+          if (!m) return status(`No ${dirName(d)} train is due here within 15 minutes.`);
+          correct(d, t.day, m.k, m.late);
+          realTime();
+          $('liveChoices').replaceChildren();
+          status(`Your ${dirName(d)} train is ${lateText(m.late)}; the map now runs it that way.`);
+        });
+        return b;
+      }));
+    }, failed, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+  });
+
+  // On a train: follow the GPS. Once the fixes show which track and direction, pick the scheduled
+  // train nearest to being there, then keep shifting it to where the user is.
+  $('onTrain').addEventListener('click', () => {
+    if (!hasGps() || live.watch !== null) return;
+    realTime();
+    live.fixes = []; live.train = null;
+    $('stopLive').hidden = false;
+    status('Finding you\u2026 the train has to move about 50 m to tell its direction.');
+    live.watch = navigator.geolocation.watchPosition(pos => {
+      const here = [pos.coords.longitude, pos.coords.latitude];
+      showMe(here);
+      if (pos.coords.accuracy > 50) return status(`Your location is only good to ${Math.round(pos.coords.accuracy)} m (underground?); waiting for a better fix.`);
+      live.fixes = [...live.fixes, here].slice(-6);
+      const t = nowIst();
+      if (!live.train) {
+        const on = onTrack(dirs, live.fixes);
+        if (!on) return status('Waiting for the train to move\u2026');
+        const d = dirs[on.index], m = matchTrain(d.p, d.deps[t.day], t.t, frontOf(d, on.s));
+        if (!m) return status(`You look to be on the ${dirName(d)} line, but no scheduled train is within 15 minutes of here.`);
+        live.train = { d, k: m.k, day: t.day };
+      }
+      const { d, k, day } = live.train, on = project(d.coords, d.s, here);
+      if (on.off > 60) return status('You seem to have left the line. Tap Stop.');
+      const late = t.t - d.deps[day][k] - timeAt(d.p, frontOf(d, on.s));
+      correct(d, day, k, late);
+      status(`Following your ${dirName(d)} train: ${lateText(late)}.`);
+    }, failed, { enableHighAccuracy: true, maximumAge: 5000 });
+  });
+  $('stopLive').addEventListener('click', () => {
+    navigator.geolocation.clearWatch(live.watch);
+    Object.assign(live, { watch: null, fixes: [], train: null });
+    if (live.marker) { live.marker.remove(); live.marker = null; }
+    $('stopLive').hidden = true;
+    status('Stopped. Corrections stay until you reload.');
+  });
+
   requestAnimationFrame(frame);
 }).catch(e => { $('counts').textContent = `Could not load the data: ${e.message}`; });
 

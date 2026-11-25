@@ -15,7 +15,8 @@ published timetable exists, so train positions are modelled.
   station and keeps to DMRC's station-to-station times. Pink Line trains go round the ring
   continuously. A time slider, 1x to 300x speed, weekday, Saturday and Sunday timetables, and a
   Now button.
-- **The line in 3D**: viaducts 12 m up with piers, tunnels 16 m down seen through the map, ramps
+- **The line in 3D**: viaducts 12 m up with piers, tunnels 16 m down seen through the map, lines that
+  cross at the same level 10 m over or under each other (in the order OSM's layer tags give), ramps
   between them, broad-gauge rails on sleepers, overhead wires and masts, and a third rail for Rapid
   Metro. Curves are rounded so wheels follow the rails.
 - **Trains like DMRC's**: stainless-steel cars with a rounded cab, the DMRC logo, a band in the
@@ -24,6 +25,9 @@ published timetable exists, so train positions are modelled.
 - **Stations**: platforms with a yellow edge strip, columns under an arched roof, a concourse on
   piers under the raised ones, and street entrances for the underground ones.
 - **Find a station**: search by name, OSM spelling or code, or click one, and the map flies there.
+- **Live from where you are (optional)**: tap "I'm at a station" when your train pulls in, or
+  "I'm on a train" to follow it by GPS, and the map runs that train as late or early as it really
+  is. Your location is read only after you tap and never leaves your browser.
 - **Fast**: simple cars when zoomed out; closer in, only cars in view are drawn in full. Rails are
   built only near the view. It renders at the screen's refresh rate, with an fps readout.
 - **Phone layout**: the panel folds away to leave the screen to the map.
@@ -95,7 +99,8 @@ To rebuild the data: `extract_dmrc_network.py`, then
 ## Credits and licence
 
 Track, stations and the map background (c) OpenStreetMap contributors, ODbL. Station order and
-run times from DMRC. [three.js](https://threejs.org) (MIT) is in `web/vendor/`;
+run times from DMRC. [three.js](https://threejs.org) (MIT) is in `web/vendor/`; the Hind typeface
+(Indian Type Foundry, SIL Open Font License, see `web/fonts/OFL.txt`) is in `web/fonts/`;
 [MapLibre GL JS](https://maplibre.org) (BSD) loads from unpkg. This project's code is GPL-3.0
 (see `LICENSE`).
 
@@ -223,7 +228,7 @@ real ones from LN3 and LN4, shortened.
      "properties": {"kind": "track", "line": "LN3", "pattern": 0, "direction": "forward",
                     "from": "DSTO", "to": "NECC", "osm_relation": 8037669, "osm_name": "...",
                     "length_m": 55644.0, "extended_m": [0.0, 0.0], "s": [0.0, 420.8, "..."],
-                    "structure": [[0.0, 1027.4, "tunnel"], "..."],
+                    "structure": [[0.0, 1027.4, "tunnel", -2], "..."],
                     "hops": [{"from": "DSTO", "to": "DSET", "track_m": 1751.1, "seconds": 181, "avg_kmh": 34.8}]}},
     {"geometry": {"type": "Point", "coordinates": [77.267951, 28.623307]},
      "properties": {"kind": "stop", "line": "LN4", "pattern": 0, "direction": "forward", "seq": 0,

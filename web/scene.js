@@ -7,11 +7,14 @@ export const RAMP_M = 400;  // slope length between levels: 12 m up to a viaduct
 export const DEPTH_M = 16;  // rail depth in tunnel; Delhi's underground sections run about 12-20 m down
 export const CAR_W = 3.2;   // DMRC broad-gauge car width
 export const STEP = 10;     // metres between height samples, and the length of one viaduct piece
+export const LEVEL_M = 10;  // how far a line rises over (or dips under) another it crosses at its own level
+const CROSS_M = 250;        // the raised (or lowered) stretch either side of the crossing, before the ramps
 const M_PER_DEG = 6371008.8 * Math.PI / 180;
 
 // Rail height above the street (negative in tunnel) every STEP metres along a track, from its structure runs
 // ([s_start, s_end, 'tunnel' | 'elevated' | 'at_grade']), and whether each sample is in tunnel.
-export function heights(structure, length) {
+// bumps: {s, dz} from crossings(), where the track rises over or dips under another line.
+export function heights(structure, length, bumps = []) {
   const n = Math.floor(length / STEP) + 1, raw = new Float64Array(n), tunnel = new Array(n);
   let r = 0;
   for (let i = 0; i < n; i++) {
@@ -19,6 +22,9 @@ export function heights(structure, length) {
     const kind = structure.length ? structure[r][2] : 'at_grade';
     raw[i] = kind === 'elevated' ? DECK_M : kind === 'tunnel' ? -DEPTH_M : 0;
     tunnel[i] = kind === 'tunnel';
+    let up = 0, down = 0;  // one rise and one dip at most: each direction of a crossing line is a bump
+    for (const b of bumps) if (Math.abs(i * STEP - b.s) <= CROSS_M) { up = Math.max(up, b.dz); down = Math.min(down, b.dz); }
+    raw[i] += up + down;
   }
   // A moving average over RAMP_M turns each change of level into a straight slope.
   const pre = new Float64Array(n + 1);
@@ -34,6 +40,46 @@ export function heights(structure, length) {
 export function heightAt(H, s) {
   const x = Math.min(Math.max(s / STEP, 0), H.h.length - 1), i = Math.floor(x), j = Math.min(i + 1, H.h.length - 1);
   return H.h[i] + (x - i) * (H.h[j] - H.h[i]);
+}
+
+// Where tracks ({line, coords, s, structure}) of different lines cross at the same level, both on
+// viaducts or both in tunnel, which one goes over: the one OSM's layer tag (4th structure field)
+// puts higher; on a tie the later line (higher DMRC number), which rises over on a viaduct and dips
+// under in tunnel, as Delhi's newer lines were built across its older ones. Returns, per track, the
+// places it rises (dz = LEVEL_M) or dips (-LEVEL_M), as heights() takes them. A grid of 200 m
+// cells keeps it to segments that could meet.
+export function crossings(tracks) {
+  const kx = M_PER_DEG * Math.cos(28.6 * Math.PI / 180), CELL = 200;
+  const pts = tracks.map(t => t.coords.map(([lon, lat]) => [lon * kx, lat * M_PER_DEG]));
+  const family = code => code.replace('EXTN', '').replace(/^LN4$/, 'LN3');  // a branch meets its own line by design
+  const runAt = (st, d) => st.find(([a, b]) => a <= d && d <= b) || st[st.length - 1];
+  const grid = new Map();
+  pts.forEach((P, t) => P.slice(1).forEach((q, i) => {
+    const p = P[i], [x0, x1, y0, y1] = [p[0], q[0], p[1], q[1]].map(v => Math.floor(v / CELL));
+    for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y++) {
+      const key = `${x},${y}`;
+      (grid.get(key) || grid.set(key, []).get(key)).push([t, i]);
+    }
+  }));
+  const bumps = tracks.map(() => []), seen = new Set();
+  for (const list of grid.values()) for (let a = 0; a < list.length; a++) for (let b = a + 1; b < list.length; b++) {
+    const [t1, i] = list[a], [t2, j] = list[b], key = `${t1},${i},${t2},${j}`;
+    if (family(tracks[t1].line) === family(tracks[t2].line) || seen.has(key)) continue;
+    seen.add(key);
+    const [p1, p2, p3, p4] = [pts[t1][i], pts[t1][i + 1], pts[t2][j], pts[t2][j + 1]];
+    const den = (p2[0] - p1[0]) * (p4[1] - p3[1]) - (p2[1] - p1[1]) * (p4[0] - p3[0]);
+    if (!den) continue;
+    const u = ((p3[0] - p1[0]) * (p4[1] - p3[1]) - (p3[1] - p1[1]) * (p4[0] - p3[0])) / den;
+    const v = ((p3[0] - p1[0]) * (p2[1] - p1[1]) - (p3[1] - p1[1]) * (p2[0] - p1[0])) / den;
+    if (u < 0 || u > 1 || v < 0 || v > 1) continue;
+    const s1 = tracks[t1].s[i] + u * (tracks[t1].s[i + 1] - tracks[t1].s[i]), s2 = tracks[t2].s[j] + v * (tracks[t2].s[j + 1] - tracks[t2].s[j]);
+    const r1 = runAt(tracks[t1].structure, s1), r2 = runAt(tracks[t2].structure, s2);
+    if (r1[2] !== r2[2] || r1[2] === 'at_grade') continue;  // already at different levels
+    const over = r1[2] === 'elevated', l1 = r1[3] || 0, l2 = r2[3] || 0;
+    const firstMoves = l1 !== l2 ? (over ? l1 > l2 : l1 < l2) : parseInt(tracks[t1].line.slice(2), 10) > parseInt(tracks[t2].line.slice(2), 10);
+    bumps[firstMoves ? t1 : t2].push({ s: firstMoves ? s1 : s2, dz: over ? LEVEL_M : -LEVEL_M });
+  }
+  return bumps;
 }
 
 export const inTunnel = (H, s) => H.tunnel[Math.min(Math.max(Math.round(s / STEP), 0), H.tunnel.length - 1)];

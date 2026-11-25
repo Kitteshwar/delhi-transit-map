@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { heights, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
+import { heights, crossings, LEVEL_M, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
 import { CAR_M, GAP_M, BOGIE_M, TRAIN_M, plan, slice } from '../web/motion.js';
 
 const M = 6371008.8 * Math.PI / 180, KX = M * Math.cos(28.6 * Math.PI / 180);
@@ -11,6 +11,21 @@ const TRACK = Array.from({ length: 31 }, (_, i) => at(i * 100)), S = TRACK.map((
 const north = ring => ring.map(p => (p[1] - 28.6) * M);
 const near = (a, b, eps) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 const RAISED = heights([[0, 3000, 'elevated']], 3000);
+
+test('where two lines cross at one level, the one OSM layers higher goes over, a tie to the later line', () => {
+  const ns = (code, kind, layer) => ({ line: code, coords: [at(1000, -500), at(1000, 500)], s: [0, 1000], structure: [[0, 1000, kind, layer]] });
+  const ew = (code, kind, layer) => ({ line: code, coords: [at(0), at(2000)], s: [0, 2000], structure: [[0, 2000, kind, layer]] });
+  const dz = b => b.map(x => [Math.round(x.s), x.dz]);
+  assert.deepEqual(crossings([ew('LN2', 'elevated', 3), ns('LN11', 'elevated', 2)]).map(dz), [[[1000, LEVEL_M]], []]);  // Yellow over Rapid Metro
+  assert.deepEqual(crossings([ew('LN3', 'elevated', 1), ns('LN7', 'elevated', 1)]).map(dz), [[], [[500, LEVEL_M]]]);  // tie: Pink over Blue
+  assert.deepEqual(crossings([ew('LN2', 'tunnel', -1), ns('LN8', 'tunnel', -1)]).map(dz), [[], [[500, -LEVEL_M]]]);  // tie: Magenta under Yellow
+  assert.deepEqual(crossings([ew('LN1', 'elevated', 1), ns('LN2', 'tunnel', -1)]).map(dz), [[], []]);  // different levels already
+  assert.deepEqual(crossings([ew('LN7', 'elevated', 1), ns('LN7EXTN', 'elevated', 1)]).map(dz), [[], []]);  // a line and its branch
+  const H = heights([[0, 2000, 'elevated', 3]], 2000, [{ s: 1000, dz: LEVEL_M }, { s: 1004, dz: LEVEL_M }]);
+  near(heightAt(H, 1000), DECK_M + LEVEL_M, 1e-9);  // both directions of the other line: one rise, not two
+  near(heightAt(H, 200), DECK_M, 1e-9);
+  for (let s = 400; s < 1000; s += 10) assert.ok(heightAt(H, s + 10) >= heightAt(H, s));  // a ramp up to it
+});
 
 test('rail height slopes between street and viaduct over RAMP_M', () => {
   const H = heights([[0, 1000, 'at_grade'], [1000, 3000, 'elevated']], 3000);

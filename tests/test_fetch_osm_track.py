@@ -7,7 +7,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from fetch_osm_track import R, chain, cumulative, cut, dist_m, osm_route, pair_stops, platform_for, project, run_on  # noqa: E402
+from fetch_osm_track import (R, chain, cumulative, cut, dist_m, inner_loop, osm_route, pair_stops, platform_for,  # noqa: E402
+                             point_at, project, return_leg, run_on, shift_left, structure)
 
 LAT, LON = 28.6, 77.3
 K = R * math.pi / 180
@@ -99,6 +100,37 @@ class PairingTest(unittest.TestCase):
         self.assertEqual(osm_route("LN7EXTN"), ("Delhi Metro", "7"))
         self.assertEqual(osm_route("LN11"), ("Rapid Metro Gurgaon", "RMGL"))
         self.assertIsNone(osm_route("FOB"))
+
+
+class OneLineBothWaysTest(unittest.TestCase):
+    def test_a_loop_inside_a_line_is_left_out_coming_back(self):
+        rmgl = ["S55", "AIT", "SKRP", "DL2", "BEL", "GAT", "DL3", "DL2"]  # DLF Phase 2, round the loop, DLF Phase 2
+        self.assertEqual(inner_loop(rmgl), (3, 7))
+        self.assertEqual(return_leg(rmgl), ["S55", "AIT", "SKRP", "DL2"])
+        ring = ["A", "B", "C", "A"]  # a ring's first and last station is not a loop inside it
+        self.assertIsNone(inner_loop(ring))
+        self.assertEqual(return_leg(ring), ring)
+        self.assertEqual(return_leg(["A", "B"]), ["A", "B"])
+
+    def test_each_direction_runs_left_of_the_line_except_on_single_track(self):
+        s = cumulative(TRACK)
+        north = lambda pts: [round((p[0] - LAT) * K, 3) for p in pts]
+        self.assertEqual(north(shift_left(TRACK, s, 2.25)), [2.25] * len(TRACK))       # going east, left is north
+        self.assertEqual(north(shift_left(TRACK[::-1], s, 2.25)), [-2.25] * len(TRACK))  # going west, south
+        self.assertEqual(north(shift_left(TRACK, s, 2.25, [(300, 700)])),
+                         [2.25, 2.25, 2.25, 2.25, 0.0, 0.0, 0.0, 2.25, 2.25, 2.25, 2.25])  # 100 m taper either end
+
+    def test_point_at_a_distance(self):
+        lat, lon = point_at(TRACK, cumulative(TRACK), 250)
+        self.assertAlmostEqual((lon - LON) * K * math.cos(math.radians(LAT)), 250, delta=0.01)
+
+
+class StructureTest(unittest.TestCase):
+    def test_runs_split_where_kind_or_layer_changes(self):
+        tags = [{"bridge": "yes", "layer": "2"}, {"bridge": "yes", "layer": "2"}, {"bridge": "yes", "layer": "3"},
+                {"tunnel": "yes", "layer": "bad"}]
+        self.assertEqual(structure([(0, 1), (1, 2), (2, 3), (3, 4)], tags, [0, 10, 20, 30, 40]),
+                         [[0, 20, "elevated", 2], [20, 30, "elevated", 3], [30, 40, "tunnel", 0]])
 
 
 if __name__ == "__main__":

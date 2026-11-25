@@ -11,10 +11,10 @@ const near = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${
 const MIDDLE = ['band', 'body', 'dark', 'doors', 'glass', 'grey', 'pinstripe'];
 
 test('every part of both kinds of car fits it: length, width, height and above the rail', () => {
-  const { middle, cab, low, lowBand } = carGeometries();
+  const { middle, cab, low } = carGeometries();
   assert.deepEqual(Object.keys(middle).sort(), MIDDLE);
   assert.deepEqual(Object.keys(cab).sort(), [...MIDDLE, 'display', 'face', 'headlamp', 'ladies', 'red', 'taillamp'].sort());
-  for (const [name, g] of [...Object.entries(middle), ...Object.entries(cab).map(([k, v]) => [`cab ${k}`, v]), ['low', low], ['lowBand', lowBand]]) {
+  for (const [name, g] of [...Object.entries(middle), ...Object.entries(cab).map(([k, v]) => [`cab ${k}`, v]), ['low', low]]) {
     const { min, max } = g.boundingBox;
     assert.ok(min.x >= -CAR_M / 2 - GAP_M && max.x <= CAR_M / 2, `${name} x ${min.x}..${max.x}`);
     assert.ok(Math.max(-min.y, max.y) <= CAR_W / 2 + 0.08, `${name} y ${min.y}..${max.y}`);
@@ -22,6 +22,8 @@ test('every part of both kinds of car fits it: length, width, height and above t
     assert.equal(g.getAttribute('position').count, g.getAttribute('normal').count);
   }
   assert.equal(low.getAttribute('color').count, low.getAttribute('position').count);
+  const colours = new Set(Array.from(low.getAttribute('color').array, v => v.toFixed(3)));
+  assert.ok(colours.has('1.000'), 'the far-off body is white, to take the line colour');
   for (const body of [middle.body.boundingBox, cab.body.boundingBox]) {  // the nose ends where the body would
     near(body.max.y, CAR_W / 2); near(body.max.z, 3.85, 1e-5); near(body.min.z, 1.0, 1e-5);
     near(body.max.x - body.min.x, CAR_M - 0.2, 1e-5);
