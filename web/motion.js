@@ -61,6 +61,20 @@ export function trainFront(p, tau, from = -DWELL, until = p.total + DWELL) {
   return p.front[i] + along(p.legs[i].run, tau - p.legs[i].start);
 }
 
+// Which stop the train stands at tau seconds after leaving its first station, and how far open its
+// doors are (0 shut, 1 open): they slide open over DOOR_S seconds starting a second after it stops,
+// and are shut again two seconds before it leaves. null while it runs. from and until as trainFront.
+export const DOOR_S = 2;
+export function doorsAt(p, tau, from = -DWELL, until = p.total + DWELL) {
+  for (let i = 0; i <= p.legs.length; i++) {
+    const prev = p.legs[i - 1], arrive = prev ? prev.start + prev.run.ta + prev.run.tc + prev.run.tb : from;
+    const leave = i < p.legs.length ? p.legs[i].start : until;
+    if (tau < arrive) return null;
+    if (tau <= leave) return { stop: i, open: Math.max(0, Math.min(1, (tau - arrive - 1) / DOOR_S, (leave - 2 - tau) / DOOR_S)) };
+  }
+  return null;
+}
+
 // On a ring, the train back at its first station after a lap takes the next departure from there,
 // waiting in between, if it leaves before the train behind comes round; otherwise it leaves
 // service there. Per departure: how long after it its train stays on the line (`stay`), and whether

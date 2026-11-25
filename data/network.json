@@ -5100,6 +5100,310 @@
    ]
   }
  ],
+ "interchanges": [
+  {
+   "from": "AVIT",
+   "to": "AVIT",
+   "lines": [
+    "LN4",
+    "LN7"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "AZU",
+   "to": "AZU",
+   "lines": [
+    "LN2",
+    "LN7"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "BCGN",
+   "to": "BCGN",
+   "lines": [
+    "LN3",
+    "LN8"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "BIMR",
+   "to": "BIMR",
+   "lines": [
+    "LN2",
+    "LN8EXTN"
+   ],
+   "minutes": 0.0,
+   "via": []
+  },
+  {
+   "from": "CTST",
+   "to": "CTST",
+   "lines": [
+    "LN2",
+    "LN6"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "DDSC",
+   "to": "DKV",
+   "lines": [
+    "LN7",
+    "LN10"
+   ],
+   "minutes": 25.0,
+   "via": [
+    "LN12"
+   ]
+  },
+  {
+   "from": "DSTO",
+   "to": "DSTO",
+   "lines": [
+    "LN3",
+    "LN10"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "DW",
+   "to": "DW",
+   "lines": [
+    "LN9",
+    "LN3"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "HKS",
+   "to": "HKS",
+   "lines": [
+    "LN2",
+    "LN8"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "ILOK",
+   "to": "ILOK",
+   "lines": [
+    "LN5",
+    "LN1"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "INA",
+   "to": "INA",
+   "lines": [
+    "LN2",
+    "LN7"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "JPW",
+   "to": "JPW",
+   "lines": [
+    "LN3",
+    "LN8"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "KG",
+   "to": "KG",
+   "lines": [
+    "LN2",
+    "LN1"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "KG",
+   "to": "KG",
+   "lines": [
+    "LN2",
+    "LN6"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "KG",
+   "to": "KG",
+   "lines": [
+    "LN1",
+    "LN6"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "KJMD",
+   "to": "KJMD",
+   "lines": [
+    "LN6",
+    "LN8"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "KKDA",
+   "to": "KKDA",
+   "lines": [
+    "LN4",
+    "LN7"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "KNR",
+   "to": "KNR",
+   "lines": [
+    "LN3",
+    "LN5"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "LJPN",
+   "to": "LJPN",
+   "lines": [
+    "LN6",
+    "LN7"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "MDHS",
+   "to": "MDHS",
+   "lines": [
+    "LN3",
+    "LN6"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "MKPR",
+   "to": "MKPR",
+   "lines": [
+    "LN7",
+    "LN8EXTN"
+   ],
+   "minutes": 0.0,
+   "via": []
+  },
+  {
+   "from": "MVP1",
+   "to": "MVP1",
+   "lines": [
+    "LN3",
+    "LN7"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "NDI",
+   "to": "NDI",
+   "lines": [
+    "LN2",
+    "LN10"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "NSHP",
+   "to": "NSHP",
+   "lines": [
+    "LN1",
+    "LN7"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "PBGW",
+   "to": "PBGW",
+   "lines": [
+    "LN7",
+    "LN5"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "PTP",
+   "to": "PTP",
+   "lines": [
+    "LN1",
+    "LN8EXTN"
+   ],
+   "minutes": 0.0,
+   "via": []
+  },
+  {
+   "from": "RCK",
+   "to": "RCK",
+   "lines": [
+    "LN2",
+    "LN3"
+   ],
+   "minutes": 5.0,
+   "via": []
+  },
+  {
+   "from": "RG",
+   "to": "RG",
+   "lines": [
+    "LN3",
+    "LN7"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "SKRP",
+   "to": "SKRP",
+   "lines": [
+    "LN2",
+    "LN11"
+   ],
+   "minutes": 10.0,
+   "via": []
+  },
+  {
+   "from": "WC",
+   "to": "WC",
+   "lines": [
+    "LN1",
+    "LN7"
+   ],
+   "minutes": 5.0,
+   "via": []
+  }
+ ],
  "warnings": [
   "station/SPBI-Badli Dipo (SAMAYPUR - Badli Dipo): no metro line, skipped",
   "LN12 (FOB): hidden on DMRC site, skipped",

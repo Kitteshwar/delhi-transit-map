@@ -186,6 +186,53 @@ def station_record(st):
     }
 
 
+def change_minutes(route, x, line_a, y, line_b):
+    """Minutes the planner allows to change from line_a (colour name) at station x to line_b at y,
+    from a trip whose first leg is on line_a ending at x and last on line_b starting at y, with
+    nothing between but walks on hidden links (Dhaula Kuan's foot bridge, "FOB"): the interchange
+    times of the later legs plus the walks' own times. None for any other trip."""
+    legs = route.get("route") or []
+    ends = lambda leg, i: (leg.get("map-path") or ["-"])[i].split("-")[i]
+    if (len(legs) < 2 or legs[0].get("line") != line_a or legs[-1].get("line") != line_b
+            or ends(legs[0], -1) != x or ends(legs[-1], 0) != y):
+        return None
+    walks = legs[1:-1]
+    return (sum(leg.get("station_interchange_time") or 0 for leg in legs[1:])
+            + sum(hms_to_seconds(leg["path_time"]) for leg in walks) / 60)
+
+
+def interchanges(api, stations, lines, route_date):
+    """Per change of line, at a station two lines share or across a hidden line's link between two
+    stations: {from, to (station codes), lines: [from's, to's], minutes, via: hidden lines walked}.
+    The planner is asked for trips from a neighbour on one line to a neighbour on the other, until
+    one changes there. A branch and its own line (EXTN, LN4 with LN3) do not count."""
+    shown = {ln["code"]: ln for ln in lines}
+    family = lambda c: "LN3" if c == "LN4" else c.replace("EXTN", "")
+    def neighbours(code, x):
+        return sorted({p[j] for p in shown[code]["patterns"] for i, c in enumerate(p) if c == x
+                       for j in (i - 1, i + 1) if 0 <= j < len(p) and p[j] != x})
+    pairs = []
+    for x, st in sorted(stations.items()):
+        here = [c for c in st["lines"] if c in shown]
+        pairs += [(x, a, x, b, []) for i, a in enumerate(here) for b in here[i + 1:] if family(a) != family(b)]
+        for hidden in (c for c in st["lines"] if c not in shown):
+            for y, other in sorted(stations.items()):
+                if y > x and hidden in other["lines"]:
+                    pairs += [(x, a, y, b, [hidden]) for a in here for b in other["lines"] if b in shown]
+    trips = [[(na, nb) for na in neighbours(a, x) for nb in neighbours(b, y) if na != nb] for x, a, y, b, _ in pairs]
+    found = [None] * len(pairs)
+    for k in range(max(map(len, trips), default=0)):  # one more trip per round for the pairs still open
+        ask = [n for n, t in enumerate(trips) if found[n] is None and k < len(t)]
+        for n, ans in zip(ask, api.get_many([route_path(*trips[n][k], route_date) for n in ask])):
+            x, a, y, b, _ = pairs[n]
+            if not isinstance(ans, Exception):
+                found[n] = change_minutes(ans, x, shown[a]["color_name"], y, shown[b]["color_name"])
+    out = [{"from": x, "to": y, "lines": [a, b], "minutes": m, "via": via}
+           for (x, a, y, b, via), m in zip(pairs, found) if m is not None]
+    missing = [f"{x}/{y} {a}-{b}" for (x, a, y, b, _), m in zip(pairs, found) if m is None]
+    return out, missing
+
+
 def route_path(a, b, route_date):
     return f"station_route/{a}/{b}/least-distance/{route_date}"
 
@@ -316,13 +363,19 @@ def main(argv=None):
             "planner_direct_same_line": None if isinstance(ans, Exception) else segment_seconds(ans, lines[idx]["color_name"], len(p)),
         })
 
+    # 5. Walking time to change lines at each interchange.
+    records = {c: station_record(d) for c, d in sorted(stations.items())}
+    changes, missing = interchanges(api, records, lines, route_date)
+    warnings += [f"interchange {m}: the planner gave no trip changing there" for m in missing]
+
     out = {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "source": API,
         "route_date": route_date,
         "hop_seconds_include_one_dwell": True,
-        "stations": {c: station_record(d) for c, d in sorted(stations.items())},
+        "stations": records,
         "lines": lines,
+        "interchanges": changes,
         "warnings": warnings,
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)

@@ -21,9 +21,12 @@ published timetable exists, so train positions are modelled.
   Metro. Curves are rounded so wheels follow the rails.
 - **Trains like DMRC's**: stainless-steel cars with a rounded cab, the DMRC logo, a band in the
   line's colour, pink door panels on the women's coach, pantographs, and lamps lit at the front and
-  red at the back. Each line runs its real number of coaches (see the table).
+  red at the back. Doors slide open on the platform side while a train stands at a station. Each line runs its real number of coaches (see the table).
 - **Stations**: platforms with a yellow edge strip, columns under an arched roof, a concourse on
-  piers under the raised ones, and street entrances for the underground ones.
+  piers under the raised ones, and street entrances for the underground ones. At interchanges a
+  see-through walkway or lift shaft sketches how the lines' platforms join (stacked platforms by a
+  shaft, others by a walkway at a concourse or the street; the real passages are not mapped), and
+  the station's popup gives DMRC's walking time for each change.
 - **Find a station**: search by name, OSM spelling or code, or click one, and the map flies there.
 - **Live from where you are (optional)**: tap "I'm at a station" when your train pulls in, or
   "I'm on a train" to follow it by GPS, and the map runs that train as late or early as it really
@@ -142,6 +145,12 @@ no time, or a line whose hop times do not add up to the planner's end-to-end tim
    (`hop_seconds_include_one_dwell`). Where the planner prefers a route over other lines the
    check is reported as not comparable.
 6. Hops outside 45-600 s are kept but marked `suspect` (DMRC's data has 2 s and 720 s hops).
+7. Interchanges: for each pair of lines at a station (a branch and its own line, such as LN4
+   with LN3, does not count), and for Dhaula Kuan's foot bridge to Durgabai Deshmukh South Campus
+   (the hidden line LN12), the planner is asked for trips from a neighbour on one line to a
+   neighbour on the other until one changes there. The change takes the later legs'
+   `station_interchange_time` plus the bridge walk: 5 or 10 minutes at most stations, 25 at
+   Dhaula Kuan, and 0 (none given) at Haiderpur Badli Mor, Majlis Park and Madhuban Chowk.
 
 ### Output shape
 
@@ -158,13 +167,15 @@ no time, or a line whose hop times do not add up to the planner's end-to-end tim
              "hops": [{"from": "SPBI", "to": "RISE", "seconds": 124}],
              "check": [{"from": "SPBI", "to": "HCC", "stops": 37, "sum_of_hops": 5002,
                         "planner_direct_same_line": 5002}]}],
+  "interchanges": [{"from": "KG", "to": "KG", "lines": ["LN2", "LN1"], "minutes": 10.0, "via": []},
+                   {"from": "DDSC", "to": "DKV", "lines": ["LN7", "LN10"], "minutes": 25.0, "via": ["LN12"]}],
   "warnings": ["..."]
 }
 ```
 
 Not included on purpose: platforms (DMRC only has platform numbers; `fetch_osm_track.py` gets
 them from OSM),
-the FOB pseudo-line (hidden on the DMRC site) and the Badli depot pseudo-station. Hops carry no
+the FOB pseudo-line as a line (hidden on the DMRC site; it appears only as an interchange) and the Badli depot pseudo-station. Hops carry no
 direction: the planner runs the Rapid Metro loop one way (Phase 3 to Moulsari Avenue goes the
 long way round), which network.json does not record yet.
 

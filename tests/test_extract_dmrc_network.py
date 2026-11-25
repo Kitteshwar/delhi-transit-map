@@ -5,8 +5,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from extract_dmrc_network import (hms_to_seconds, hop_pairs, line_edges, loop_closure,  # noqa: E402
-                                  patterns_from_edges, segment_seconds, span_around)
+from extract_dmrc_network import (change_minutes, hms_to_seconds, hop_pairs, interchanges,  # noqa: E402
+                                  line_edges, loop_closure, patterns_from_edges, segment_seconds, span_around)
 
 
 def station(code, line_id, prev, nxt, line_name="Line 5"):
@@ -100,6 +100,38 @@ class PlannerParsingTest(unittest.TestCase):
     def test_hms(self):
         self.assertEqual(hms_to_seconds("1:23:22"), 5002)
         self.assertEqual(hms_to_seconds("0:00:00"), 0)
+
+
+def leg(line, path, minutes=0, time="0:02:00"):
+    return {"line": line, "map-path": path, "station_interchange_time": minutes, "path_time": time}
+
+
+class InterchangeTest(unittest.TestCase):
+    FOB = {"route": [leg("Orange Line", ["SJSU-DKV"]), leg("FOB", ["DKV-DDSC"], 5.0, "0:15:00"),
+                     leg("Pink Line", ["DDSC-SVMB"], 5.0)]}
+
+    def test_the_change_is_the_later_legs_interchange_times_and_any_walk_between(self):
+        plain = {"route": [leg("Yellow Line", ["AHNR-AZU"]), leg("Pink Line", ["AZU-MKPR"], 10.0)]}
+        self.assertEqual(change_minutes(plain, "AZU", "Yellow Line", "AZU", "Pink Line"), 10)
+        self.assertEqual(change_minutes(self.FOB, "DKV", "Orange Line", "DDSC", "Pink Line"), 25)
+        self.assertIsNone(change_minutes(plain, "INA", "Yellow Line", "INA", "Pink Line"))   # changed elsewhere
+        self.assertIsNone(change_minutes(plain, "AZU", "Blue Line", "AZU", "Pink Line"))
+        self.assertIsNone(change_minutes({"route": plain["route"][:1]}, "AZU", "Yellow Line", "AZU", "Pink Line"))
+
+    def test_pairs_at_shared_stations_and_across_hidden_links_but_not_branches(self):
+        back = {"route": [leg("Pink Line", ["SVMB-DDSC"]), leg("FOB", ["DDSC-DKV"], 5.0, "0:15:00"),
+                          leg("Orange Line", ["DKV-SJSU"], 5.0)]}
+
+        class Api:
+            def get_many(self, paths):  # only the last trip tried changes over the bridge
+                return [back if "/SVMB/SJSU/" in p else {"route": []} for p in paths]
+        lines = [{"code": c, "color_name": n, "patterns": [p]} for c, n, p in [
+            ("LN10", "Orange Line", ["SJSU", "DKV", "DACY"]), ("LN7", "Pink Line", ["DLIC", "DDSC", "SVMB"]),
+            ("LN3", "Blue Line", ["A", "YB", "B"]), ("LN4", "Blue Line", ["YB", "C"])]]
+        stations = {"DKV": {"lines": ["LN10", "LN12"]}, "DDSC": {"lines": ["LN7", "LN12"]}, "YB": {"lines": ["LN3", "LN4"]}}
+        out, missing = interchanges(Api(), stations, lines, "2025-01-01")
+        self.assertEqual(out, [{"from": "DDSC", "to": "DKV", "lines": ["LN7", "LN10"], "minutes": 25, "via": ["LN12"]}])
+        self.assertEqual(missing, [])
 
 
 if __name__ == "__main__":

@@ -173,15 +173,49 @@ export function ringSeam(coords, s, first, lap) {
   return best;
 }
 
-// Viaduct piers under one track wherever the rail is raised, every 30 m. The deck is drawn by the
-// three.js layer, which slopes it smoothly: extrusions are flat, so a deck built from them steps.
-export function viaduct(coords, s, H) {
+// Viaduct piers under one track wherever the rail is raised, every 30 m, where clear(at, top) (see
+// pierClear) lets one stand. The deck is drawn by the three.js layer, which slopes it smoothly:
+// extrusions are flat, so a deck built from them steps.
+export function viaduct(coords, s, H, clear = () => true) {
   const out = [], L = s[s.length - 1];
   for (let a = 0; a + 1.5 <= L; a += 30) {
     const h = heightAt(H, a + 0.75);
-    if (h - 1.2 >= 0.5) out.push(box(ribbon(slice(coords, s, a, a + 1.5), 0.9), 0, h - 1.2, { part: 'pier' }));  // deck underside clears the street
+    if (h - 1.2 >= 0.5 && clear(slice(coords, s, a + 0.75, a + 0.75)[0], h - 1.2)) {  // deck underside clears the street
+      out.push(box(ribbon(slice(coords, s, a, a + 1.5), 0.9), 0, h - 1.2, { part: 'pier' }));
+    }
   }
   return out.filter(Boolean);
+}
+
+// For viaduct(): whether a pier at `at` ([lon, lat]) standing up to `top` metres misses every track
+// in spines ({sections: trackSections list}) that passes within CLEAR_M of it in plan, above the
+// street and below its top: where one line rises over another, its piers would come up through the
+// lower line's deck. Real crossings span the lower line with a longer beam or a portal frame.
+const CLEAR_M = 4.5;  // deck half-width 2.4 m, pier half-width 0.9 m, and a margin
+export function pierClear(spines) {
+  const kx = M_PER_DEG * Math.cos(28.6 * Math.PI / 180), CELL = 50, grid = new Map();
+  const xy = ([lon, lat]) => [lon * kx, lat * M_PER_DEG], cell = v => Math.floor(v / CELL);
+  for (const { sections } of spines) for (let i = 0; i + 1 < sections.length; i++) {
+    const [a, b] = [sections[i], sections[i + 1]];
+    if (Math.max(a.z, b.z) < -0.5) continue;  // in tunnel, under the piers' footings
+    const seg = [xy(a.at), xy(b.at), a.z, b.z], [p, q] = seg;
+    for (let x = cell(Math.min(p[0], q[0]) - CLEAR_M); x <= cell(Math.max(p[0], q[0]) + CLEAR_M); x++) {
+      for (let y = cell(Math.min(p[1], q[1]) - CLEAR_M); y <= cell(Math.max(p[1], q[1]) + CLEAR_M); y++) {
+        const key = `${x},${y}`;
+        (grid.get(key) || grid.set(key, []).get(key)).push(seg);
+      }
+    }
+  }
+  return (at, top) => {
+    const p = xy(at);
+    for (const [a, b, za, zb] of grid.get(`${cell(p[0])},${cell(p[1])}`) || []) {
+      const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy;
+      const f = L2 ? Math.min(Math.max(((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2, 0), 1) : 0;
+      const z = za + f * (zb - za);
+      if (z > -0.5 && z < top - 0.5 && Math.hypot(a[0] + f * dx - p[0], a[1] + f * dy - p[1]) < CLEAR_M) return false;
+    }
+    return true;
+  };
 }
 
 // Points every `step` metres from one end of the track to the other, with the rail height at each:
@@ -215,4 +249,24 @@ export function stationShape(stop, coords, s, H, rev) {
   sections.push(slice(coords, s, to, to)[0]);
   return { code: stop.code, name: stop.name, bearing: Math.atan2(dx, dy) * 180 / Math.PI, sections,
            m: lat / 2, g: Math.max(Math.abs(lat) / 2, 2.3), h: heightAt(H, stop.s), under: inTunnel(H, stop.s) };
+}
+
+// How the platforms of two lines at an interchange (stationShape objects) join, in outline: stacked
+// one over the other (centres under STACK_M apart) by lifts and stairs straight between them;
+// otherwise by a walkway at the lower concourse when both are raised (a foot bridge), at the upper
+// one when both are in tunnel, else at the street, with lifts from each platform to it. Pieces
+// {from, to: [lon, lat], z0, z1} in metres above the street; a lift's from and to are one point.
+// A sketch, not a survey: neither OSM nor DMRC's data maps the passages.
+export const STACK_M = 40;
+export function interchangeLink(A, B) {
+  const centre = st => {
+    const [lon, lat] = st.sections[st.sections.length >> 1], b = st.bearing * Math.PI / 180;
+    return [lon - Math.cos(b) * st.m / (M_PER_DEG * Math.cos(lat * Math.PI / 180)), lat + Math.sin(b) * st.m / M_PER_DEG];
+  };
+  const a = centre(A), b = centre(B), kx = M_PER_DEG * Math.cos(a[1] * Math.PI / 180);
+  const lift = (at, z0, z1) => ({ from: at, to: at, z0: Math.min(z0, z1), z1: Math.max(z0, z1) });
+  if (Math.hypot((b[0] - a[0]) * kx, (b[1] - a[1]) * M_PER_DEG) < STACK_M) return [lift([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], A.h, B.h)];
+  const hall = st => st.under ? st.h + 6 : st.h > 10 ? st.h - 6.8 : 0;  // as train3d.js stationGeometry draws them
+  const level = !A.under && !B.under ? Math.min(hall(A), hall(B)) : A.under && B.under ? Math.max(hall(A), hall(B)) : 0;
+  return [lift(a, A.h, level), { from: a, to: b, z0: level, z1: level }, lift(b, B.h, level)];
 }

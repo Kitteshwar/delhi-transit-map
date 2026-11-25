@@ -150,8 +150,8 @@
   </div></div>
 </div>
 <script type="module">
-import { plan, trainFront, ringTurns, running, secs, trainLength, DWELL } from './motion.js';
-import { heights, crossings, viaduct, stationShape, carPoses, trackSections, smooth, ringSeam } from './scene.js';
+import { plan, trainFront, doorsAt, ringTurns, running, secs, trainLength, DWELL } from './motion.js';
+import { heights, crossings, viaduct, pierClear, interchangeLink, stationShape, carPoses, trackSections, smooth, ringSeam } from './scene.js';
 import { findStations } from './search.js';
 import { project, timeAt, matchTrain, onTrack, nearestStation } from './live.js';
 import { trainLayer } from './train3d.js';
@@ -211,7 +211,7 @@ async function load() {
   const allTracks = tracks.flatMap(fc => fc.features.filter(f => f.properties.kind === 'track'));
   const bumps = new Map(crossings(allTracks.map(f => ({ line: f.properties.line, coords: f.geometry.coordinates,
     s: f.properties.s, structure: f.properties.structure }))).map((b, i) => [allTracks[i], b]));
-  const dirs = [], scene = [], built = new Set(), spines = [], stations = [], index = {};
+  const dirs = [], scene = [], built = new Map(), spines = [], stations = [], index = {};
   tracks.forEach((lineFc, i) => {
     const code = codes[i], cars = consists.lines[code], color = info[code].color, thirdRail = consists.third_rail.includes(code);
     if (!Number.isInteger(cars) || cars < 1) throw new Error(`config/consists.json: no coach count for ${code}`);
@@ -230,31 +230,47 @@ async function load() {
       const deps = Object.fromEntries(DAYS.map(day => [day, times[day][dir].map(secs)]));
       // A ring (first station again at the end) runs continuously: see ringTurns and carPoses.
       const ring = stops[0].code === stops[stops.length - 1].code;
+      // The other direction's stop at each station, and which side the doors open there: the side of
+      // the platform, away from the other track (1 left, as on Delhi's left-running lines).
+      const other = new Map(stopsOf(pattern, dir === 'forward' ? 'reverse' : 'forward').map(f => [f.properties.code, f.geometry.coordinates]));
+      const doorSide = stops.map(st => stationShape(st, coords, s, H, other.get(st.code) || null).m > 0 ? -1 : 1);
       dirs.push({
-        code, coords, s, H, cars, color, thirdRail, p, deps, stops, lineName: info[code].color_name, delays: new Map(),
+        code, coords, s, H, cars, color, thirdRail, p, deps, stops, doorSide, lineName: info[code].color_name, delays: new Map(),
         turns: ring ? Object.fromEntries(DAYS.map(day => [day, ringTurns(p, deps[day])])) : null,
         wrap: ring ? ringSeam(coords, s, stops[0].s, stops[stops.length - 1].s - stops[0].s) : null,
       });
-      scene.push(...viaduct(coords, s, H));
       spines.push({ sections: trackSections(coords, s, H, 10), thirdRail });
       if (dir !== 'forward') continue;
-      const reverse = new Map(stopsOf(pattern, 'reverse').map(f => [f.properties.code, f.geometry.coordinates]));
       for (const st of stopsOf(pattern, 'forward')) {
         // Once per station and colour: Yamuna Bank is on LN3 and LN4, Maujpur on LN7 and its extension.
         const key = `${color} ${st.properties.code}`;
         if (built.has(key)) continue;
-        built.add(key);
-        const shape = stationShape(st.properties, coords, s, H, reverse.get(st.properties.code) || null);
+        const shape = stationShape(st.properties, coords, s, H, other.get(st.properties.code) || null);
+        built.set(key, shape);
         stations.push(shape);
         // One search entry per station code, with every line through it.
         const entry = (index[st.properties.code] ||= { code: st.properties.code, name: st.properties.name, osmName: st.properties.osm_name,
-          at: st.geometry.coordinates, bearing: shape.bearing, lines: [], colors: [] });
+          at: st.geometry.coordinates, bearing: shape.bearing, lines: [], colors: [], changes: [] });
         if (!entry.lines.includes(info[code].color_name)) entry.lines.push(info[code].color_name);
         if (!entry.colors.includes(color)) entry.colors.push(color);
       }
     }
   });
-  return { tracks, dirs, scene, spines, stations, index: Object.values(index), lines: codes.map(c => info[c]) };
+  // Piers once every track is known: none where another line passes underneath.
+  const clear = pierClear(spines);
+  for (const d of dirs) scene.push(...viaduct(d.coords, d.s, d.H, clear));
+  // Interchanges: DMRC's walking allowance for each change of line, and a sketch of how the platforms
+  // join. Dhaula Kuan's is a foot bridge to Durgabai Deshmukh South Campus, a different station.
+  const links = [], name = code => info[code].color_name;
+  for (const x of network.interchanges || []) {
+    const [A, B] = [[x.from, x.lines[0]], [x.to, x.lines[1]]].map(([st, line]) => built.get(`${info[line].color} ${st}`));
+    if (A && B && A !== B) links.push(...interchangeLink(A, B));
+    const walk = x.minutes ? `${x.minutes} min` : 'no time given';
+    const change = x.from === x.to ? `${name(x.lines[0])} and ${name(x.lines[1])}, ${walk}`
+      : `${name(x.lines[0])} here and ${name(x.lines[1])} at ${B ? B.name : x.to} by ${x.via.join(', ')}, ${walk}`;
+    for (const code of new Set([x.from, x.to])) if (index[code]) index[code].changes.push(change);
+  }
+  return { tracks, dirs, scene, spines, stations, links, index: Object.values(index), lines: codes.map(c => info[c]) };
 }
 
 const state = { ...nowIst(), speed: 10, playing: true };
@@ -276,7 +292,7 @@ const extrude = (color, opacity = 1) => ({
 });
 const part = (...names) => ['in', ['get', 'part'], ['literal', names]];
 
-Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs, scene, spines, stations, index, lines }]) => {
+Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs, scene, spines, stations, links, index, lines }]) => {
   map.addSource('track', { type: 'geojson', data: fc(tracks.flatMap(t => t.features.filter(f => f.properties.kind === 'track'))) });
   // MapLibre extrusions cannot go below the street; the three.js layer draws what is under it.
   map.addSource('scene', { type: 'geojson', data: fc(scene.filter(f => f.properties.base >= 0)) });
@@ -287,13 +303,15 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
   map.addLayer(trains);
   trains.setTrack(spines);
   trains.setStations(stations);
+  trains.setLinks(links);
 
   // Fly to a station and name it. Names come from DMRC's data, so they go in as text, not HTML.
   let popup = null;
   const byCode = Object.fromEntries(index.map(st => [st.code, st]));
   const goTo = st => {
     if (popup) popup.remove();
-    popup = new maplibregl.Popup().setLngLat(st.at).setText(`${st.name} (${st.code}): ${st.lines.join(', ')}`).addTo(map);
+    const changes = st.changes.length ? `. Changing lines, DMRC allows: ${st.changes.join('; ')}` : '';
+    popup = new maplibregl.Popup().setLngLat(st.at).setText(`${st.name} (${st.code}): ${st.lines.join(', ')}${changes}`).addTo(map);
     map.flyTo({ center: st.at, zoom: 17.4, pitch: 65, bearing: st.bearing - 60 });
   };
   map.on('click', e => { const shape = trains.pick(e.point.x, e.point.y); if (shape) goTo(byCode[shape.code]); });
@@ -376,7 +394,9 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
         const tau = state.t - dep - (d.delays.get(`${state.day}:${k}`) || 0);  // a live correction runs it late or early
         const front = turns ? trainFront(d.p, tau, turns.held[k] ? 0 : -DWELL, turns.stay[k]) : trainFront(d.p, tau);
         if (front === null) return;
-        for (const c of carPoses(d.coords, d.s, front, d.H, d.cars, d.wrap)) cars.push(Object.assign(c, { color: d.color, thirdRail: d.thirdRail }));
+        const at = turns ? doorsAt(d.p, tau, turns.held[k] ? 0 : -DWELL, turns.stay[k]) : doorsAt(d.p, tau);
+        const doors = { open: at ? at.open : 0, side: at ? d.doorSide[at.stop] : 1 };
+        for (const c of carPoses(d.coords, d.s, front, d.H, d.cars, d.wrap)) cars.push(Object.assign(c, { color: d.color, thirdRail: d.thirdRail }, doors));
       });
       counts[d.code] += running(d.p, deps, state.t);
     }

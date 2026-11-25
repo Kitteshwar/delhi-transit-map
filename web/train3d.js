@@ -21,6 +21,7 @@ const HALF = CAR_M / 2;  // car frame: x along the car (front +x), y to its left
 const W = CAR_W / 2;     // origin on the rail at the car's middle
 const BODY_HALF = HALF - 0.1;
 const DOORS_X = [-8.25, -2.75, 2.75, 8.25];
+export const DOOR_OPEN_M = 0.7;  // how far each leaf of a double door slides, clearing its half of the 1.4 m doorway
 const GAUGE_HALF = 0.873;  // rail centre from track centre: broad gauge, 1676 mm between the rails
 const RAIL_TOP = 0.28;     // rail top above the deck or bed: 0.12 m sleeper, 0.16 m rail
 const CONTACT_M = 5.3;     // 25 kV contact wire above the rail top (typical; DMRC's design height is not public)
@@ -330,10 +331,9 @@ export function carGeometries() {
     const end = cab ? NOSE_X : BODY_HALF;
     return {
       body: cab ? merge([body(-BODY_HALF, NOSE_X), noseGeometry()]) : body(-BODY_HALF, BODY_HALF),
-      doors: merge(DOORS_X.flatMap(x => [-0.36, 0.36].flatMap(dx => bothSides(side => box(0.7, 0.05, 2.0, x + dx, side * (W + 0.02), 2.05))))),
+      doorway: merge(DOORS_X.flatMap(x => bothSides(side => box(1.42, 0.01, 2.0, x, side * (W + 0.005), 2.05)))),  // seen when open
       glass: merge([
         ...windows(cab),
-        ...DOORS_X.flatMap(x => [-0.36, 0.36].flatMap(dx => bothSides(side => box(0.42, 0.02, 0.95, x + dx, side * (W + 0.05), 2.5)))),
         ...(cab ? [faces([
           ...both(side => facePanel(side * 0.5, side * 1.25, 2.15, 3.3, 0.03)),  // windscreens
           ...facePanel(-0.26, 0.26, 2.3, 3.2, 0.02),                              // front door window
@@ -376,9 +376,15 @@ export function carGeometries() {
       taillamp: faces(both(side => facePanel(side * 0.7, side * 0.88, 1.33, 1.57, 0.03)), INSIDE),
       ladies: merge(DOORS_X.flatMap(x => [-0.8, 0.8].flatMap(dx => bothSides(side => box(0.1, 0.02, 1.9, x + dx, side * (W + 0.012), 2.0))))),
     },
+    leaves: LEAVES.map(([side, dir]) => ({
+      doors: merge(DOORS_X.map(x => box(0.7, 0.04, 2.0, x + dir * 0.36, side * (W + 0.02), 2.05))),
+      glass: merge(DOORS_X.map(x => box(0.42, 0.02, 0.95, x + dir * 0.36, side * (W + 0.05), 2.5))),
+    })),
     ...lowGeometry(),
   };
 }
+// The door leaves in four sets, [side (1 left, -1 right), the way each slides open along the car].
+export const LEAVES = [[1, -1], [1, 1], [-1, -1], [-1, 1]];
 
 // One box per car with a dark window band. The body is white here, so the per-car colour makes
 // it the line's colour: far off, a silver car on a grey viaduct was lost in the track.
@@ -487,7 +493,7 @@ export function trainLayer(map, origin) {
     glass: onTop(mat(0x18202b, { metalness: 0.3, roughness: 0.15 }), 2), band: onTop(mat(0xffffff), 3), pinstripe: onTop(mat(0xffffff), 3),
     dark: mat(0x303338, { roughness: 0.85 }), grey: mat(0x9ba1a8, { roughness: 0.6 }), face: onTop(mat(0x45494f, { roughness: 0.6 }), 1),
     red: onTop(mat(0xd0202a), 2), display: onTop(new THREE.MeshBasicMaterial({ color: 0xff8c1a }), 2), headlamp: lamp(3), taillamp: lamp(3),
-    ladies: onTop(mat(0xe75480), 2),
+    ladies: onTop(mat(0xe75480), 2), doorway: onTop(mat(0x2a2f36, { roughness: 0.8 }), 1),
   };
   const meshes = {};
   const add = (name, geometry, material, capacity = MAX_CARS) => {
@@ -497,6 +503,7 @@ export function trainLayer(map, origin) {
     meshes[name] = m;
   };
   for (const kind of ['middle', 'cab']) for (const [part, geometry] of Object.entries(g[kind])) add(`${kind}.${part}`, geometry, MATERIALS[part]);
+  g.leaves.forEach((leaf, k) => { add(`leaf${k}.doors`, leaf.doors, MATERIALS.doors); add(`leaf${k}.glass`, leaf.glass, MATERIALS.glass); });
   add('low', g.low, new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.25, roughness: 0.45 }));
   add('pantographs', pantographGeometry(), new THREE.MeshStandardMaterial({ color: 0x2b2d30, metalness: 0.4, roughness: 0.5 }));
   // Per-car colours: lamps lit or not, and the band and stripe in the line's colour.
@@ -512,7 +519,9 @@ export function trainLayer(map, origin) {
   let placed = [];
   const pool = [];
 
-  const scene = new THREE.Scene(), camera = new THREE.Camera();
+  // Everything but the cars, which are placed relative to `eye` themselves (see render).
+  const scene = new THREE.Scene(), camera = new THREE.Camera(), world = new THREE.Group(), eye = new THREE.Vector2();
+  scene.add(world);
   scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8a8a, 2.2));
   const sun = new THREE.DirectionalLight(0xffffff, 2.0);
   sun.position.set(-0.6, -1, 1.6);
@@ -526,7 +535,7 @@ export function trainLayer(map, origin) {
     mesh.frustumCulled = false;
     pieces.forEach((p, i) => mesh.setMatrixAt(i, place(m, toLocal(p.a), toLocal(p.b), p.za, p.zb)));
     statics[name] = mesh;
-    scene.add(mesh);
+    world.add(mesh);
   };
   const see = (color, opacity) => new THREE.MeshStandardMaterial({ color, transparent: true, opacity, depthWrite: false });
 
@@ -534,27 +543,36 @@ export function trainLayer(map, origin) {
     if (mesh.count < mesh.instanceMatrix.count) mesh.setMatrixAt(mesh.count++, matrix);
   };
   // Fill the car meshes for this frame: all as boxes when vp is null, else only those in its view.
+  const slid = new THREE.Matrix4(), slide = new THREE.Matrix4();
   const drawCars = (vp, width, height) => {
     for (const mesh of Object.values(meshes)) mesh.count = 0;
-    const tint = (mesh, colour) => { mesh.setColorAt(mesh.count, colour); put(mesh, c.m); };
+    const tint = (mesh, colour) => { mesh.setColorAt(mesh.count, colour); put(mesh, c.r); };
     let c;
     for (c of placed) {
       const detail = vp ? carDetail(vp, frustum, c.a, c.b, width, height) : 'low';
       if (detail === 'none') continue;
+      c.r.copy(c.m);
+      c.r.elements[12] -= eye.x;
+      c.r.elements[13] -= eye.y;
       if (detail === 'low') { tint(meshes.low, c.livery.band); continue; }
       const kind = c.lead || c.last ? 'cab' : 'middle';
-      for (const name of PARTS[kind]) put(meshes[name], c.m);
+      for (const name of PARTS[kind]) put(meshes[name], c.r);
+      LEAVES.forEach(([side, dir], k) => {
+        const at = side === c.doorSide && c.open > 0 ? slid.multiplyMatrices(c.r, slide.makeTranslation(dir * c.open * DOOR_OPEN_M, 0, 0)) : c.r;
+        put(meshes[`leaf${k}.doors`], at);
+        put(meshes[`leaf${k}.glass`], at);
+      });
       tint(meshes[`${kind}.band`], c.livery.band);
       tint(meshes[`${kind}.pinstripe`], c.livery.pin);
       if (kind === 'cab') {
         tint(meshes['cab.headlamp'], c.lead ? LIT : OFF);
         tint(meshes['cab.taillamp'], c.last && !c.lead ? RED : RED_OFF);
-        if (c.lead) put(meshes['cab.ladies'], c.m);
+        if (c.lead) put(meshes['cab.ladies'], c.r);
       }
-      if (c.panto) put(meshes.pantographs, c.m);
+      if (c.panto) put(meshes.pantographs, c.r);
     }
-    // Upload only the instances in use: the whole buffers (room for MAX_CARS in each of 25 meshes)
-    // are 6 MB, too much to send to the GPU every frame at a 120 Hz refresh.
+    // Upload only the instances in use: the whole buffers (room for MAX_CARS in each of 30 meshes)
+    // are 8 MB, too much to send to the GPU every frame at a 120 Hz refresh.
     const upload = (attribute, count) => {
       attribute.clearUpdateRanges();
       attribute.addUpdateRange(0, count * attribute.itemSize);
@@ -577,10 +595,10 @@ export function trainLayer(map, origin) {
     const rails = [PROFILES.railLeft, PROFILES.railRight, ...(c.thirdRail ? [PROFILES.thirdRail] : [])].map(profile => sweep(c.part, profile));
     c.meshes = [new THREE.Mesh(merge(rails), railMat), sleepers];
     for (const mesh of c.meshes) mesh.frustumCulled = false;
-    scene.add(...c.meshes);
+    world.add(...c.meshes);
   };
   const dropChunk = c => {
-    scene.remove(...c.meshes);
+    world.remove(...c.meshes);
     c.meshes[0].geometry.dispose();
     c.meshes[1].dispose();
     c.meshes = null;
@@ -615,11 +633,15 @@ export function trainLayer(map, origin) {
     render(gl, matrix) {
       const zoom = map.getZoom();
       for (const name of ['wires', 'masts', 'conductor', 'station.steel', 'station.edge', 'station.window']) if (statics[name]) statics[name].visible = zoom >= 14;
-      camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix).multiply(frame);
-      lastView = camera.projectionMatrix;
-      frustum.setFromProjectionMatrix(camera.projectionMatrix);
+      // lastView (layer frame) picks, culls and chooses detail; the camera draws relative to eye,
+      // the point under the map's centre, where coordinates are small enough for float32.
+      lastView = new THREE.Matrix4().fromArray(matrix).multiply(frame);
+      frustum.setFromProjectionMatrix(lastView);
+      eye.fromArray(toLocal(map.getCenter())).round();
+      world.position.set(-eye.x, -eye.y, 0);
+      camera.projectionMatrix = lastView.clone().multiply(new THREE.Matrix4().makeTranslation(eye.x, eye.y, 0));
       drawTrack(zoom);
-      drawCars(zoom >= LOD_ZOOM ? camera.projectionMatrix : null, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      drawCars(zoom >= LOD_ZOOM ? lastView : null, gl.drawingBufferWidth, gl.drawingBufferHeight);
       renderer.resetState();
       renderer.render(scene, camera);
     },
@@ -653,7 +675,7 @@ export function trainLayer(map, origin) {
         const mesh = new THREE.Mesh(merge(geoms), material);
         mesh.frustumCulled = false;
         statics[name] = mesh;
-        scene.add(mesh);
+        world.add(mesh);
       };
       addMesh('deck', parts.deck, solid(0x9a958c, { roughness: 0.9 }));
       addMesh('bed', parts.bed, solid(0x57524b, { roughness: 1 }));
@@ -667,7 +689,7 @@ export function trainLayer(map, origin) {
       wireGeometry.setAttribute('position', new THREE.BufferAttribute(all, 3));
       statics.wires = new THREE.LineSegments(wireGeometry, new THREE.LineBasicMaterial({ color: 0x2a2a2a }));
       statics.wires.frustumCulled = false;
-      scene.add(statics.wires);
+      world.add(statics.wires);
       map.triggerRepaint();
     },
     // Stations: scene.js stationShape objects. Call once.
@@ -695,8 +717,21 @@ export function trainLayer(map, origin) {
         const mesh = new THREE.Mesh(merge(geoms), STATION_MATERIALS[part]);
         mesh.frustumCulled = false;
         statics[`station.${part}`] = mesh;
-        scene.add(mesh);
+        world.add(mesh);
       }
+      map.triggerRepaint();
+    },
+    // Interchange walkways and lifts: scene.js interchangeLink pieces, drawn see-through, a 4 m wide
+    // passage 3.5 m high, and a 4 m square shaft. Call once.
+    setLinks(pieces) {
+      const geoms = pieces.map(({ from, to, z0, z1 }) => {
+        const a = toLocal(from), b = toLocal(to), len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+        return len ? box(len, 4, 3.5, 0, 0, 0).applyMatrix4(place(m, a, b, z0 + 1.75, z1 + 1.75)) : box(4, 4, z1 - z0 + 3.5, a[0], a[1], (z0 + z1 + 3.5) / 2);
+      });
+      if (!geoms.length) return;
+      statics.links = new THREE.Mesh(merge(geoms), Object.assign(see(0x1c2b39, 0.45), { side: THREE.DoubleSide }));
+      statics.links.frustumCulled = false;
+      world.add(statics.links);
       map.triggerRepaint();
     },
     // The station drawn nearest the screen point (x, y) in CSS pixels, within `radius`, or null. Picked
@@ -717,14 +752,17 @@ export function trainLayer(map, origin) {
     // picks each car's detail for the camera then.
     setCars(poses) {
       placed = poses.map((p, i) => {
-        const c = (pool[i] ||= { m: new THREE.Matrix4(), a: new THREE.Vector3(), b: new THREE.Vector3() });
+        const c = (pool[i] ||= { m: new THREE.Matrix4(), r: new THREE.Matrix4(), a: new THREE.Vector3(), b: new THREE.Vector3() });
         const flip = p.last && !p.lead;  // the last car is turned round so its cab faces backwards
         const [ra, fa, zr, zf] = flip ? [p.front, p.rear, p.zFront, p.zRear] : [p.rear, p.front, p.zRear, p.zFront];
         const la = toLocal(ra), lb = toLocal(fa);
         place(c.m, la, lb, zr + RAIL_TOP, zf + RAIL_TOP);
         c.a.set(la[0], la[1], zr + RAIL_TOP);
         c.b.set(lb[0], lb[1], zf + RAIL_TOP);
-        Object.assign(c, { lead: p.lead, last: p.last, panto: !p.thirdRail && hasPantograph(p.car, p.cars), livery: livery(p.color || '#3b76c0') });
+        // Doors open on the platform side, p.side of the way the train runs (1 left), the car's own
+        // other side when it is turned round.
+        Object.assign(c, { lead: p.lead, last: p.last, panto: !p.thirdRail && hasPantograph(p.car, p.cars), livery: livery(p.color || '#3b76c0'),
+                           open: p.open || 0, doorSide: (flip ? -1 : 1) * (p.side || 1) });
         return c;
       });
       map.triggerRepaint();

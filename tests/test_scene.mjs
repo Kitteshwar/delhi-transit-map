@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { heights, crossings, LEVEL_M, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
+import { heights, crossings, LEVEL_M, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, pierClear, interchangeLink, STACK_M, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
 import { CAR_M, GAP_M, BOGIE_M, TRAIN_M, plan, slice } from '../web/motion.js';
 
 const M = 6371008.8 * Math.PI / 180, KX = M * Math.cos(28.6 * Math.PI / 180);
@@ -117,6 +117,33 @@ test('viaduct only where the rail is raised, with piers down to the street', () 
   assert.ok(parts.every(f => f.properties.part === 'pier'));  // the deck is drawn by the three.js layer
   const piers = parts;
   assert.ok(piers.length > 50 && piers.every(f => f.properties.base === 0 && f.properties.top > 0));
+});
+
+test('no pier where another line passes under the viaduct, one where a line runs alongside at its level', () => {
+  const H = heights([[0, 3000, 'elevated']], 3000), mid = 1500.75;
+  const across = (z, east = 1500.75) => ({ sections: [-50, 50].map(n => ({ at: at(east, n), z })) });  // a line running north
+  const pierAt = spines => viaduct(TRACK, S, H, pierClear(spines)).some(f => Math.abs((f.geometry.coordinates[0][0][0] - 77.3) * KX - 1500) < 2);
+  assert.ok(pierAt([]));
+  assert.ok(!pierAt([across(0)]), 'over a line at street level');
+  assert.ok(!pierAt([across(DECK_M - LEVEL_M / 2)]), 'over a lower viaduct');
+  assert.ok(pierAt([across(-DEPTH_M)]), 'over a tunnel');
+  assert.ok(pierAt([across(0, mid + 20)]), '20 m from the crossing');
+  const beside = { sections: [0, 3000].map(e => ({ at: at(e, 4.5), z: DECK_M })) };  // the other direction's track
+  assert.ok(pierAt([beside]));
+});
+
+test('interchanges: stacked platforms by a lift between them, others by a walkway at a concourse or the street', () => {
+  const shape = (east, h, under = false) => ({ sections: [at(east - 50), at(east), at(east + 50)], bearing: 90, m: 2.5, h, under });
+  const centreNorth = p => (p[1] - 28.6) * M;
+  const [lift] = interchangeLink(shape(0, 12), shape(STACK_M / 2, -16, true));
+  assert.deepEqual([lift.z0, lift.z1], [-16, 12]);
+  near(centreNorth(lift.from), 2.5, 1e-6);  // between the tracks, 2.5 m left of the forward one
+  assert.equal(interchangeLink(shape(0, 12), shape(STACK_M / 2, -16, true)).length, 1);
+  const bridge = interchangeLink(shape(0, 12), shape(300, 22));
+  assert.equal(bridge.length, 3);
+  assert.deepEqual(bridge.map(p => [p.z0, p.z1]), [[12 - 6.8, 12], [12 - 6.8, 12 - 6.8], [12 - 6.8, 22]]);
+  assert.equal(interchangeLink(shape(0, -16, true), shape(300, -25, true))[1].z0, -10);
+  assert.equal(interchangeLink(shape(0, 12), shape(300, -16, true))[1].z0, 0);
 });
 
 test('station layout: along the platform, between both tracks, at rail height or underground', () => {

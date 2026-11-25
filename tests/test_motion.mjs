@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { profile, along, plan, trainFront, ringTurns, running, secs, trainLength, DWELL, CAR_M, GAP_M } from '../web/motion.js';
+import { profile, along, plan, trainFront, doorsAt, DOOR_S, ringTurns, running, secs, trainLength, DWELL, CAR_M, GAP_M } from '../web/motion.js';
 
 const near = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 
@@ -30,6 +30,20 @@ test('the front waits at the first platform, runs, then waits at the last', () =
   let prev = 0;
   for (let t = 0; t <= 100; t += 0.5) { const f = trainFront(p, t); assert.ok(f >= prev); prev = f; }
   assert.throws(() => plan(stops, [{ from: 'B', to: 'A', seconds: 100 }], 2000));
+});
+
+test('doors open a second after the train stops and shut two seconds before it leaves', () => {
+  const stops = [{ code: 'A', s: 0, platform: null }, { code: 'B', s: 1000, platform: { s_end: 1100 } }];
+  const p = plan(stops, [{ from: 'A', to: 'B', seconds: 100 }], 2000), run = p.legs[0].run, arrive = run.ta + run.tc + run.tb;
+  assert.equal(doorsAt(p, -DWELL - 1), null);
+  assert.deepEqual(doorsAt(p, -DWELL + 1), { stop: 0, open: 0 });
+  assert.deepEqual(doorsAt(p, -DWELL + 1 + DOOR_S), { stop: 0, open: 1 });
+  assert.deepEqual(doorsAt(p, -2), { stop: 0, open: 0 });
+  assert.equal(doorsAt(p, 10), null);  // running
+  assert.deepEqual(doorsAt(p, arrive + 1 + DOOR_S / 2), { stop: 1, open: 0.5 });
+  assert.deepEqual(doorsAt(p, 100 + DWELL - 2 - DOOR_S), { stop: 1, open: 1 });
+  assert.deepEqual(doorsAt(p, 200, -DWELL, 300), { stop: 1, open: 1 });  // a ring train waiting for its next departure
+  assert.equal(doorsAt(p, 100 + DWELL + 1), null);
 });
 
 test('on a ring the train back at the start takes the next departure, if it leaves before the one behind', () => {

@@ -2,13 +2,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from '../web/vendor/three.module.min.js';
-import { carGeometries, sweep, runs, PROFILES, pantographGeometry, overheadLines, MAST, noseGeometry, carDetail, hasPantograph, simplify, sleeperSpots, stationGeometry } from '../web/train3d.js';
+import { carGeometries, LEAVES, DOOR_OPEN_M, sweep, runs, PROFILES, pantographGeometry, overheadLines, MAST, noseGeometry, carDetail, hasPantograph, simplify, sleeperSpots, stationGeometry } from '../web/train3d.js';
 import { CAR_M, GAP_M } from '../web/motion.js';
 import { CAR_W } from '../web/scene.js';
 
 const near = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) <= eps, `${a} != ${b}`);
 
-const MIDDLE = ['band', 'body', 'dark', 'doors', 'glass', 'grey', 'pinstripe'];
+const MIDDLE = ['band', 'body', 'dark', 'doorway', 'glass', 'grey', 'pinstripe'];
 
 test('every part of both kinds of car fits it: length, width, height and above the rail', () => {
   const { middle, cab, low } = carGeometries();
@@ -28,6 +28,26 @@ test('every part of both kinds of car fits it: length, width, height and above t
     near(body.max.y, CAR_W / 2); near(body.max.z, 3.85, 1e-5); near(body.min.z, 1.0, 1e-5);
     near(body.max.x - body.min.x, CAR_M - 0.2, 1e-5);
   }
+});
+
+test('door leaves: four sets, each on its side of the car and in its half of every doorway', () => {
+  const { leaves, middle } = carGeometries();
+  assert.equal(leaves.length, LEAVES.length);
+  leaves.forEach(({ doors, glass }, k) => {
+    const [side, dir] = LEAVES[k];
+    for (const g of [doors, glass]) {
+      const ys = points(g).map(([, y]) => y * side);
+      assert.ok(Math.min(...ys) >= CAR_W / 2 - 1e-6 && Math.max(...ys) <= CAR_W / 2 + 0.08);
+    }
+    const xs = points(doors).map(([x]) => x);
+    for (const door of [-8.25, -2.75, 2.75, 8.25]) {  // each leaf covers its half of the doorway, and clears it open
+      const mine = xs.filter(x => Math.abs(x - door) < 1);
+      near(Math.min(...mine.map(x => dir * (x - door))), 0.01, 1e-5);
+      assert.ok(Math.min(...mine.map(x => dir * (x - door))) + DOOR_OPEN_M >= 0.71 - 1e-6);
+    }
+  });
+  const way = middle.doorway.boundingBox;  // the dark doorway lies behind the shut leaves
+  assert.ok(way.max.y < Math.min(...leaves.map(l => l.doors.boundingBox.max.y).filter(y => y > 0)));
 });
 
 test('the cab nose is closed, faces outwards and leans back above the windscreen foot', () => {
