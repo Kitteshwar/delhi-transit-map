@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from '../web/vendor/three.module.min.js';
-import { carGeometries, LEAVES, DOOR_OPEN_M, sweep, runs, PROFILES, pantographGeometry, overheadLines, MAST, noseGeometry, carDetail, hasPantograph, simplify, sleeperSpots, stationGeometry } from '../web/train3d.js';
+import { carGeometries, LEAVES, DOOR_OPEN_M, sweep, runs, PROFILES, pantographGeometry, overheadLines, MAST, noseGeometry, carDetail, hasPantograph, simplify, sleeperSpots, stationGeometry, linkGeometry } from '../web/train3d.js';
 import { CAR_M, GAP_M } from '../web/motion.js';
 import { CAR_W } from '../web/scene.js';
 
@@ -48,6 +48,20 @@ test('door leaves: four sets, each on its side of the car and in its half of eve
   });
   const way = middle.doorway.boundingBox;  // the dark doorway lies behind the shut leaves
   assert.ok(way.max.y < Math.min(...leaves.map(l => l.doors.boundingBox.max.y).filter(y => y > 0)));
+});
+
+test('interchange links: a raised walkway is a glazed bridge on columns, a tower stands on the street, tunnel ones are see-through', () => {
+  const bridge = linkGeometry([{ a: [0, 0], b: [100, 0], z0: 5, z1: 5 }]);
+  assert.deepEqual(Object.keys(bridge).sort(), ['concourse', 'pane', 'pier', 'roof', 'steel']);
+  near(bridge.concourse.boundingBox.max.z, 5, 1e-5);
+  near(bridge.pier.boundingBox.min.z, 0, 1e-5);
+  near(bridge.pier.boundingBox.max.z, 4.6, 1e-5);
+  near(bridge.roof.boundingBox.min.x, 0, 1e-5); near(bridge.roof.boundingBox.max.x, 100, 1e-5);
+  assert.deepEqual(Object.keys(linkGeometry([{ a: [0, 0], b: [100, 0], z0: 0, z1: 0 }])).sort(), ['roof', 'steel']);  // along the street
+  assert.deepEqual(Object.keys(linkGeometry([{ a: [0, 0], b: [100, 0], z0: -10, z1: -10 }])), ['hall']);
+  const tower = linkGeometry([{ a: [5, 5], b: [5, 5], z0: -16, z1: 12 }]);
+  near(tower.hall.boundingBox.min.z, -16, 1e-5); near(tower.hall.boundingBox.max.z, 0, 1e-5);
+  near(tower.pane.boundingBox.min.z, 0, 1e-5); near(tower.roof.boundingBox.min.z, 12 + 3.7, 1e-5);
 });
 
 test('the cab nose is closed, faces outwards and leans back above the windscreen foot', () => {

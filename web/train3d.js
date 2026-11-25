@@ -473,6 +473,39 @@ export function stationGeometry(sections, { m, g, h, under }) {
   return Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, merge(v)]));
 }
 
+// Interchange walkways and lift towers by material, named as stationGeometry's parts, from scene.js
+// interchangeLink pieces with their ends turned to layer [x, y]. Raised, a walkway is an enclosed foot
+// bridge: a floor, glass sides between steel frames and a roof, on columns every 20 m. Along the
+// street it is a roof on posts; in tunnel a passage drawn see-through like the station halls. A tower
+// is glass on steel corner posts under a roof, see-through below the street.
+const WALK_W = 4, WALK_H = 3.2;
+export function linkGeometry(pieces) {
+  const parts = {}, add = (part, g) => (parts[part] ||= []).push(g), m = new THREE.Matrix4();
+  for (const { a, b, z0, z1 } of pieces) {
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (!len) {
+      const top = z1 + WALK_H + 0.5, low = Math.max(z0, 0), under = Math.min(top, 0);
+      if (z0 < under) add('hall', box(WALK_W, WALK_W, under - z0, a[0], a[1], (z0 + under) / 2));
+      if (top <= 0) continue;
+      add('pane', box(WALK_W, WALK_W, top - low, a[0], a[1], (low + top) / 2));
+      for (const [dx, dy] of [[-1, -1], [-1, 1], [1, -1], [1, 1]]) add('steel', box(0.25, 0.25, top - low, a[0] + dx * WALK_W / 2, a[1] + dy * WALK_W / 2, (low + top) / 2));
+      add('roof', box(WALK_W + 0.6, WALK_W + 0.6, 0.3, a[0], a[1], top + 0.15));
+      continue;
+    }
+    place(m, a, b, z0, z1);
+    const on = g => g.applyMatrix4(m);  // walkway frame: x along it from -len/2, z up from its floor
+    const every = (step, fn) => { const n = Math.max(1, Math.round(len / step)); for (let i = 0; i <= n; i++) fn(-len / 2 + len * i / n); };
+    if (z0 < -0.5) { add('hall', on(box(len, WALK_W, WALK_H, 0, 0, WALK_H / 2))); continue; }
+    add('roof', on(box(len, WALK_W + 0.6, 0.3, 0, 0, WALK_H + 0.15)));
+    every(6, x => { for (const s of [-1, 1]) add('steel', on(box(0.2, 0.2, WALK_H, x, s * WALK_W / 2, WALK_H / 2))); });
+    if (z0 < 0.5) continue;
+    add('concourse', on(box(len, WALK_W, 0.4, 0, 0, -0.2)));
+    for (const s of [-1, 1]) add('pane', on(box(len, 0.05, WALK_H, 0, s * WALK_W / 2, WALK_H / 2)));
+    every(20, x => add('pier', on(box(0.9, 0.9, z0 - 0.4, x, 0, -0.4 - (z0 - 0.4) / 2))));
+  }
+  return Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, merge(v)]));
+}
+
 export function trainLayer(map, origin) {
   const o = maplibregl.MercatorCoordinate.fromLngLat(origin, 0), k = o.meterInMercatorCoordinateUnits();
   // Layer frame: metres east, north and up from `origin`.
@@ -692,8 +725,8 @@ export function trainLayer(map, origin) {
       world.add(statics.wires);
       map.triggerRepaint();
     },
-    // Stations: scene.js stationShape objects. Call once.
-    setStations(shapes) {
+    // Stations, scene.js stationShape objects, and the interchangeLink pieces joining them. Call once.
+    setStations(shapes, links = []) {
       const byPart = {};
       for (const shape of shapes) {
         const local = shape.sections.map(toLocal);
@@ -701,6 +734,8 @@ export function trainLayer(map, origin) {
         const [x, y] = local[local.length >> 1];
         stations.push({ shape, at: new THREE.Vector4(x, y, shape.under ? 1.5 : shape.h + 3, 1) });
       }
+      const local = links.map(l => ({ a: toLocal(l.from), b: toLocal(l.to), z0: l.z0, z1: l.z1 }));
+      for (const [part, geometry] of Object.entries(linkGeometry(local))) (byPart[part] ||= []).push(geometry);
       const STATION_MATERIALS = {
         platform: new THREE.MeshStandardMaterial({ color: 0xe4ded2, roughness: 0.8 }),
         edge: onTop(new THREE.MeshStandardMaterial({ color: 0xf0c419, roughness: 0.7 }), 1),
@@ -710,7 +745,7 @@ export function trainLayer(map, origin) {
         concourse: new THREE.MeshStandardMaterial({ color: 0xd9d3c7, roughness: 0.8 }),
         window: onTop(new THREE.MeshStandardMaterial({ color: 0x2c3b48, metalness: 0.3, roughness: 0.2 }), 1),
         pier: new THREE.MeshStandardMaterial({ color: 0x9a958c, roughness: 0.9 }),
-        hall: see(0xcfc6b8, 0.22),
+        hall: see(0xcfc6b8, 0.22), pane: see(0xa9c4d4, 0.3),
         canopy: new THREE.MeshStandardMaterial({ color: 0xc0282c, roughness: 0.6 }),
       };
       for (const [part, geoms] of Object.entries(byPart)) {
@@ -719,19 +754,6 @@ export function trainLayer(map, origin) {
         statics[`station.${part}`] = mesh;
         world.add(mesh);
       }
-      map.triggerRepaint();
-    },
-    // Interchange walkways and lifts: scene.js interchangeLink pieces, drawn see-through, a 4 m wide
-    // passage 3.5 m high, and a 4 m square shaft. Call once.
-    setLinks(pieces) {
-      const geoms = pieces.map(({ from, to, z0, z1 }) => {
-        const a = toLocal(from), b = toLocal(to), len = Math.hypot(b[0] - a[0], b[1] - a[1]);
-        return len ? box(len, 4, 3.5, 0, 0, 0).applyMatrix4(place(m, a, b, z0 + 1.75, z1 + 1.75)) : box(4, 4, z1 - z0 + 3.5, a[0], a[1], (z0 + z1 + 3.5) / 2);
-      });
-      if (!geoms.length) return;
-      statics.links = new THREE.Mesh(merge(geoms), Object.assign(see(0x1c2b39, 0.45), { side: THREE.DoubleSide }));
-      statics.links.frustumCulled = false;
-      world.add(statics.links);
       map.triggerRepaint();
     },
     // The station drawn nearest the screen point (x, y) in CSS pixels, within `radius`, or null. Picked

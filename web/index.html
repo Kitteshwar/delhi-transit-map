@@ -302,8 +302,7 @@ Promise.all([load(), new Promise(r => map.on('load', r))]).then(([{ tracks, dirs
   const trains = trainLayer(map, [77.19, 28.6]);
   map.addLayer(trains);
   trains.setTrack(spines);
-  trains.setStations(stations);
-  trains.setLinks(links);
+  trains.setStations(stations, links);
 
   // Fly to a station and name it. Names come from DMRC's data, so they go in as text, not HTML.
   let popup = null;

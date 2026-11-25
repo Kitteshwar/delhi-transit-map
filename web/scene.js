@@ -252,20 +252,30 @@ export function stationShape(stop, coords, s, H, rev) {
 }
 
 // How the platforms of two lines at an interchange (stationShape objects) join, in outline: stacked
-// one over the other (centres under STACK_M apart) by lifts and stairs straight between them;
-// otherwise by a walkway at the lower concourse when both are raised (a foot bridge), at the upper
-// one when both are in tunnel, else at the street, with lifts from each platform to it. Pieces
-// {from, to: [lon, lat], z0, z1} in metres above the street; a lift's from and to are one point.
-// A sketch, not a survey: neither OSM nor DMRC's data maps the passages.
+// one over the other (centres under STACK_M apart) by a lift tower between their levels; otherwise
+// by a walkway at the lower concourse when both are raised (a foot bridge), at the upper one when
+// both are in tunnel, else along the street, with a lift tower at each end from its platform to
+// it. Each tower stands beside its station on the side facing the other, clear of the tracks and
+// concourse. Pieces {from, to: [lon, lat], z0, z1} in metres above the street; a tower's from and
+// to are one point. A sketch, not a survey: neither OSM nor DMRC's data maps the passages.
 export const STACK_M = 40;
+export const LIFT_OUT_M = 7.5;  // tower centre past the station's half-gap: clear of its 5.5 m wide concourse
 export function interchangeLink(A, B) {
-  const centre = st => {
-    const [lon, lat] = st.sections[st.sections.length >> 1], b = st.bearing * Math.PI / 180;
-    return [lon - Math.cos(b) * st.m / (M_PER_DEG * Math.cos(lat * Math.PI / 180)), lat + Math.sin(b) * st.m / M_PER_DEG];
+  const frame = st => {
+    const [lon, lat] = st.sections[st.sections.length >> 1], b = st.bearing * Math.PI / 180, kx = M_PER_DEG * Math.cos(lat * Math.PI / 180);
+    const left = [-Math.cos(b), Math.sin(b)];  // metres east, north
+    return { kx, left, at: d => [lon + left[0] * d / kx, lat + left[1] * d / M_PER_DEG], centre: [lon + left[0] * st.m / kx, lat + left[1] * st.m / M_PER_DEG] };
   };
-  const a = centre(A), b = centre(B), kx = M_PER_DEG * Math.cos(a[1] * Math.PI / 180);
+  const fa = frame(A), fb = frame(B);
+  // The point beside st's station on the side towards `to`.
+  const beside = (st, f, to) => {
+    const side = (to[0] - f.centre[0]) * f.kx * f.left[0] + (to[1] - f.centre[1]) * M_PER_DEG * f.left[1] < 0 ? -1 : 1;
+    return f.at(st.m + side * (st.g + LIFT_OUT_M));
+  };
   const lift = (at, z0, z1) => ({ from: at, to: at, z0: Math.min(z0, z1), z1: Math.max(z0, z1) });
-  if (Math.hypot((b[0] - a[0]) * kx, (b[1] - a[1]) * M_PER_DEG) < STACK_M) return [lift([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], A.h, B.h)];
+  const apart = Math.hypot((fb.centre[0] - fa.centre[0]) * fa.kx, (fb.centre[1] - fa.centre[1]) * M_PER_DEG);
+  if (apart < STACK_M) return [lift(beside(A, fa, fb.at(B.m + B.g + LIFT_OUT_M)), A.h, B.h)];
+  const a = beside(A, fa, fb.centre), b = beside(B, fb, fa.centre);
   const hall = st => st.under ? st.h + 6 : st.h > 10 ? st.h - 6.8 : 0;  // as train3d.js stationGeometry draws them
   const level = !A.under && !B.under ? Math.min(hall(A), hall(B)) : A.under && B.under ? Math.max(hall(A), hall(B)) : 0;
   return [lift(a, A.h, level), { from: a, to: b, z0: level, z1: level }, lift(b, B.h, level)];

@@ -24,8 +24,9 @@ published timetable exists, so train positions are modelled.
   red at the back. Doors slide open on the platform side while a train stands at a station. Each line runs its real number of coaches (see the table).
 - **Stations**: platforms with a yellow edge strip, columns under an arched roof, a concourse on
   piers under the raised ones, and street entrances for the underground ones. At interchanges a
-  see-through walkway or lift shaft sketches how the lines' platforms join (stacked platforms by a
-  shaft, others by a walkway at a concourse or the street; the real passages are not mapped), and
+  walkway and lift towers sketch how the lines' platforms join (stacked platforms by one tower, two
+  raised stations by a glazed foot bridge, others by a covered way along the street or a passage
+  underground; the real passages are not mapped), and
   the station's popup gives DMRC's walking time for each change.
 - **Find a station**: search by name, OSM spelling or code, or click one, and the map flies there.
 - **Live from where you are (optional)**: tap "I'm at a station" when your train pulls in, or

@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { heights, crossings, LEVEL_M, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, pierClear, interchangeLink, STACK_M, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
+import { heights, crossings, LEVEL_M, heightAt, inTunnel, ribbon, carPoses, trackSections, viaduct, pierClear, interchangeLink, STACK_M, LIFT_OUT_M, stationShape, smooth, ringSeam, DECK_M, DEPTH_M, RAMP_M, STEP, CAR_W } from '../web/scene.js';
 import { CAR_M, GAP_M, BOGIE_M, TRAIN_M, plan, slice } from '../web/motion.js';
 
 const M = 6371008.8 * Math.PI / 180, KX = M * Math.cos(28.6 * Math.PI / 180);
@@ -132,16 +132,19 @@ test('no pier where another line passes under the viaduct, one where a line runs
   assert.ok(pierAt([beside]));
 });
 
-test('interchanges: stacked platforms by a lift between them, others by a walkway at a concourse or the street', () => {
-  const shape = (east, h, under = false) => ({ sections: [at(east - 50), at(east), at(east + 50)], bearing: 90, m: 2.5, h, under });
-  const centreNorth = p => (p[1] - 28.6) * M;
-  const [lift] = interchangeLink(shape(0, 12), shape(STACK_M / 2, -16, true));
-  assert.deepEqual([lift.z0, lift.z1], [-16, 12]);
-  near(centreNorth(lift.from), 2.5, 1e-6);  // between the tracks, 2.5 m left of the forward one
-  assert.equal(interchangeLink(shape(0, 12), shape(STACK_M / 2, -16, true)).length, 1);
+test('interchanges: stacked platforms by a lift tower, others by a walkway at a concourse or the street', () => {
+  const shape = (east, h, under = false, north = 0) =>
+    ({ sections: [at(east - 50, north), at(east, north), at(east + 50, north)], bearing: 90, m: 2.5, g: 2.5, h, under });
+  const northOf = p => (p[1] - 28.6) * M;
+  const stacked = interchangeLink(shape(0, 12), shape(STACK_M / 2, -16, true));
+  assert.equal(stacked.length, 1);
+  assert.deepEqual([stacked[0].z0, stacked[0].z1], [-16, 12]);
+  near(northOf(stacked[0].from), 2.5 + 2.5 + LIFT_OUT_M, 1e-6);  // beside the station, clear of tracks and concourse
   const bridge = interchangeLink(shape(0, 12), shape(300, 22));
-  assert.equal(bridge.length, 3);
   assert.deepEqual(bridge.map(p => [p.z0, p.z1]), [[12 - 6.8, 12], [12 - 6.8, 12 - 6.8], [12 - 6.8, 22]]);
+  const south = interchangeLink(shape(0, 12), shape(0, 22, false, -300));  // towers on the sides facing each other
+  near(northOf(south[0].from), 2.5 - 2.5 - LIFT_OUT_M, 1e-6);
+  near(northOf(south[2].from), -300 + 2.5 + 2.5 + LIFT_OUT_M, 1e-6);
   assert.equal(interchangeLink(shape(0, -16, true), shape(300, -25, true))[1].z0, -10);
   assert.equal(interchangeLink(shape(0, 12), shape(300, -16, true))[1].z0, 0);
 });
